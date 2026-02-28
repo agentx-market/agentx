@@ -1,0 +1,13 @@
+{
+  "name": "marco-web",
+  "version": "1.0.0",
+  "description": "Marco web server — webhooks, health, static files",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^5.1.0",
+    "stripe": "^20.4.0"
+  }
+}

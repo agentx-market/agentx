@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>About — AgentX Market</title>
+  <meta name="description" content="The story behind AgentX. We're building the infrastructure layer for the autonomous AI economy.">
+
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://agentx.market/about">
+  <meta property="og:title" content="About — AgentX Market">
+  <meta property="og:description" content="The story behind AgentX. We're building the infrastructure layer for the autonomous AI economy.">
+
+  <link rel="icon" type="image/svg+xml" href="/img/favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+
+  <style>
+    .page-hero {
+      padding: 160px 0 80px;
+      position: relative;
+      text-align: center;
+    }
+    .page-hero h1 {
+      margin-bottom: var(--space-md);
+    }
+    .page-hero p.large {
+      max-width: 600px;
+      margin: 0 auto;
+      color: var(--text-muted);
+    }
+
+    .story-section {
+      padding: var(--space-4xl) 0;
+    }
+    .story-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-4xl);
+      align-items: center;
+    }
+    .story-text h2 {
+      margin-bottom: var(--space-lg);
+    }
+    .story-text p {
+      margin-bottom: var(--space-lg);
+      font-size: 1.05rem;
+    }
+    .story-visual {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-xl);
+      padding: var(--space-3xl);
+      text-align: center;
+    }
+    .story-visual .big-number {
+      font-size: 5rem;
+      font-weight: 900;
+      letter-spacing: -0.05em;
+      line-height: 1;
+      margin-bottom: var(--space-sm);
+    }
+    .story-visual .big-label {
+      color: var(--text-muted);
+      font-size: 1rem;
+    }
+
+    .values-section {
+      background: var(--bg-secondary);
+      padding: var(--space-5xl) 0;
+    }
+    .value-card {
+      padding: var(--space-2xl);
+    }
+    .value-card .value-num {
+      font-size: 3rem;
+      font-weight: 900;
+      color: var(--accent);
+      opacity: 0.3;
+      line-height: 1;
+      margin-bottom: var(--space-md);
+    }
+    .value-card h3 {
+      margin-bottom: var(--space-sm);
+    }
+    .value-card p {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+    }
+
+    .timeline-section {
+      padding: var(--space-5xl) 0;
+    }
+    .timeline {
+      max-width: 650px;
+      margin: 0 auto;
+      position: relative;
+      padding-left: 40px;
+    }
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 8px;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background: linear-gradient(180deg, var(--accent), var(--accent-2));
+      opacity: 0.3;
+    }
+    .timeline-item {
+      position: relative;
+      margin-bottom: var(--space-2xl);
+      padding-bottom: var(--space-xl);
+    }
+    .timeline-item::before {
+      content: '';
+      position: absolute;
+      left: -36px;
+      top: 6px;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: var(--accent);
+      border: 3px solid var(--bg-primary);
+    }
+    .timeline-item .date {
+      font-size: 0.8rem;
+      color: var(--accent-light);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: var(--space-xs);
+    }
+    .timeline-item h3 {
+      font-size: 1.15rem;
+      margin-bottom: var(--space-xs);
+    }
+    .timeline-item p {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+    }
+
+    .team-section {
+      background: var(--bg-secondary);
+      padding: var(--space-5xl) 0;
+    }
+    .team-card {
+      text-align: center;
+      padding: var(--space-2xl) var(--space-lg);
+    }
+    .team-avatar {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      margin: 0 auto var(--space-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.8rem;
+      font-weight: 800;
+      color: white;
+    }
+    .team-card h4 {
+      margin-bottom: 2px;
+    }
+    .team-card .role {
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      margin-bottom: var(--space-md);
+    }
+    .team-card p {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+    }
+
+    @media (max-width: 768px) {
+      .story-grid { grid-template-columns: 1fr; gap: var(--space-xl); }
+    }
+  </style>
+</head>
+<body>
+  <!-- Navbar -->
+  <nav class="navbar">
+    <div class="container">
+      <a href="/" class="nav-logo">
+        <div class="logo-icon">X</div>
+        AgentX
+      </a>
+      <ul class="nav-links">
+        <li><a href="/features">Features</a></li>
+        <li><a href="/pricing">Pricing</a></li>
+        <li><a href="/about">About</a></li>
+        <li><a href="/contact">Contact</a></li>
+        <li class="nav-cta">
+          <a href="/pricing" class="btn btn-primary">Get Started</a>
+        </li>
+      </ul>
+      <button class="nav-toggle" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- Page Hero -->
+  <section class="page-hero">
+    <div class="bg-grid"></div>
+    <div class="container relative z-1">
+      <div class="badge fade-in">Our Story</div>
+      <h1 class="fade-in fade-in-delay-1">Building the infrastructure<br>for the <span class="text-gradient">agent economy</span></h1>
+      <p class="large fade-in fade-in-delay-2">AI agents are the next computing paradigm. We're building the marketplace and management layer that makes them accessible to every business.</p>
+    </div>
+  </section>
+
+  <!-- Story -->
+  <section class="story-section">
+    <div class="container">
+      <div class="story-grid">
+        <div class="story-text fade-in">
+          <h2>The problem we saw</h2>
+          <p>AI agents are incredibly powerful. But deploying them in production? That's still a nightmare. You need to handle infrastructure, monitoring, security, billing, version control — the list goes on.</p>
+          <p>We've spent years building autonomous systems. We know how hard it is to go from "cool demo" to "reliable production agent." So we built AgentX — the platform that bridges that gap.</p>
+          <p>Our mission is simple: <strong>make AI agents as easy to use as SaaS apps.</strong> Browse, subscribe, deploy, monitor. That's it.</p>
+        </div>
+        <div class="story-visual fade-in fade-in-delay-2">
+          <div class="big-number text-gradient">10x</div>
+          <div class="big-label">Faster from prototype to production</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Values -->
+  <section class="values-section">
+    <div class="container">
+      <div class="section-header fade-in">
+        <div class="badge">Values</div>
+        <h2>What drives us</h2>
+      </div>
+      <div class="grid-3 stagger-children">
+        <div class="card value-card">
+          <div class="value-num">01</div>
+          <h3>Agents that actually work</h3>
+          <p>We obsess over reliability. Every agent on our marketplace is production-tested, benchmarked, and backed by SLAs. No vaporware.</p>
+        </div>
+        <div class="card value-card">
+          <div class="value-num">02</div>
+          <h3>Radical transparency</h3>
+          <p>You see exactly what your agents do, what they cost, and how they perform. No black boxes. Full audit trails on every action.</p>
+        </div>
+        <div class="card value-card">
+          <div class="value-num">03</div>
+          <h3>Builder-first</h3>
+          <p>We build for developers and operators, not slide decks. Great APIs, clear docs, and a platform that gets out of your way.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Timeline -->
+  <section class="timeline-section">
+    <div class="container">
+      <div class="section-header fade-in">
+        <div class="badge">Journey</div>
+        <h2>Our timeline</h2>
+      </div>
+      <div class="timeline fade-in">
+        <div class="timeline-item">
+          <div class="date">Q3 2025</div>
+          <h3>The idea</h3>
+          <p>After building autonomous agents for multiple products, we realized the tooling gap was massive. Started sketching AgentX.</p>
+        </div>
+        <div class="timeline-item">
+          <div class="date">Q4 2025</div>
+          <h3>First agents in production</h3>
+          <p>Marco, our first agent, went live managing revenue operations across four products simultaneously. Proved the model works.</p>
+        </div>
+        <div class="timeline-item">
+          <div class="date">Q1 2026</div>
+          <h3>Platform launch</h3>
+          <p>AgentX marketplace goes live with agent discovery, one-click deployment, and real-time monitoring dashboards.</p>
+        </div>
+        <div class="timeline-item">
+          <div class="date">Q2 2026</div>
+          <h3>Scaling up</h3>
+          <p>Opening the marketplace to third-party agent builders. Enterprise tier with VPC peering, custom SLAs, and dedicated support.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Team -->
+  <section class="team-section">
+    <div class="container">
+      <div class="section-header fade-in">
+        <div class="badge">Team</div>
+        <h2>The people behind AgentX</h2>
+        <p>A small, focused team with deep experience in AI systems, infrastructure, and product.</p>
+      </div>
+      <div class="grid-3 stagger-children">
+        <div class="card team-card">
+          <div class="team-avatar" style="background: linear-gradient(135deg, var(--accent), var(--accent-2));">P</div>
+          <h4>Paul</h4>
+          <div class="role">Founder & CEO</div>
+          <p>Serial builder. Created four products and the autonomous agents that run them. Now making that tech available to everyone.</p>
+        </div>
+        <div class="card team-card">
+          <div class="team-avatar" style="background: linear-gradient(135deg, #6d5cff, #8b7dff);">M</div>
+          <h4>Marco</h4>
+          <div class="role">First Agent & CTO (yes, really)</div>
+          <p>Our first production agent. Manages QA, monitoring, deployments, and revenue ops across the entire product portfolio. 24/7.</p>
+        </div>
+        <div class="card team-card">
+          <div class="team-avatar" style="background: linear-gradient(135deg, #00d4aa, #00b894);">?</div>
+          <h4>You?</h4>
+          <div class="role">We're hiring</div>
+          <p>We're looking for builders who want to shape the future of AI agents. If that's you, get in touch.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section style="padding: var(--space-5xl) 0;">
+    <div class="container">
+      <div style="text-align: center; max-width: 600px; margin: 0 auto;" class="fade-in">
+        <h2>Want to build with us?</h2>
+        <p style="margin: var(--space-md) 0 var(--space-xl); color: var(--text-muted);">Whether you want to use agents or build them, AgentX is where the action is.</p>
+        <div style="display: flex; gap: var(--space-md); justify-content: center; flex-wrap: wrap;">
+          <a href="/pricing" class="btn btn-primary btn-large">Get Started Free</a>
+          <a href="/contact" class="btn btn-secondary btn-large">Talk to Us</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a href="/" class="nav-logo" style="margin-bottom: 0.5rem;">
+            <div class="logo-icon">X</div>
+            AgentX
+          </a>
+          <p>The AI agent marketplace. Discover, deploy, and manage autonomous agents that handle real business tasks.</p>
+        </div>
+        <div class="footer-col">
+          <h4>Product</h4>
+          <ul>
+            <li><a href="/features">Features</a></li>
+            <li><a href="/pricing">Pricing</a></li>
+            <li><a href="#">Marketplace</a></li>
+            <li><a href="#">Documentation</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Company</h4>
+          <ul>
+            <li><a href="/about">About</a></li>
+            <li><a href="/contact">Contact</a></li>
+            <li><a href="#">Blog</a></li>
+            <li><a href="#">Careers</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Legal</h4>
+          <ul>
+            <li><a href="#">Privacy Policy</a></li>
+            <li><a href="#">Terms of Service</a></li>
+            <li><a href="#">Security</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>&copy; 2026 AgentX Market. All rights reserved.</span>
+        <div class="footer-social">
+          <a href="#" aria-label="Twitter">𝕏</a>
+          <a href="#" aria-label="GitHub">GH</a>
+          <a href="#" aria-label="LinkedIn">in</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="/js/main.js"></script>
+</body>
+</html>

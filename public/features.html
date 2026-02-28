@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Features — AgentX Market</title>
+  <meta name="description" content="Explore the full AgentX platform: agent marketplace, one-click deployment, real-time monitoring, workflow builder, enterprise security, and more.">
+
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://agentx.market/features">
+  <meta property="og:title" content="Features — AgentX Market">
+  <meta property="og:description" content="Everything you need to run AI agents in production.">
+
+  <link rel="icon" type="image/svg+xml" href="/img/favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+
+  <style>
+    .page-hero {
+      padding: 160px 0 80px;
+      position: relative;
+      text-align: center;
+    }
+    .page-hero h1 { margin-bottom: var(--space-md); }
+    .page-hero p.large {
+      max-width: 600px;
+      margin: 0 auto;
+      color: var(--text-muted);
+    }
+
+    /* Feature blocks — alternating layout */
+    .feature-block {
+      padding: var(--space-4xl) 0;
+    }
+    .feature-block:nth-child(even) {
+      background: var(--bg-secondary);
+    }
+    .feature-block-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-4xl);
+      align-items: center;
+    }
+    .feature-block:nth-child(even) .feature-block-grid {
+      direction: rtl;
+    }
+    .feature-block:nth-child(even) .feature-block-grid > * {
+      direction: ltr;
+    }
+    .feature-block-text h2 {
+      font-size: clamp(1.5rem, 3vw, 2.2rem);
+      margin-bottom: var(--space-md);
+    }
+    .feature-block-text p {
+      margin-bottom: var(--space-lg);
+      font-size: 1.05rem;
+    }
+    .feature-list {
+      list-style: none;
+    }
+    .feature-list li {
+      padding: var(--space-sm) 0;
+      color: var(--text-secondary);
+      font-size: 0.95rem;
+      display: flex;
+      align-items: flex-start;
+      gap: var(--space-sm);
+    }
+    .feature-list li::before {
+      content: '';
+      width: 18px;
+      height: 18px;
+      min-width: 18px;
+      border-radius: 50%;
+      background: rgba(34, 197, 94, 0.15);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 3px;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2322c55e' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='20 6 9 17 4 12'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: center;
+    }
+
+    /* Visual panels */
+    .feature-visual {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-xl);
+      padding: var(--space-xl);
+      position: relative;
+      overflow: hidden;
+    }
+    .feature-visual-inner {
+      background: var(--bg-primary);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: var(--space-lg);
+      font-family: var(--font-mono);
+      font-size: 0.82rem;
+      line-height: 1.8;
+      color: var(--text-muted);
+    }
+    .code-line { display: block; }
+    .code-keyword { color: var(--accent-light); }
+    .code-string { color: var(--accent-2); }
+    .code-comment { color: var(--text-muted); opacity: 0.5; }
+    .code-func { color: #f472b6; }
+    .code-num { color: var(--warning); }
+
+    /* Dashboard mockup */
+    .dashboard-mock {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-md);
+    }
+    .dash-stat {
+      background: var(--bg-primary);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: var(--space-md);
+    }
+    .dash-stat .label {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .dash-stat .value {
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: var(--text-primary);
+      letter-spacing: -0.02em;
+    }
+    .dash-stat .change {
+      font-size: 0.75rem;
+      color: var(--success);
+    }
+    .dash-chart {
+      grid-column: 1 / -1;
+      background: var(--bg-primary);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: var(--space-md);
+      height: 120px;
+      display: flex;
+      align-items: flex-end;
+      gap: 4px;
+    }
+    .dash-bar {
+      flex: 1;
+      background: var(--accent);
+      border-radius: 3px 3px 0 0;
+      opacity: 0.6;
+      transition: opacity var(--transition-fast);
+    }
+    .dash-bar:hover { opacity: 1; }
+
+    /* Workflow visual */
+    .workflow-visual {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--space-md);
+      flex-wrap: wrap;
+    }
+    .wf-node {
+      background: var(--bg-primary);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: var(--space-md) var(--space-lg);
+      text-align: center;
+      min-width: 100px;
+    }
+    .wf-node .wf-icon {
+      font-size: 1.3rem;
+      margin-bottom: 4px;
+    }
+    .wf-node .wf-label {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+    .wf-arrow {
+      color: var(--accent);
+      font-size: 1.2rem;
+    }
+
+    /* Integrations grid */
+    .integrations-section {
+      padding: var(--space-5xl) 0;
+    }
+    .integration-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: var(--space-md);
+    }
+    .integration-item {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: var(--space-lg);
+      text-align: center;
+      transition: all var(--transition-base);
+    }
+    .integration-item:hover {
+      border-color: var(--border-light);
+      transform: translateY(-2px);
+    }
+    .integration-item .int-icon {
+      font-size: 1.8rem;
+      margin-bottom: var(--space-sm);
+    }
+    .integration-item .int-name {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+    }
+
+    @media (max-width: 768px) {
+      .feature-block-grid { grid-template-columns: 1fr; gap: var(--space-xl); }
+      .feature-block:nth-child(even) .feature-block-grid { direction: ltr; }
+      .integration-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+  </style>
+</head>
+<body>
+  <!-- Navbar -->
+  <nav class="navbar">
+    <div class="container">
+      <a href="/" class="nav-logo">
+        <div class="logo-icon">X</div>
+        AgentX
+      </a>
+      <ul class="nav-links">
+        <li><a href="/features">Features</a></li>
+        <li><a href="/pricing">Pricing</a></li>
+        <li><a href="/about">About</a></li>
+        <li><a href="/contact">Contact</a></li>
+        <li class="nav-cta">
+          <a href="/pricing" class="btn btn-primary">Get Started</a>
+        </li>
+      </ul>
+      <button class="nav-toggle" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- Page Hero -->
+  <section class="page-hero">
+    <div class="bg-grid"></div>
+    <div class="container relative z-1">
+      <div class="badge fade-in">Platform</div>
+      <h1 class="fade-in fade-in-delay-1">Built for agents<br><span class="text-gradient">in production</span></h1>
+      <p class="large fade-in fade-in-delay-2">Everything you need to discover, deploy, monitor, and scale AI agents — from prototype to enterprise.</p>
+    </div>
+  </section>
+
+  <!-- Feature 1: Marketplace -->
+  <div class="feature-block">
+    <div class="container">
+      <div class="feature-block-grid">
+        <div class="feature-block-text fade-in">
+          <div class="badge">Discovery</div>
+          <h2>Agent Marketplace</h2>
+          <p>Browse a curated catalog of production-ready AI agents. Every agent is benchmarked, reviewed, and verified before listing.</p>
+          <ul class="feature-list">
+            <li>Search by task type, industry, model, or performance tier</li>
+            <li>Live demos and sandboxed testing before you commit</li>
+            <li>Verified publisher badges and community reviews</li>
+            <li>Transparent pricing with per-task and subscription models</li>
+          </ul>
+        </div>
+        <div class="feature-visual fade-in fade-in-delay-1">
+          <div class="feature-visual-inner">
+            <span class="code-line"><span class="code-comment">// Search the marketplace</span></span>
+            <span class="code-line"><span class="code-keyword">const</span> agents = <span class="code-keyword">await</span> agentx.<span class="code-func">search</span>({</span>
+            <span class="code-line">&nbsp;&nbsp;task: <span class="code-string">"revenue-ops"</span>,</span>
+            <span class="code-line">&nbsp;&nbsp;minRating: <span class="code-num">4.5</span>,</span>
+            <span class="code-line">&nbsp;&nbsp;verified: <span class="code-keyword">true</span></span>
+            <span class="code-line">});</span>
+            <span class="code-line">&nbsp;</span>
+            <span class="code-line"><span class="code-comment">// Deploy in one call</span></span>
+            <span class="code-line"><span class="code-keyword">const</span> deployment = <span class="code-keyword">await</span> agentx.<span class="code-func">deploy</span>(</span>
+            <span class="code-line">&nbsp;&nbsp;agents[<span class="code-num">0</span>].id,</span>
+            <span class="code-line">&nbsp;&nbsp;{ env: <span class="code-string">"production"</span> }</span>
+            <span class="code-line">);</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Feature 2: Monitoring -->
+  <div class="feature-block">
+    <div class="container">
+      <div class="feature-block-grid">
+        <div class="feature-block-text fade-in">
+          <div class="badge">Observability</div>
+          <h2>Real-Time Monitoring</h2>
+          <p>Complete visibility into every agent action, cost, and outcome. Know exactly what your agents are doing at all times.</p>
+          <ul class="feature-list">
+            <li>Live activity feeds with full action audit trails</li>
+            <li>Cost tracking with per-agent, per-task breakdowns</li>
+            <li>Performance metrics: latency, throughput, success rates</li>
+            <li>Custom alerts for anomalies, failures, or budget thresholds</li>
+          </ul>
+        </div>
+        <div class="feature-visual fade-in fade-in-delay-1">
+          <div class="dashboard-mock">
+            <div class="dash-stat">
+              <div class="label">Active Agents</div>
+              <div class="value">12</div>
+              <div class="change">+3 this week</div>
+            </div>
+            <div class="dash-stat">
+              <div class="label">Tasks / hr</div>
+              <div class="value">847</div>
+              <div class="change">+12.4%</div>
+            </div>
+            <div class="dash-stat">
+              <div class="label">Avg Latency</div>
+              <div class="value">230ms</div>
+              <div class="change">-18ms</div>
+            </div>
+            <div class="dash-stat">
+              <div class="label">Cost Today</div>
+              <div class="value">$4.82</div>
+              <div class="change">Under budget</div>
+            </div>
+            <div class="dash-chart">
+              <div class="dash-bar" style="height: 40%"></div>
+              <div class="dash-bar" style="height: 55%"></div>
+              <div class="dash-bar" style="height: 45%"></div>
+              <div class="dash-bar" style="height: 70%"></div>
+              <div class="dash-bar" style="height: 60%"></div>
+              <div class="dash-bar" style="height: 85%"></div>
+              <div class="dash-bar" style="height: 75%"></div>
+              <div class="dash-bar" style="height: 90%"></div>
+              <div class="dash-bar" style="height: 80%"></div>
+              <div class="dash-bar" style="height: 95%"></div>
+              <div class="dash-bar" style="height: 85%"></div>
+              <div class="dash-bar" style="height: 70%"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Feature 3: Workflows -->
+  <div class="feature-block">
+    <div class="container">
+      <div class="feature-block-grid">
+        <div class="feature-block-text fade-in">
+          <div class="badge">Automation</div>
+          <h2>Workflow Builder</h2>
+          <p>Chain agents into powerful multi-step workflows. Add conditional logic, human approvals, and automated retries.</p>
+          <ul class="feature-list">
+            <li>Visual workflow designer with drag-and-drop</li>
+            <li>Human-in-the-loop approval gates</li>
+            <li>Conditional branching and error handling</li>
+            <li>Scheduled triggers, webhooks, and event-driven execution</li>
+          </ul>
+        </div>
+        <div class="feature-visual fade-in fade-in-delay-1">
+          <div class="workflow-visual">
+            <div class="wf-node">
+              <div class="wf-icon">&#9889;</div>
+              <div class="wf-label">Trigger</div>
+            </div>
+            <div class="wf-arrow">&rarr;</div>
+            <div class="wf-node">
+              <div class="wf-icon">&#129302;</div>
+              <div class="wf-label">Agent 1</div>
+            </div>
+            <div class="wf-arrow">&rarr;</div>
+            <div class="wf-node">
+              <div class="wf-icon">&#128101;</div>
+              <div class="wf-label">Review</div>
+            </div>
+            <div class="wf-arrow">&rarr;</div>
+            <div class="wf-node">
+              <div class="wf-icon">&#129302;</div>
+              <div class="wf-label">Agent 2</div>
+            </div>
+            <div class="wf-arrow">&rarr;</div>
+            <div class="wf-node" style="border-color: var(--success);">
+              <div class="wf-icon">&#9989;</div>
+              <div class="wf-label">Deploy</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Feature 4: Security -->
+  <div class="feature-block">
+    <div class="container">
+      <div class="feature-block-grid">
+        <div class="feature-block-text fade-in">
+          <div class="badge">Enterprise</div>
+          <h2>Enterprise-Grade Security</h2>
+          <p>Built for regulated industries and security-conscious teams. Your data and your agents are protected at every layer.</p>
+          <ul class="feature-list">
+            <li>SOC 2 Type II certified infrastructure</li>
+            <li>Role-based access control with SSO / SAML</li>
+            <li>Full audit logs for every agent action</li>
+            <li>VPC peering, data residency options, custom SLAs</li>
+          </ul>
+        </div>
+        <div class="feature-visual fade-in fade-in-delay-1">
+          <div class="feature-visual-inner" style="text-align: center; padding: var(--space-2xl);">
+            <div style="font-size: 3rem; margin-bottom: var(--space-md);">
+              <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="var(--success)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11.5 14.5 15 10" stroke-width="2"/></svg>
+            </div>
+            <div style="font-size: 0.9rem; color: var(--text-secondary); font-family: var(--font-sans); margin-bottom: var(--space-lg);">Enterprise security verified</div>
+            <div style="display: flex; gap: var(--space-md); justify-content: center; flex-wrap: wrap;">
+              <span class="badge badge-success">SOC 2</span>
+              <span class="badge badge-success">GDPR</span>
+              <span class="badge badge-success">HIPAA Ready</span>
+              <span class="badge badge-success">SSO/SAML</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Integrations -->
+  <section class="integrations-section">
+    <div class="container">
+      <div class="section-header fade-in">
+        <div class="badge">Ecosystem</div>
+        <h2>Integrates with everything</h2>
+        <p>Connect your agents to the tools your team already uses.</p>
+      </div>
+      <div class="integration-grid stagger-children">
+        <div class="integration-item"><div class="int-icon">&#9889;</div><div class="int-name">Slack</div></div>
+        <div class="integration-item"><div class="int-icon">&#128187;</div><div class="int-name">GitHub</div></div>
+        <div class="integration-item"><div class="int-icon">&#128202;</div><div class="int-name">Notion</div></div>
+        <div class="integration-item"><div class="int-icon">&#128176;</div><div class="int-name">Stripe</div></div>
+        <div class="integration-item"><div class="int-icon">&#9729;&#65039;</div><div class="int-name">AWS</div></div>
+        <div class="integration-item"><div class="int-icon">&#128268;</div><div class="int-name">Zapier</div></div>
+        <div class="integration-item"><div class="int-icon">&#128232;</div><div class="int-name">SendGrid</div></div>
+        <div class="integration-item"><div class="int-icon">&#128295;</div><div class="int-name">REST API</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section style="padding: var(--space-5xl) 0; background: var(--bg-secondary);">
+    <div class="container">
+      <div style="text-align: center; max-width: 600px; margin: 0 auto;" class="fade-in">
+        <h2>Ready to see it in action?</h2>
+        <p style="margin: var(--space-md) 0 var(--space-xl); color: var(--text-muted);">Start with our free tier. Deploy your first agent in under 5 minutes.</p>
+        <div style="display: flex; gap: var(--space-md); justify-content: center; flex-wrap: wrap;">
+          <a href="/pricing" class="btn btn-primary btn-large">Start Free</a>
+          <a href="/contact" class="btn btn-secondary btn-large">Request a Demo</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a href="/" class="nav-logo" style="margin-bottom: 0.5rem;">
+            <div class="logo-icon">X</div>
+            AgentX
+          </a>
+          <p>The AI agent marketplace. Discover, deploy, and manage autonomous agents that handle real business tasks.</p>
+        </div>
+        <div class="footer-col">
+          <h4>Product</h4>
+          <ul>
+            <li><a href="/features">Features</a></li>
+            <li><a href="/pricing">Pricing</a></li>
+            <li><a href="#">Marketplace</a></li>
+            <li><a href="#">Documentation</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Company</h4>
+          <ul>
+            <li><a href="/about">About</a></li>
+            <li><a href="/contact">Contact</a></li>
+            <li><a href="#">Blog</a></li>
+            <li><a href="#">Careers</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Legal</h4>
+          <ul>
+            <li><a href="#">Privacy Policy</a></li>
+            <li><a href="#">Terms of Service</a></li>
+            <li><a href="#">Security</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>&copy; 2026 AgentX Market. All rights reserved.</span>
+        <div class="footer-social">
+          <a href="#" aria-label="Twitter">𝕏</a>
+          <a href="#" aria-label="GitHub">GH</a>
+          <a href="#" aria-label="LinkedIn">in</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="/js/main.js"></script>
+</body>
+</html>

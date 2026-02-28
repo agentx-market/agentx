@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contact — AgentX Market</title>
+  <meta name="description" content="Get in touch with the AgentX team. We'd love to hear from you — whether you're looking for a demo, have questions, or want to partner.">
+
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://agentx.market/contact">
+  <meta property="og:title" content="Contact — AgentX Market">
+  <meta property="og:description" content="Get in touch with the AgentX team.">
+
+  <link rel="icon" type="image/svg+xml" href="/img/favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+
+  <style>
+    .page-hero {
+      padding: 160px 0 80px;
+      position: relative;
+      text-align: center;
+    }
+    .page-hero h1 { margin-bottom: var(--space-md); }
+    .page-hero p.large {
+      max-width: 600px;
+      margin: 0 auto;
+      color: var(--text-muted);
+    }
+
+    .contact-layout {
+      display: grid;
+      grid-template-columns: 1fr 1.2fr;
+      gap: var(--space-4xl);
+      padding: var(--space-3xl) 0 var(--space-5xl);
+    }
+
+    .contact-info h3 {
+      margin-bottom: var(--space-lg);
+    }
+    .contact-info p {
+      margin-bottom: var(--space-xl);
+      font-size: 1rem;
+    }
+    .contact-channels {
+      list-style: none;
+      margin-bottom: var(--space-2xl);
+    }
+    .contact-channels li {
+      display: flex;
+      align-items: center;
+      gap: var(--space-md);
+      padding: var(--space-md) 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .contact-channels li:last-child { border: none; }
+    .channel-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: var(--radius-md);
+      background: var(--accent-bg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+      flex-shrink: 0;
+    }
+    .channel-text .channel-label {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .channel-text .channel-value {
+      font-size: 0.95rem;
+      color: var(--text-primary);
+      font-weight: 500;
+    }
+
+    .response-time {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: var(--space-lg);
+      display: flex;
+      align-items: center;
+      gap: var(--space-md);
+    }
+    .response-time .rt-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: rgba(34, 197, 94, 0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .response-time .rt-text {
+      font-size: 0.9rem;
+    }
+    .response-time .rt-text strong {
+      color: var(--text-primary);
+    }
+    .response-time .rt-text span {
+      color: var(--text-muted);
+    }
+
+    /* Form */
+    .contact-form-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-xl);
+      padding: var(--space-2xl);
+    }
+    .form-group {
+      margin-bottom: var(--space-lg);
+    }
+    .form-group label {
+      display: block;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+      margin-bottom: var(--space-sm);
+    }
+    .form-group input,
+    .form-group textarea,
+    .form-group select {
+      width: 100%;
+      padding: 0.7rem 1rem;
+      background: var(--bg-primary);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      color: var(--text-primary);
+      font-family: var(--font-sans);
+      font-size: 0.9rem;
+      outline: none;
+      transition: border-color var(--transition-fast);
+    }
+    .form-group input::placeholder,
+    .form-group textarea::placeholder {
+      color: var(--text-muted);
+    }
+    .form-group input:focus,
+    .form-group textarea:focus,
+    .form-group select:focus {
+      border-color: var(--accent);
+    }
+    .form-group textarea {
+      resize: vertical;
+      min-height: 120px;
+    }
+    .form-group select {
+      -webkit-appearance: none;
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2371717a' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 12px center;
+      padding-right: 36px;
+    }
+    .form-group select option {
+      background: var(--bg-primary);
+      color: var(--text-primary);
+    }
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-md);
+    }
+    .form-submit {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .form-submit .note {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    /* Success state */
+    .form-success {
+      display: none;
+      text-align: center;
+      padding: var(--space-3xl) var(--space-xl);
+    }
+    .form-success.show {
+      display: block;
+    }
+    .form-success .check-circle {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      background: rgba(34, 197, 94, 0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto var(--space-lg);
+      font-size: 1.8rem;
+    }
+
+    @media (max-width: 768px) {
+      .contact-layout { grid-template-columns: 1fr; gap: var(--space-xl); }
+      .form-row { grid-template-columns: 1fr; }
+      .form-submit { flex-direction: column; gap: var(--space-md); }
+    }
+  </style>
+</head>
+<body>
+  <!-- Navbar -->
+  <nav class="navbar">
+    <div class="container">
+      <a href="/" class="nav-logo">
+        <div class="logo-icon">X</div>
+        AgentX
+      </a>
+      <ul class="nav-links">
+        <li><a href="/features">Features</a></li>
+        <li><a href="/pricing">Pricing</a></li>
+        <li><a href="/about">About</a></li>
+        <li><a href="/contact">Contact</a></li>
+        <li class="nav-cta">
+          <a href="/pricing" class="btn btn-primary">Get Started</a>
+        </li>
+      </ul>
+      <button class="nav-toggle" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- Page Hero -->
+  <section class="page-hero">
+    <div class="bg-grid"></div>
+    <div class="container relative z-1">
+      <div class="badge fade-in">Contact</div>
+      <h1 class="fade-in fade-in-delay-1">Let's talk</h1>
+      <p class="large fade-in fade-in-delay-2">Whether you need a demo, have a question, or want to explore enterprise options — we're here to help.</p>
+    </div>
+  </section>
+
+  <!-- Contact Layout -->
+  <section style="padding: 0 0 var(--space-5xl);">
+    <div class="container">
+      <div class="contact-layout">
+        <!-- Left: Info -->
+        <div class="contact-info fade-in">
+          <h3>Get in touch</h3>
+          <p>We typically respond within a few hours during business hours. For urgent issues, reach out on Twitter.</p>
+
+          <ul class="contact-channels">
+            <li>
+              <div class="channel-icon">&#9993;</div>
+              <div class="channel-text">
+                <div class="channel-label">Email</div>
+                <div class="channel-value">hello@agentx.market</div>
+              </div>
+            </li>
+            <li>
+              <div class="channel-icon">&#128172;</div>
+              <div class="channel-text">
+                <div class="channel-label">Sales</div>
+                <div class="channel-value">sales@agentx.market</div>
+              </div>
+            </li>
+            <li>
+              <div class="channel-icon">𝕏</div>
+              <div class="channel-text">
+                <div class="channel-label">Twitter</div>
+                <div class="channel-value">@agentxmarket</div>
+              </div>
+            </li>
+          </ul>
+
+          <div class="response-time">
+            <div class="rt-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--success)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            </div>
+            <div class="rt-text">
+              <strong>Average response time</strong><br>
+              <span>Under 4 hours during business hours (PT)</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right: Form -->
+        <div class="contact-form-card fade-in fade-in-delay-1">
+          <form id="contact-form">
+            <div class="form-row">
+              <div class="form-group">
+                <label for="first-name">First name</label>
+                <input type="text" id="first-name" name="firstName" placeholder="Jane" required>
+              </div>
+              <div class="form-group">
+                <label for="last-name">Last name</label>
+                <input type="text" id="last-name" name="lastName" placeholder="Smith">
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="email">Work email</label>
+              <input type="email" id="email" name="email" placeholder="jane@company.com" required>
+            </div>
+            <div class="form-group">
+              <label for="company">Company</label>
+              <input type="text" id="company" name="company" placeholder="Acme Inc.">
+            </div>
+            <div class="form-group">
+              <label for="subject">I'm interested in...</label>
+              <select id="subject" name="subject">
+                <option value="">Select a topic</option>
+                <option value="demo">Product demo</option>
+                <option value="enterprise">Enterprise plan</option>
+                <option value="partnership">Partnership</option>
+                <option value="support">Technical support</option>
+                <option value="other">Something else</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="message">Message</label>
+              <textarea id="message" name="message" placeholder="Tell us about your project and how we can help..." required></textarea>
+            </div>
+            <div class="form-submit">
+              <span class="note">We'll never share your info with third parties.</span>
+              <button type="submit" class="btn btn-primary btn-large">Send Message</button>
+            </div>
+          </form>
+
+          <div class="form-success" id="form-success">
+            <div class="check-circle">&#10003;</div>
+            <h3>Message sent!</h3>
+            <p style="margin-top: var(--space-md);">Thanks for reaching out. We'll get back to you within 24 hours.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a href="/" class="nav-logo" style="margin-bottom: 0.5rem;">
+            <div class="logo-icon">X</div>
+            AgentX
+          </a>
+          <p>The AI agent marketplace. Discover, deploy, and manage autonomous agents that handle real business tasks.</p>
+        </div>
+        <div class="footer-col">
+          <h4>Product</h4>
+          <ul>
+            <li><a href="/features">Features</a></li>
+            <li><a href="/pricing">Pricing</a></li>
+            <li><a href="#">Marketplace</a></li>
+            <li><a href="#">Documentation</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Company</h4>
+          <ul>
+            <li><a href="/about">About</a></li>
+            <li><a href="/contact">Contact</a></li>
+            <li><a href="#">Blog</a></li>
+            <li><a href="#">Careers</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Legal</h4>
+          <ul>
+            <li><a href="#">Privacy Policy</a></li>
+            <li><a href="#">Terms of Service</a></li>
+            <li><a href="#">Security</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>&copy; 2026 AgentX Market. All rights reserved.</span>
+        <div class="footer-social">
+          <a href="#" aria-label="Twitter">𝕏</a>
+          <a href="#" aria-label="GitHub">GH</a>
+          <a href="#" aria-label="LinkedIn">in</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="/js/main.js"></script>
+  <script>
+    document.getElementById('contact-form').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      const btn = this.querySelector('button[type="submit"]');
+      btn.disabled = true;
+      btn.textContent = 'Sending...';
+      try {
+        const data = Object.fromEntries(new FormData(this));
+        const resp = await fetch('/api/contact', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data),
+        });
+        if (!resp.ok) throw new Error('Server error');
+        this.style.display = 'none';
+        document.getElementById('form-success').classList.add('show');
+      } catch (err) {
+        btn.disabled = false;
+        btn.textContent = 'Send Message';
+        alert('Something went wrong. Please try again or email hello@agentx.market directly.');
+      }
+    });
+  </script>
+</body>
+</html>

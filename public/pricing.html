@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pricing — AgentX Market</title>
+  <meta name="description" content="Simple, transparent pricing for AI agents. Start free, scale as you grow. No hidden fees.">
+
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://agentx.market/pricing">
+  <meta property="og:title" content="Pricing — AgentX Market">
+  <meta property="og:description" content="Simple, transparent pricing. Start free, scale as you grow.">
+
+  <link rel="icon" type="image/svg+xml" href="/img/favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+
+  <style>
+    .page-hero {
+      padding: 160px 0 80px;
+      position: relative;
+      text-align: center;
+    }
+    .page-hero h1 { margin-bottom: var(--space-md); }
+    .page-hero p.large {
+      max-width: 600px;
+      margin: 0 auto;
+      color: var(--text-muted);
+    }
+
+    /* Pricing Toggle */
+    .pricing-toggle {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--space-md);
+      margin: var(--space-2xl) 0;
+    }
+    .pricing-toggle span {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: color var(--transition-fast);
+    }
+    .pricing-toggle span.active {
+      color: var(--text-primary);
+      font-weight: 600;
+    }
+    .toggle-switch {
+      width: 48px;
+      height: 26px;
+      background: var(--border-light);
+      border-radius: 13px;
+      position: relative;
+      cursor: pointer;
+      transition: background var(--transition-fast);
+    }
+    .toggle-switch.active {
+      background: var(--accent);
+    }
+    .toggle-switch::after {
+      content: '';
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      background: white;
+      border-radius: 50%;
+      top: 3px;
+      left: 3px;
+      transition: transform var(--transition-fast);
+    }
+    .toggle-switch.active::after {
+      transform: translateX(22px);
+    }
+    .save-badge {
+      background: rgba(34, 197, 94, 0.1);
+      color: var(--success);
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 2px 8px;
+      border-radius: var(--radius-full);
+    }
+
+    /* Pricing Cards */
+    .pricing-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--space-xl);
+      align-items: start;
+    }
+    .pricing-card {
+      padding: var(--space-2xl);
+      position: relative;
+    }
+    .pricing-card.featured {
+      border-color: var(--accent);
+      box-shadow: var(--shadow-glow);
+    }
+    .pricing-card.featured::before {
+      content: 'Most Popular';
+      position: absolute;
+      top: -12px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--accent);
+      color: white;
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 4px 16px;
+      border-radius: var(--radius-full);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .pricing-tier {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: var(--space-md);
+    }
+    .pricing-price {
+      margin-bottom: var(--space-lg);
+    }
+    .pricing-price .amount {
+      font-size: 3.5rem;
+      font-weight: 900;
+      color: var(--text-primary);
+      letter-spacing: -0.04em;
+      line-height: 1;
+    }
+    .pricing-price .period {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+    }
+    .pricing-price .note {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-top: var(--space-xs);
+    }
+    .pricing-desc {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      margin-bottom: var(--space-xl);
+      padding-bottom: var(--space-lg);
+      border-bottom: 1px solid var(--border);
+    }
+    .pricing-features {
+      list-style: none;
+      margin-bottom: var(--space-xl);
+    }
+    .pricing-features li {
+      padding: var(--space-sm) 0;
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+    }
+    .pricing-features li::before {
+      content: '✓';
+      color: var(--success);
+      font-weight: 700;
+      font-size: 0.85rem;
+    }
+    .pricing-features li.disabled {
+      color: var(--text-muted);
+      opacity: 0.5;
+    }
+    .pricing-features li.disabled::before {
+      content: '—';
+      color: var(--text-muted);
+    }
+    .pricing-card .btn {
+      width: 100%;
+    }
+
+    @media (max-width: 1024px) {
+      .pricing-grid { grid-template-columns: 1fr; max-width: 420px; margin: 0 auto; }
+    }
+
+    /* FAQ */
+    .faq-section {
+      padding: var(--space-5xl) 0;
+    }
+    .faq-list {
+      max-width: 700px;
+      margin: 0 auto;
+    }
+    .faq-item {
+      border-bottom: 1px solid var(--border);
+    }
+    .faq-question {
+      padding: var(--space-lg) 0;
+      font-size: 1.05rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: none;
+      border: none;
+      width: 100%;
+      text-align: left;
+      font-family: var(--font-sans);
+    }
+    .faq-question:hover {
+      color: var(--accent-light);
+    }
+    .faq-question .icon {
+      font-size: 1.2rem;
+      transition: transform var(--transition-fast);
+      color: var(--text-muted);
+    }
+    .faq-item.open .faq-question .icon {
+      transform: rotate(45deg);
+    }
+    .faq-answer {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height var(--transition-base);
+    }
+    .faq-item.open .faq-answer {
+      max-height: 200px;
+    }
+    .faq-answer p {
+      padding-bottom: var(--space-lg);
+      font-size: 0.95rem;
+      color: var(--text-muted);
+    }
+
+    /* Comparison table */
+    .compare-section {
+      background: var(--bg-secondary);
+      padding: var(--space-5xl) 0;
+    }
+    .compare-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.9rem;
+    }
+    .compare-table th {
+      text-align: left;
+      padding: var(--space-md);
+      border-bottom: 1px solid var(--border);
+      color: var(--text-muted);
+      font-weight: 600;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .compare-table td {
+      padding: var(--space-md);
+      border-bottom: 1px solid var(--border);
+      color: var(--text-secondary);
+    }
+    .compare-table td:first-child {
+      font-weight: 500;
+      color: var(--text-primary);
+    }
+    .compare-table .check {
+      color: var(--success);
+      font-weight: 700;
+    }
+    .compare-table .dash {
+      color: var(--text-muted);
+      opacity: 0.3;
+    }
+  </style>
+</head>
+<body>
+  <!-- Navbar -->
+  <nav class="navbar">
+    <div class="container">
+      <a href="/" class="nav-logo">
+        <div class="logo-icon">X</div>
+        AgentX
+      </a>
+      <ul class="nav-links">
+        <li><a href="/features">Features</a></li>
+        <li><a href="/pricing">Pricing</a></li>
+        <li><a href="/about">About</a></li>
+        <li><a href="/contact">Contact</a></li>
+        <li class="nav-cta">
+          <a href="/pricing" class="btn btn-primary">Get Started</a>
+        </li>
+      </ul>
+      <button class="nav-toggle" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- Page Hero -->
+  <section class="page-hero">
+    <div class="bg-grid"></div>
+    <div class="container relative z-1">
+      <div class="badge fade-in">Pricing</div>
+      <h1 class="fade-in fade-in-delay-1">Simple, transparent<br><span class="text-gradient">pricing</span></h1>
+      <p class="large fade-in fade-in-delay-2">Start free. Scale as you grow. No hidden fees, no surprises.</p>
+
+      <div class="pricing-toggle fade-in fade-in-delay-3">
+        <span class="active" id="monthly-label">Monthly</span>
+        <div class="toggle-switch" id="billing-toggle"></div>
+        <span id="annual-label">Annual</span>
+        <span class="save-badge">Save 20%</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Pricing Cards -->
+  <section style="padding: 0 0 var(--space-5xl);">
+    <div class="container">
+      <div class="pricing-grid stagger-children">
+        <!-- Starter -->
+        <div class="card pricing-card">
+          <div class="pricing-tier">Starter</div>
+          <div class="pricing-price">
+            <span class="amount" data-monthly="0" data-annual="0">$0</span>
+            <span class="period">/ month</span>
+            <div class="note">Free forever</div>
+          </div>
+          <div class="pricing-desc">Perfect for trying out AI agents and personal projects.</div>
+          <ul class="pricing-features">
+            <li>3 active agents</li>
+            <li>1,000 tasks / month</li>
+            <li>Basic monitoring dashboard</li>
+            <li>Community support</li>
+            <li>7-day log retention</li>
+            <li class="disabled">Workflow builder</li>
+            <li class="disabled">Custom integrations</li>
+            <li class="disabled">Priority support</li>
+          </ul>
+          <a href="#" class="btn btn-secondary">Get Started Free</a>
+        </div>
+
+        <!-- Pro -->
+        <div class="card pricing-card featured">
+          <div class="pricing-tier">Pro</div>
+          <div class="pricing-price">
+            <span class="amount" data-monthly="49" data-annual="39">$49</span>
+            <span class="period">/ month</span>
+            <div class="note price-note">per seat, billed monthly</div>
+          </div>
+          <div class="pricing-desc">For teams running agents in production at scale.</div>
+          <ul class="pricing-features">
+            <li>Unlimited agents</li>
+            <li>50,000 tasks / month</li>
+            <li>Advanced monitoring + alerting</li>
+            <li>Workflow builder</li>
+            <li>30-day log retention</li>
+            <li>All integrations</li>
+            <li>Priority email support</li>
+            <li>Team collaboration</li>
+          </ul>
+          <a href="#" class="btn btn-primary">Start 14-Day Free Trial</a>
+        </div>
+
+        <!-- Enterprise -->
+        <div class="card pricing-card">
+          <div class="pricing-tier">Enterprise</div>
+          <div class="pricing-price">
+            <span class="amount">Custom</span>
+            <span class="period"></span>
+            <div class="note">Tailored to your needs</div>
+          </div>
+          <div class="pricing-desc">For organizations that need security, compliance, and scale.</div>
+          <ul class="pricing-features">
+            <li>Everything in Pro</li>
+            <li>Unlimited tasks</li>
+            <li>SSO / SAML authentication</li>
+            <li>VPC peering & data residency</li>
+            <li>Custom SLAs (up to 99.99%)</li>
+            <li>Dedicated account manager</li>
+            <li>On-premise deployment option</li>
+            <li>SOC 2 & HIPAA compliance</li>
+          </ul>
+          <a href="/contact" class="btn btn-secondary">Contact Sales</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Comparison Table -->
+  <section class="compare-section">
+    <div class="container">
+      <div class="section-header fade-in">
+        <h2>Compare plans</h2>
+        <p>See exactly what's included in each tier.</p>
+      </div>
+      <div style="overflow-x: auto;">
+        <table class="compare-table fade-in">
+          <thead>
+            <tr>
+              <th>Feature</th>
+              <th>Starter</th>
+              <th>Pro</th>
+              <th>Enterprise</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Active agents</td>
+              <td>3</td>
+              <td>Unlimited</td>
+              <td>Unlimited</td>
+            </tr>
+            <tr>
+              <td>Monthly tasks</td>
+              <td>1,000</td>
+              <td>50,000</td>
+              <td>Unlimited</td>
+            </tr>
+            <tr>
+              <td>Team members</td>
+              <td>1</td>
+              <td>Up to 25</td>
+              <td>Unlimited</td>
+            </tr>
+            <tr>
+              <td>Monitoring</td>
+              <td>Basic</td>
+              <td>Advanced + Alerts</td>
+              <td>Custom dashboards</td>
+            </tr>
+            <tr>
+              <td>Workflow builder</td>
+              <td><span class="dash">—</span></td>
+              <td><span class="check">✓</span></td>
+              <td><span class="check">✓</span></td>
+            </tr>
+            <tr>
+              <td>Integrations</td>
+              <td>3 included</td>
+              <td>All included</td>
+              <td>All + Custom</td>
+            </tr>
+            <tr>
+              <td>SSO / SAML</td>
+              <td><span class="dash">—</span></td>
+              <td><span class="dash">—</span></td>
+              <td><span class="check">✓</span></td>
+            </tr>
+            <tr>
+              <td>VPC peering</td>
+              <td><span class="dash">—</span></td>
+              <td><span class="dash">—</span></td>
+              <td><span class="check">✓</span></td>
+            </tr>
+            <tr>
+              <td>SLA</td>
+              <td>Best effort</td>
+              <td>99.9%</td>
+              <td>Up to 99.99%</td>
+            </tr>
+            <tr>
+              <td>Support</td>
+              <td>Community</td>
+              <td>Priority email</td>
+              <td>Dedicated + Slack</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="faq-section">
+    <div class="container">
+      <div class="section-header fade-in">
+        <h2>Frequently asked questions</h2>
+      </div>
+      <div class="faq-list fade-in">
+        <div class="faq-item">
+          <button class="faq-question">
+            What counts as a "task"?
+            <span class="icon">+</span>
+          </button>
+          <div class="faq-answer">
+            <p>A task is a single unit of work completed by an agent — for example, checking a fact, processing a payment, or analyzing a document. Multi-step workflows count as one task per workflow execution.</p>
+          </div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-question">
+            Can I switch plans anytime?
+            <span class="icon">+</span>
+          </button>
+          <div class="faq-answer">
+            <p>Yes. Upgrade or downgrade at any time. When upgrading, you'll be prorated for the remainder of your billing period. When downgrading, the change takes effect at your next billing date.</p>
+          </div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-question">
+            Is there a free trial for Pro?
+            <span class="icon">+</span>
+          </button>
+          <div class="faq-answer">
+            <p>Yes — Pro comes with a 14-day free trial with full access to all features. No credit card required to start.</p>
+          </div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-question">
+            What happens if I exceed my task limit?
+            <span class="icon">+</span>
+          </button>
+          <div class="faq-answer">
+            <p>On the Starter plan, agents pause when you hit the limit. On Pro, you can set up automatic overage at $0.002 per additional task, or choose to pause. You're always in control.</p>
+          </div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-question">
+            Do you offer discounts for startups?
+            <span class="icon">+</span>
+          </button>
+          <div class="faq-answer">
+            <p>Yes! We offer 50% off Pro for the first year for qualifying startups. Contact us at hello@agentx.market to apply.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section style="padding: var(--space-5xl) 0; background: var(--bg-secondary);">
+    <div class="container">
+      <div style="text-align: center; max-width: 600px; margin: 0 auto;" class="fade-in">
+        <h2>Start building with agents today</h2>
+        <p style="margin: var(--space-md) 0 var(--space-xl); color: var(--text-muted);">Free tier includes everything you need to get started. No credit card required.</p>
+        <a href="#" class="btn btn-primary btn-large">Get Started Free</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a href="/" class="nav-logo" style="margin-bottom: 0.5rem;">
+            <div class="logo-icon">X</div>
+            AgentX
+          </a>
+          <p>The AI agent marketplace. Discover, deploy, and manage autonomous agents that handle real business tasks.</p>
+        </div>
+        <div class="footer-col">
+          <h4>Product</h4>
+          <ul>
+            <li><a href="/features">Features</a></li>
+            <li><a href="/pricing">Pricing</a></li>
+            <li><a href="#">Marketplace</a></li>
+            <li><a href="#">Documentation</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Company</h4>
+          <ul>
+            <li><a href="/about">About</a></li>
+            <li><a href="/contact">Contact</a></li>
+            <li><a href="#">Blog</a></li>
+            <li><a href="#">Careers</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Legal</h4>
+          <ul>
+            <li><a href="#">Privacy Policy</a></li>
+            <li><a href="#">Terms of Service</a></li>
+            <li><a href="#">Security</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>&copy; 2026 AgentX Market. All rights reserved.</span>
+        <div class="footer-social">
+          <a href="#" aria-label="Twitter">𝕏</a>
+          <a href="#" aria-label="GitHub">GH</a>
+          <a href="#" aria-label="LinkedIn">in</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="/js/main.js"></script>
+  <script>
+    // Pricing toggle
+    const toggle = document.getElementById('billing-toggle');
+    const monthlyLabel = document.getElementById('monthly-label');
+    const annualLabel = document.getElementById('annual-label');
+    let isAnnual = false;
+
+    toggle.addEventListener('click', () => {
+      isAnnual = !isAnnual;
+      toggle.classList.toggle('active', isAnnual);
+      monthlyLabel.classList.toggle('active', !isAnnual);
+      annualLabel.classList.toggle('active', isAnnual);
+
+      document.querySelectorAll('.pricing-price .amount').forEach(el => {
+        const monthly = el.getAttribute('data-monthly');
+        const annual = el.getAttribute('data-annual');
+        if (monthly && annual) {
+          el.textContent = '$' + (isAnnual ? annual : monthly);
+        }
+      });
+
+      document.querySelectorAll('.price-note').forEach(el => {
+        el.textContent = isAnnual ? 'per seat, billed annually' : 'per seat, billed monthly';
+      });
+    });
+
+    // FAQ accordion
+    document.querySelectorAll('.faq-question').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const item = btn.parentElement;
+        const wasOpen = item.classList.contains('open');
+        document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
+        if (!wasOpen) item.classList.add('open');
+      });
+    });
+  </script>
+</body>
+</html>

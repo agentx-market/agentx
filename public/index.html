@@ -1,0 +1,890 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AgentX — The AI Agent Marketplace</title>
+  <meta name="description" content="Discover, deploy, and manage autonomous AI agents. AgentX is the marketplace where businesses find production-ready AI agents that actually work.">
+  <meta name="keywords" content="AI agents, autonomous agents, AI marketplace, agent deployment, AI automation, agent management">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://agentx.market/">
+  <meta property="og:title" content="AgentX — The AI Agent Marketplace">
+  <meta property="og:description" content="Discover, deploy, and manage autonomous AI agents. The marketplace for production-ready AI that actually works.">
+  <meta property="og:image" content="https://agentx.market/img/og-image.png">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="/img/favicon.svg">
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="/css/style.css">
+
+  <!-- Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "AgentX",
+    "applicationCategory": "BusinessApplication",
+    "description": "The AI Agent Marketplace — discover, deploy, and manage autonomous AI agents.",
+    "url": "https://agentx.market",
+    "operatingSystem": "Web",
+    "offers": {
+      "@type": "AggregateOffer",
+      "lowPrice": "0",
+      "highPrice": "499",
+      "priceCurrency": "USD"
+    }
+  }
+  </script>
+
+  <style>
+    /* --- Hero --- */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      padding-top: 80px;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero-content {
+      position: relative;
+      z-index: 1;
+      max-width: 750px;
+    }
+    .hero h1 {
+      margin-bottom: var(--space-lg);
+      font-weight: 900;
+      letter-spacing: -0.04em;
+    }
+    .hero p.large {
+      margin-bottom: var(--space-2xl);
+      max-width: 580px;
+    }
+    .hero-ctas {
+      display: flex;
+      gap: var(--space-md);
+      flex-wrap: wrap;
+      margin-bottom: var(--space-3xl);
+    }
+    .hero-visual {
+      position: absolute;
+      right: -60px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 500px;
+      height: 500px;
+      z-index: 0;
+      opacity: 0.7;
+    }
+    .hero-orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(80px);
+    }
+    .hero-orb-1 {
+      width: 400px;
+      height: 400px;
+      background: var(--accent);
+      opacity: 0.15;
+      top: 0;
+      right: 0;
+      animation: float 8s ease-in-out infinite;
+    }
+    .hero-orb-2 {
+      width: 300px;
+      height: 300px;
+      background: var(--accent-2);
+      opacity: 0.1;
+      bottom: 0;
+      left: 0;
+      animation: float 10s ease-in-out infinite reverse;
+    }
+
+    .hero-stats {
+      display: flex;
+      gap: var(--space-3xl);
+    }
+    .hero-stat {
+      text-align: left;
+    }
+    .hero-stat .number {
+      font-size: 2.5rem;
+      font-weight: 800;
+      color: var(--text-primary);
+      letter-spacing: -0.03em;
+      line-height: 1;
+    }
+    .hero-stat .label {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    /* Hero terminal preview */
+    .hero-preview {
+      margin-top: var(--space-4xl);
+      position: relative;
+      z-index: 1;
+      max-width: 680px;
+    }
+    .hero-preview .terminal-window {
+      box-shadow: 0 25px 60px rgba(0,0,0,0.5), 0 0 40px var(--accent-glow);
+    }
+
+    /* For Builders section */
+    .builders-section {
+      padding: var(--space-5xl) 0;
+    }
+    .builders-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-3xl);
+    }
+    .builders-side {
+      padding: var(--space-2xl);
+      border-radius: var(--radius-xl);
+      position: relative;
+      overflow: hidden;
+    }
+    .builders-side h3 {
+      font-size: 1.5rem;
+      margin-bottom: var(--space-md);
+    }
+    .builders-side p {
+      margin-bottom: var(--space-lg);
+    }
+    .builders-side.use-agents {
+      background: linear-gradient(135deg, rgba(109, 92, 255, 0.08), rgba(0, 212, 170, 0.04));
+      border: 1px solid rgba(109, 92, 255, 0.15);
+    }
+    .builders-side.build-agents {
+      background: linear-gradient(135deg, rgba(0, 212, 170, 0.08), rgba(109, 92, 255, 0.04));
+      border: 1px solid rgba(0, 212, 170, 0.15);
+    }
+    .builder-perks {
+      list-style: none;
+      margin-bottom: var(--space-xl);
+    }
+    .builder-perks li {
+      padding: 6px 0;
+      font-size: 0.95rem;
+      color: var(--text-secondary);
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+    }
+    .builder-perks li::before {
+      content: '>';
+      color: var(--accent-2);
+      font-family: var(--font-mono);
+      font-weight: 700;
+    }
+
+    @media (max-width: 768px) {
+      .hero { min-height: auto; padding: 120px 0 60px; }
+      .hero-stats { gap: var(--space-xl); flex-wrap: wrap; }
+      .hero-visual { display: none; }
+      .builders-grid { grid-template-columns: 1fr; }
+    }
+
+    /* --- Logos bar --- */
+    .logos-bar {
+      padding: var(--space-3xl) 0;
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+    .logos-bar p {
+      text-align: center;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--text-muted);
+      margin-bottom: var(--space-xl);
+    }
+    .logos-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--space-3xl);
+      flex-wrap: wrap;
+      opacity: 0.4;
+    }
+    .logo-item {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--text-secondary);
+      letter-spacing: -0.02em;
+      white-space: nowrap;
+    }
+
+    /* --- Features Section --- */
+    .features-section {
+      position: relative;
+    }
+    .feature-card {
+      padding: var(--space-2xl);
+    }
+    .feature-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: var(--radius-md);
+      background: var(--accent-bg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: var(--space-lg);
+      font-size: 1.3rem;
+    }
+    .feature-card h3 {
+      margin-bottom: var(--space-sm);
+      font-size: 1.2rem;
+    }
+    .feature-card p {
+      font-size: 0.95rem;
+      color: var(--text-muted);
+    }
+
+    /* --- How It Works --- */
+    .steps-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--space-xl);
+      position: relative;
+    }
+    .steps-grid::before {
+      content: '';
+      position: absolute;
+      top: 40px;
+      left: 16.67%;
+      right: 16.67%;
+      height: 2px;
+      background: linear-gradient(90deg, var(--accent), var(--accent-2));
+      opacity: 0.3;
+    }
+    .step {
+      text-align: center;
+      position: relative;
+      z-index: 1;
+    }
+    .step-number {
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background: var(--bg-primary);
+      border: 2px solid var(--accent);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto var(--space-lg);
+      font-weight: 800;
+      font-size: 1.1rem;
+      color: var(--accent-light);
+    }
+    .step h3 {
+      margin-bottom: var(--space-sm);
+    }
+    .step p {
+      font-size: 0.95rem;
+      color: var(--text-muted);
+      max-width: 280px;
+      margin: 0 auto;
+    }
+    @media (max-width: 768px) {
+      .steps-grid { grid-template-columns: 1fr; gap: var(--space-2xl); }
+      .steps-grid::before { display: none; }
+    }
+
+    /* --- Agent Showcase --- */
+    .agent-card {
+      padding: var(--space-xl);
+      display: flex;
+      flex-direction: column;
+    }
+    .agent-header {
+      display: flex;
+      align-items: center;
+      gap: var(--space-md);
+      margin-bottom: var(--space-lg);
+    }
+    .agent-avatar {
+      width: 48px;
+      height: 48px;
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.3rem;
+      font-weight: 800;
+      color: white;
+    }
+    .agent-info h4 {
+      font-size: 1rem;
+      margin-bottom: 2px;
+    }
+    .agent-info span {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+    .agent-tags {
+      display: flex;
+      gap: var(--space-xs);
+      flex-wrap: wrap;
+      margin-bottom: var(--space-md);
+    }
+    .agent-tag {
+      padding: 2px 10px;
+      font-size: 0.75rem;
+      border-radius: var(--radius-full);
+      background: var(--bg-tertiary);
+      color: var(--text-muted);
+      border: 1px solid var(--border);
+    }
+    .agent-card p {
+      font-size: 0.9rem;
+      flex: 1;
+    }
+    .agent-stats-row {
+      display: flex;
+      gap: var(--space-lg);
+      margin-top: var(--space-lg);
+      padding-top: var(--space-md);
+      border-top: 1px solid var(--border);
+    }
+    .agent-stat-sm {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+    .agent-stat-sm strong {
+      color: var(--text-secondary);
+    }
+
+    /* --- Testimonials --- */
+    .testimonial-card {
+      padding: var(--space-xl);
+    }
+    .testimonial-card .stars {
+      color: var(--warning);
+      margin-bottom: var(--space-md);
+      font-size: 0.9rem;
+      letter-spacing: 2px;
+    }
+    .testimonial-card blockquote {
+      font-size: 1rem;
+      line-height: 1.7;
+      color: var(--text-secondary);
+      margin-bottom: var(--space-lg);
+      font-style: italic;
+    }
+    .testimonial-author {
+      display: flex;
+      align-items: center;
+      gap: var(--space-md);
+    }
+    .testimonial-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 0.85rem;
+      color: white;
+    }
+    .testimonial-meta .name {
+      font-weight: 600;
+      font-size: 0.9rem;
+      color: var(--text-primary);
+    }
+    .testimonial-meta .role {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    /* --- CTA Section --- */
+    .cta-section {
+      position: relative;
+      overflow: hidden;
+    }
+    .cta-box {
+      position: relative;
+      background: linear-gradient(135deg, rgba(109, 92, 255, 0.1), rgba(0, 212, 170, 0.05));
+      border: 1px solid rgba(109, 92, 255, 0.2);
+      border-radius: var(--radius-xl);
+      padding: var(--space-4xl) var(--space-3xl);
+      text-align: center;
+      overflow: hidden;
+    }
+    .cta-box::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle at 50% 50%, var(--accent-glow), transparent 50%);
+      opacity: 0.15;
+      pointer-events: none;
+    }
+    .cta-box h2 {
+      position: relative;
+    }
+    .cta-box p {
+      position: relative;
+      max-width: 500px;
+      margin: var(--space-md) auto var(--space-xl);
+    }
+
+    /* --- Email Capture --- */
+    .email-capture {
+      display: flex;
+      gap: var(--space-sm);
+      max-width: 440px;
+      margin: 0 auto;
+      position: relative;
+    }
+    .email-capture input {
+      flex: 1;
+      padding: 0.7rem 1.2rem;
+      border-radius: var(--radius-full);
+      border: 1px solid var(--border-light);
+      background: var(--bg-tertiary);
+      color: var(--text-primary);
+      font-family: var(--font-sans);
+      font-size: 0.9rem;
+      outline: none;
+      transition: border-color var(--transition-fast);
+    }
+    .email-capture input::placeholder {
+      color: var(--text-muted);
+    }
+    .email-capture input:focus {
+      border-color: var(--accent);
+    }
+  </style>
+</head>
+<body class="noise-overlay">
+  <!-- Navbar -->
+  <nav class="navbar">
+    <div class="container">
+      <a href="/" class="nav-logo">
+        <div class="logo-icon">X</div>
+        AgentX
+      </a>
+      <ul class="nav-links">
+        <li><a href="/features">Features</a></li>
+        <li><a href="/pricing">Pricing</a></li>
+        <li><a href="/about">About</a></li>
+        <li><a href="/contact">Contact</a></li>
+        <li class="nav-cta">
+          <a href="/pricing" class="btn btn-primary">Get Started</a>
+        </li>
+      </ul>
+      <button class="nav-toggle" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="bg-grid"></div>
+    <div class="hero-visual">
+      <div class="hero-orb hero-orb-1"></div>
+      <div class="hero-orb hero-orb-2"></div>
+    </div>
+    <div class="container">
+      <div class="hero-content">
+        <div class="badge badge-shimmer fade-in">
+          <span class="dot"></span>
+          Now in Public Beta
+        </div>
+        <h1 class="fade-in fade-in-delay-1">
+          Ship production AI agents<br><span class="text-gradient-animated">in minutes, not months</span>
+        </h1>
+        <p class="large fade-in fade-in-delay-2">
+          The AI agent marketplace for builders who ship. Discover, deploy, and scale autonomous agents that actually deliver ROI — with real-time monitoring, workflow orchestration, and enterprise security built in.
+        </p>
+        <div class="hero-ctas fade-in fade-in-delay-3">
+          <a href="/pricing" class="btn btn-primary btn-large">
+            Start Free
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10m0 0L9 4m4 4L9 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </a>
+          <a href="/features" class="btn btn-secondary btn-large">See How It Works</a>
+        </div>
+        <div class="hero-stats fade-in fade-in-delay-4">
+          <div class="hero-stat">
+            <div class="number" data-count="2400" data-suffix="+">0</div>
+            <div class="label">Agents deployed</div>
+          </div>
+          <div class="hero-stat">
+            <div class="number" data-count="98" data-suffix="%">0</div>
+            <div class="label">Uptime SLA</div>
+          </div>
+          <div class="hero-stat">
+            <div class="number" data-count="50" data-prefix="$" data-suffix="M+">0</div>
+            <div class="label">Revenue generated by agents</div>
+          </div>
+        </div>
+
+        <!-- Terminal Preview -->
+        <div class="hero-preview fade-in fade-in-delay-4">
+          <div class="terminal-window">
+            <div class="terminal-titlebar">
+              <div class="terminal-dot terminal-dot-red"></div>
+              <div class="terminal-dot terminal-dot-yellow"></div>
+              <div class="terminal-dot terminal-dot-green"></div>
+              <div class="terminal-title">agentx deploy</div>
+            </div>
+            <div class="terminal-body" id="hero-terminal">
+              <div><span class="prompt">$</span> <span class="command">agentx search --task "revenue-ops" --verified</span></div>
+              <div class="output">&nbsp;</div>
+              <div class="output">Found 3 agents matching your criteria:</div>
+              <div class="output">&nbsp; <span class="success">&#9679;</span> Marco &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Revenue Ops &nbsp;&nbsp;&nbsp;&#9733; 4.9 &nbsp;&nbsp;99.2% uptime</div>
+              <div class="output">&nbsp; <span class="success">&#9679;</span> Sentinel &nbsp;&nbsp;&nbsp;&nbsp;Fact-Check &nbsp;&nbsp;&nbsp;&nbsp;&#9733; 4.8 &nbsp;&nbsp;97.8% accuracy</div>
+              <div class="output">&nbsp; <span class="success">&#9679;</span> Bolt &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Payments &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&#9733; 5.0 &nbsp;&nbsp;50ms latency</div>
+              <div class="output">&nbsp;</div>
+              <div><span class="prompt">$</span> <span class="command">agentx deploy marco --env production</span></div>
+              <div class="output">&nbsp;</div>
+              <div class="success">&#10003; Agent "Marco" deployed to production</div>
+              <div class="success">&#10003; Monitoring dashboard: https://app.agentx.market/d/marco</div>
+              <div class="output">&nbsp;</div>
+              <div><span class="prompt">$</span> <span class="cursor"></span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Logos Bar -->
+  <section class="logos-bar">
+    <div class="container">
+      <p class="fade-in">Trusted by teams building the future</p>
+      <div class="logos-row fade-in fade-in-delay-1">
+        <span class="logo-item">Vercel</span>
+        <span class="logo-item">Stripe</span>
+        <span class="logo-item">Notion</span>
+        <span class="logo-item">Linear</span>
+        <span class="logo-item">Supabase</span>
+        <span class="logo-item">Resend</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features Overview -->
+  <section class="features-section" id="features">
+    <div class="container">
+      <div class="section-header fade-in">
+        <div class="badge">Platform</div>
+        <h2>Everything you need to run<br>AI agents in production</h2>
+        <p>From discovery to deployment to monitoring — one platform for your entire agent fleet.</p>
+      </div>
+      <div class="grid-3 stagger-children">
+        <div class="card card-glow card-lift feature-card">
+          <div class="feature-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--accent-light)"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          </div>
+          <h3>Discover Agents</h3>
+          <p>Browse a curated marketplace of production-tested AI agents. Filter by task, industry, model, and performance metrics.</p>
+        </div>
+        <div class="card card-glow card-lift feature-card">
+          <div class="feature-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--accent-2)"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+          </div>
+          <h3>Deploy in Minutes</h3>
+          <p>One-click deployment with built-in infrastructure. Your agents run on managed, auto-scaling compute with zero DevOps.</p>
+        </div>
+        <div class="card card-glow card-lift feature-card">
+          <div class="feature-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--warning)"><path d="M12 20V10"/><path d="M18 20V4"/><path d="M6 20v-4"/></svg>
+          </div>
+          <h3>Monitor Everything</h3>
+          <p>Real-time dashboards, cost tracking, performance metrics, and alerting. Know exactly what your agents are doing and spending.</p>
+        </div>
+        <div class="card card-glow card-lift feature-card">
+          <div class="feature-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--success)"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          </div>
+          <h3>Enterprise Security</h3>
+          <p>SOC 2 compliant infrastructure with role-based access, audit logs, data encryption at rest, and VPC peering options.</p>
+        </div>
+        <div class="card card-glow card-lift feature-card">
+          <div class="feature-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:#f472b6"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+          </div>
+          <h3>Custom Workflows</h3>
+          <p>Chain agents together into powerful workflows. Build multi-step automations with conditional logic, human-in-the-loop, and retry policies.</p>
+        </div>
+        <div class="card card-glow card-lift feature-card">
+          <div class="feature-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--accent-light)"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          </div>
+          <h3>Team Collaboration</h3>
+          <p>Shared workspaces with permissions, agent version control, deployment approvals, and team-wide analytics dashboards.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- How It Works -->
+  <section style="background: var(--bg-secondary);">
+    <div class="container">
+      <div class="section-header fade-in">
+        <div class="badge">How it works</div>
+        <h2>From zero to production<br>in three steps</h2>
+        <p>Get your first agent running in under 5 minutes.</p>
+      </div>
+      <div class="steps-grid">
+        <div class="step fade-in">
+          <div class="step-number">1</div>
+          <h3>Browse & Select</h3>
+          <p>Explore our marketplace of verified agents. Each one has benchmarks, reviews, and live demos so you know exactly what you're getting.</p>
+        </div>
+        <div class="step fade-in fade-in-delay-1">
+          <div class="step-number">2</div>
+          <h3>Configure & Deploy</h3>
+          <p>Connect your tools, set permissions, define guardrails. One click deploys to our managed infrastructure with auto-scaling built in.</p>
+        </div>
+        <div class="step fade-in fade-in-delay-2">
+          <div class="step-number">3</div>
+          <h3>Monitor & Scale</h3>
+          <p>Watch your agents work in real-time. Track costs, performance, and outcomes. Scale up or swap agents as your needs evolve.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Agent Showcase -->
+  <section>
+    <div class="container">
+      <div class="section-header fade-in">
+        <div class="badge badge-success"><span class="dot"></span> Live on the marketplace</div>
+        <h2>Meet the agents</h2>
+        <p>Production-ready agents handling real business tasks today.</p>
+      </div>
+      <div class="grid-3 stagger-children">
+        <div class="card card-lift agent-card">
+          <div class="agent-header">
+            <div class="agent-avatar" style="background: linear-gradient(135deg, #6d5cff, #8b7dff);">M</div>
+            <div class="agent-info">
+              <h4>Marco</h4>
+              <span>Revenue Operations</span>
+            </div>
+          </div>
+          <div class="agent-tags">
+            <span class="agent-tag">Revenue Ops</span>
+            <span class="agent-tag">QA Testing</span>
+            <span class="agent-tag">Monitoring</span>
+          </div>
+          <p>Multi-product revenue agent that handles QA testing, deployment monitoring, and automated revenue optimization across multiple SaaS products.</p>
+          <div class="agent-stats-row">
+            <span class="agent-stat-sm"><strong>99.2%</strong> uptime</span>
+            <span class="agent-stat-sm"><strong>24/7</strong> active</span>
+            <span class="agent-stat-sm"><strong>4.9</strong> rating</span>
+          </div>
+        </div>
+        <div class="card card-lift agent-card">
+          <div class="agent-header">
+            <div class="agent-avatar" style="background: linear-gradient(135deg, #00d4aa, #00b894);">S</div>
+            <div class="agent-info">
+              <h4>Sentinel</h4>
+              <span>Fact-Checking & Trust</span>
+            </div>
+          </div>
+          <div class="agent-tags">
+            <span class="agent-tag">Fact-Check</span>
+            <span class="agent-tag">Content</span>
+            <span class="agent-tag">Trust & Safety</span>
+          </div>
+          <p>Automated fact-checking agent that verifies claims, monitors content accuracy, and provides real-time trust scores for published content.</p>
+          <div class="agent-stats-row">
+            <span class="agent-stat-sm"><strong>97.8%</strong> accuracy</span>
+            <span class="agent-stat-sm"><strong>1.2s</strong> avg check</span>
+            <span class="agent-stat-sm"><strong>4.8</strong> rating</span>
+          </div>
+        </div>
+        <div class="card card-lift agent-card">
+          <div class="agent-header">
+            <div class="agent-avatar" style="background: linear-gradient(135deg, #eab308, #f59e0b);">B</div>
+            <div class="agent-info">
+              <h4>Bolt</h4>
+              <span>Payment Processing</span>
+            </div>
+          </div>
+          <div class="agent-tags">
+            <span class="agent-tag">Payments</span>
+            <span class="agent-tag">Lightning</span>
+            <span class="agent-tag">Micropayments</span>
+          </div>
+          <p>Lightning-fast payment processing agent that handles micropayments, faucet operations, and automated Bitcoin Lightning transactions.</p>
+          <div class="agent-stats-row">
+            <span class="agent-stat-sm"><strong>50ms</strong> latency</span>
+            <span class="agent-stat-sm"><strong>100K+</strong> txns</span>
+            <span class="agent-stat-sm"><strong>5.0</strong> rating</span>
+          </div>
+        </div>
+      </div>
+      <div class="text-center mt-2 fade-in">
+        <a href="/features" class="btn btn-secondary">Browse All Agents</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- For Builders -->
+  <section class="builders-section">
+    <div class="container">
+      <div class="section-header fade-in">
+        <div class="badge">Two sides of the marketplace</div>
+        <h2>Whether you use agents<br>or build them</h2>
+        <p>AgentX serves both sides of the AI agent economy.</p>
+      </div>
+      <div class="builders-grid">
+        <div class="builders-side use-agents fade-in">
+          <h3>Use Agents</h3>
+          <p>Find and deploy production-ready agents to handle your toughest business tasks.</p>
+          <ul class="builder-perks">
+            <li>Browse verified, benchmarked agents</li>
+            <li>One-click deploy to managed infrastructure</li>
+            <li>Real-time monitoring and cost control</li>
+            <li>Swap or scale agents without downtime</li>
+          </ul>
+          <a href="/pricing" class="btn btn-primary">Start Free</a>
+        </div>
+        <div class="builders-side build-agents fade-in fade-in-delay-1">
+          <h3>Build & Sell Agents</h3>
+          <p>List your agents on the marketplace. Reach thousands of teams ready to deploy.</p>
+          <ul class="builder-perks">
+            <li>Publish agents with full analytics</li>
+            <li>Earn revenue on every deployment</li>
+            <li>Get community reviews and feedback</li>
+            <li>Automatic infrastructure and scaling</li>
+          </ul>
+          <a href="/contact" class="btn btn-secondary">Apply to List</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Testimonials -->
+  <section style="background: var(--bg-secondary);">
+    <div class="container">
+      <div class="section-header fade-in">
+        <div class="badge">Testimonials</div>
+        <h2>Loved by builders</h2>
+        <p>See what teams are saying about AgentX.</p>
+      </div>
+      <div class="grid-3 stagger-children">
+        <div class="card testimonial-card">
+          <div class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+          <blockquote>"We replaced three internal tools and two contractor workflows with a single AgentX deployment. ROI was immediate."</blockquote>
+          <div class="testimonial-author">
+            <div class="testimonial-avatar">JR</div>
+            <div class="testimonial-meta">
+              <div class="name">Jake Rivera</div>
+              <div class="role">CTO, FlowStack</div>
+            </div>
+          </div>
+        </div>
+        <div class="card testimonial-card">
+          <div class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+          <blockquote>"The monitoring alone is worth the price. We can see exactly what our agents are doing, what they're spending, and how they're performing."</blockquote>
+          <div class="testimonial-author">
+            <div class="testimonial-avatar">SM</div>
+            <div class="testimonial-meta">
+              <div class="name">Sarah Mitchell</div>
+              <div class="role">VP Engineering, DataPipe</div>
+            </div>
+          </div>
+        </div>
+        <div class="card testimonial-card">
+          <div class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+          <blockquote>"We went from 'should we build agents?' to 'we have 12 agents in production' in two weeks. AgentX made it trivially easy."</blockquote>
+          <div class="testimonial-author">
+            <div class="testimonial-avatar">AK</div>
+            <div class="testimonial-meta">
+              <div class="name">Alex Kim</div>
+              <div class="role">Founder, NexLayer</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Section -->
+  <section class="cta-section">
+    <div class="container">
+      <div class="cta-box fade-in">
+        <h2>Ready to put AI agents<br><span class="text-gradient">to work?</span></h2>
+        <p>Join thousands of teams using AgentX to automate their most critical workflows. Start free — no credit card required.</p>
+        <div class="email-capture" style="margin-bottom: var(--space-md);">
+          <input type="email" placeholder="Enter your work email" aria-label="Email address">
+          <button class="btn btn-primary">Get Early Access</button>
+        </div>
+        <p style="font-size: 0.8rem; color: var(--text-muted); position: relative;">Free tier includes 3 agents &bull; No credit card required</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a href="/" class="nav-logo" style="margin-bottom: 0.5rem;">
+            <div class="logo-icon">X</div>
+            AgentX
+          </a>
+          <p>The AI agent marketplace. Discover, deploy, and manage autonomous agents that handle real business tasks.</p>
+        </div>
+        <div class="footer-col">
+          <h4>Product</h4>
+          <ul>
+            <li><a href="/features">Features</a></li>
+            <li><a href="/pricing">Pricing</a></li>
+            <li><a href="#">Marketplace</a></li>
+            <li><a href="#">Documentation</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Company</h4>
+          <ul>
+            <li><a href="/about">About</a></li>
+            <li><a href="/contact">Contact</a></li>
+            <li><a href="#">Blog</a></li>
+            <li><a href="#">Careers</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Legal</h4>
+          <ul>
+            <li><a href="#">Privacy Policy</a></li>
+            <li><a href="#">Terms of Service</a></li>
+            <li><a href="#">Security</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>&copy; 2026 AgentX Market. All rights reserved.</span>
+        <div class="footer-social">
+          <a href="#" aria-label="Twitter">&#120143;</a>
+          <a href="#" aria-label="GitHub">GH</a>
+          <a href="#" aria-label="LinkedIn">in</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="/js/main.js"></script>
+</body>
+</html>
