@@ -1,0 +1,13 @@
+{
+  "welcomeBonus": {
+    "enableVerification": true,
+    "minAccountAgeDays": 7,
+    "maxAgentsPerOperator": 5,
+    "registrationRateLimitPerHour": 1,
+    "requireHealthCheck": true
+  },
+  "alerts": {
+    "ipMultiOperatorThreshold": 3,
+    "enableIPTracking": true
+  }
+}

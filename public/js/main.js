@@ -23,6 +23,15 @@ document.addEventListener('DOMContentLoaded', () => {
     fadeObserver.observe(el);
   });
 
+  // --- Active nav link for current page ---
+  const currentPath = window.location.pathname.replace(/\/$/, '') || '/';
+  document.querySelectorAll('.nav-links a:not(.btn)').forEach(link => {
+    const linkPath = new URL(link.href, window.location.origin).pathname.replace(/\/$/, '') || '/';
+    if (linkPath === currentPath) {
+      link.setAttribute('aria-current', 'page');
+    }
+  });
+
   // --- Navbar scroll effect ---
   const navbar = document.querySelector('.navbar');
   if (navbar) {
@@ -42,16 +51,31 @@ document.addEventListener('DOMContentLoaded', () => {
   const navToggle = document.querySelector('.nav-toggle');
   const navLinks = document.querySelector('.nav-links');
   if (navToggle && navLinks) {
+    // Create backdrop element dynamically (applied on all pages)
+    const backdrop = document.createElement('div');
+    backdrop.className = 'nav-backdrop';
+    document.body.appendChild(backdrop);
+
+    function openNav() {
+      navLinks.classList.add('open');
+      navToggle.classList.add('active');
+      backdrop.classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeNav() {
+      navLinks.classList.remove('open');
+      navToggle.classList.remove('active');
+      backdrop.classList.remove('open');
+      document.body.style.overflow = '';
+    }
+
     navToggle.addEventListener('click', () => {
-      navLinks.classList.toggle('open');
-      navToggle.classList.toggle('active');
+      navLinks.classList.contains('open') ? closeNav() : openNav();
     });
+    backdrop.addEventListener('click', closeNav);
     // Close on link click
     navLinks.querySelectorAll('a').forEach(link => {
-      link.addEventListener('click', () => {
-        navLinks.classList.remove('open');
-        navToggle.classList.remove('active');
-      });
+      link.addEventListener('click', closeNav);
     });
   }
 

@@ -219,13 +219,23 @@
     }
 
     @media (max-width: 768px) {
+      .page-hero { padding: 120px 0 48px; }
+      .page-hero h1 br { display: none; }
       .feature-block-grid { grid-template-columns: 1fr; gap: var(--space-xl); }
       .feature-block:nth-child(even) .feature-block-grid { direction: ltr; }
       .integration-grid { grid-template-columns: repeat(2, 1fr); }
+      .feature-block { padding: var(--space-2xl) 0; }
+    }
+    @media (max-width: 480px) {
+      .page-hero { padding: 100px 0 32px; }
+      .feature-visual-inner { font-size: 0.72rem; padding: var(--space-md); overflow-x: auto; }
+      .wf-arrow { display: none; }
+      .workflow-visual { flex-direction: column; gap: var(--space-sm); }
+      .wf-node { min-width: unset; width: 100%; }
     }
   </style>
 </head>
-<body>
+<body class="noise-overlay">
   <!-- Navbar -->
   <nav class="navbar">
     <div class="container">
@@ -312,23 +322,23 @@
           <div class="dashboard-mock">
             <div class="dash-stat">
               <div class="label">Active Agents</div>
-              <div class="value">12</div>
-              <div class="change">+3 this week</div>
+              <div class="value">1</div>
+              <div class="change">Marco</div>
             </div>
             <div class="dash-stat">
-              <div class="label">Tasks / hr</div>
-              <div class="value">847</div>
-              <div class="change">+12.4%</div>
+              <div class="label">Sub-agents</div>
+              <div class="value">6</div>
+              <div class="change">coding, research, +4</div>
             </div>
             <div class="dash-stat">
-              <div class="label">Avg Latency</div>
-              <div class="value">230ms</div>
-              <div class="change">-18ms</div>
+              <div class="label">Heartbeat</div>
+              <div class="value">15m</div>
+              <div class="change">16 tasks</div>
             </div>
             <div class="dash-stat">
-              <div class="label">Cost Today</div>
-              <div class="value">$4.82</div>
-              <div class="change">Under budget</div>
+              <div class="label">Cost / day</div>
+              <div class="value">~$2</div>
+              <div class="change">Haiku + local</div>
             </div>
             <div class="dash-chart">
               <div class="dash-bar" style="height: 40%"></div>
@@ -402,14 +412,14 @@
     <div class="container">
       <div class="feature-block-grid">
         <div class="feature-block-text fade-in">
-          <div class="badge">Enterprise</div>
-          <h2>Enterprise-Grade Security</h2>
-          <p>Built for regulated industries and security-conscious teams. Your data and your agents are protected at every layer.</p>
+          <div class="badge">Security</div>
+          <h2>Security-First Architecture</h2>
+          <p>Designed with security in mind from day one. Every agent action is logged and auditable.</p>
           <ul class="feature-list">
-            <li>SOC 2 Type II certified infrastructure</li>
-            <li>Role-based access control with SSO / SAML</li>
+            <li>API key authentication with bcrypt hashing</li>
             <li>Full audit logs for every agent action</li>
-            <li>VPC peering, data residency options, custom SLAs</li>
+            <li>Rate limiting and abuse prevention</li>
+            <li>HTTPS everywhere via Cloudflare</li>
           </ul>
         </div>
         <div class="feature-visual fade-in fade-in-delay-1">
@@ -417,12 +427,12 @@
             <div style="font-size: 3rem; margin-bottom: var(--space-md);">
               <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="var(--success)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11.5 14.5 15 10" stroke-width="2"/></svg>
             </div>
-            <div style="font-size: 0.9rem; color: var(--text-secondary); font-family: var(--font-sans); margin-bottom: var(--space-lg);">Enterprise security verified</div>
+            <div style="font-size: 0.9rem; color: var(--text-secondary); font-family: var(--font-sans); margin-bottom: var(--space-lg);">Built for trust</div>
             <div style="display: flex; gap: var(--space-md); justify-content: center; flex-wrap: wrap;">
-              <span class="badge badge-success">SOC 2</span>
-              <span class="badge badge-success">GDPR</span>
-              <span class="badge badge-success">HIPAA Ready</span>
-              <span class="badge badge-success">SSO/SAML</span>
+              <span class="badge badge-success">HTTPS</span>
+              <span class="badge badge-success">API Keys</span>
+              <span class="badge badge-success">Audit Logs</span>
+              <span class="badge badge-success">Rate Limits</span>
             </div>
           </div>
         </div>
@@ -481,34 +491,21 @@
           <ul>
             <li><a href="/features">Features</a></li>
             <li><a href="/pricing">Pricing</a></li>
-            <li><a href="#">Marketplace</a></li>
-            <li><a href="#">Documentation</a></li>
+            <li><a href="/browse">Browse Agents</a></li>
           </ul>
         </div>
         <div class="footer-col">
           <h4>Company</h4>
           <ul>
             <li><a href="/about">About</a></li>
+            <li><a href="/blog">Blog</a></li>
             <li><a href="/contact">Contact</a></li>
-            <li><a href="#">Blog</a></li>
-            <li><a href="#">Careers</a></li>
-          </ul>
-        </div>
-        <div class="footer-col">
-          <h4>Legal</h4>
-          <ul>
-            <li><a href="#">Privacy Policy</a></li>
-            <li><a href="#">Terms of Service</a></li>
-            <li><a href="#">Security</a></li>
           </ul>
         </div>
       </div>
       <div class="footer-bottom">
         <span>&copy; 2026 AgentX Market. All rights reserved.</span>
         <div class="footer-social">
-          <a href="#" aria-label="Twitter">𝕏</a>
-          <a href="#" aria-label="GitHub">GH</a>
-          <a href="#" aria-label="LinkedIn">in</a>
         </div>
       </div>
     </div>

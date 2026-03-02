@@ -14,7 +14,7 @@
 
   --text-primary: #fafafa;
   --text-secondary: #a1a1aa;
-  --text-muted: #71717a;
+  --text-muted: #8f8fa3;
 
   --accent: #6d5cff;
   --accent-light: #8b7dff;
@@ -208,10 +208,34 @@ section {
 .nav-links a:hover {
   color: var(--text-primary);
 }
+/* Nav CTA button — stands out from regular nav links */
 .nav-cta {
   display: inline-flex;
   align-items: center;
   gap: var(--space-sm);
+  margin-left: var(--space-sm);
+}
+.nav-cta .btn {
+  padding: 0.5rem 1.3rem;
+  font-size: 0.85rem;
+  font-weight: 700;
+  border-radius: var(--radius-full);
+  background: linear-gradient(135deg, var(--accent), #8b5cf6);
+  color: white;
+  box-shadow: 0 0 16px var(--accent-glow), 0 2px 8px rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(139, 125, 255, 0.3);
+  transition: all var(--transition-base);
+  letter-spacing: 0.01em;
+}
+.nav-cta .btn:hover {
+  background: linear-gradient(135deg, var(--accent-light), #9d7aff);
+  box-shadow: 0 0 24px var(--accent-glow), 0 4px 12px rgba(0, 0, 0, 0.4);
+  transform: translateY(-1px);
+  color: white;
+}
+.nav-cta .btn:active {
+  transform: translateY(0) scale(0.97);
+  box-shadow: 0 0 12px var(--accent-glow);
 }
 
 /* Mobile hamburger */
@@ -229,7 +253,37 @@ section {
   height: 2px;
   background: var(--text-primary);
   border-radius: 2px;
-  transition: var(--transition-fast);
+  transition: transform 200ms ease, opacity 200ms ease;
+  transform-origin: center;
+}
+
+/* Hamburger → X when active */
+.nav-toggle.active span:nth-child(1) {
+  transform: rotate(45deg) translate(5px, 5px);
+}
+.nav-toggle.active span:nth-child(2) {
+  opacity: 0;
+  transform: scaleX(0);
+}
+.nav-toggle.active span:nth-child(3) {
+  transform: rotate(-45deg) translate(5px, -5px);
+}
+
+/* Mobile nav backdrop */
+.nav-backdrop {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  z-index: 999;
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  animation: backdrop-in 200ms ease;
+}
+.nav-backdrop.open { display: block; }
+@keyframes backdrop-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
 @media (max-width: 768px) {
@@ -247,6 +301,23 @@ section {
     gap: var(--space-md);
   }
   .nav-links.open { display: flex; }
+
+  /* Nav CTA: full-width, larger touch target on mobile */
+  .nav-cta {
+    margin-left: 0;
+    margin-top: var(--space-sm);
+    padding-top: var(--space-sm);
+    border-top: 1px solid var(--border);
+    width: 100%;
+  }
+  .nav-cta .btn {
+    width: 100%;
+    padding: 0.75rem 1.6rem;
+    font-size: 0.95rem;
+    min-height: 48px;
+    text-align: center;
+    justify-content: center;
+  }
 }
 
 /* --- Buttons --- */
@@ -434,7 +505,7 @@ section {
 }
 .footer-grid {
   display: grid;
-  grid-template-columns: 2fr repeat(3, 1fr);
+  grid-template-columns: 2fr 1fr 1fr;
   gap: var(--space-3xl);
   margin-bottom: var(--space-3xl);
 }
@@ -527,7 +598,6 @@ section {
 .stagger-children.visible > *:nth-child(4) { transition-delay: 0.2s; }
 .stagger-children.visible > *:nth-child(5) { transition-delay: 0.25s; }
 .stagger-children.visible > *:nth-child(6) { transition-delay: 0.3s; }
-.stagger-children.visible > * { opacity: 0; transform: translateY(15px); }
 .stagger-children.visible > * {
   opacity: 1;
   transform: translateY(0);
@@ -630,6 +700,13 @@ section {
 @keyframes shimmer {
   0% { left: -100%; }
   100% { left: 100%; }
+}
+
+/* Disabled button state */
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
 }
 
 /* Magnetic button hover */
@@ -747,11 +824,11 @@ section {
   outline-offset: 2px;
 }
 
-/* Smooth link underline effect */
+/* Smooth link underline effect — exclude CTA button */
 .nav-links a {
   position: relative;
 }
-.nav-links a::after {
+.nav-links li:not(.nav-cta) a::after {
   content: '';
   position: absolute;
   bottom: -4px;
@@ -761,7 +838,15 @@ section {
   background: var(--accent);
   transition: width var(--transition-base);
 }
-.nav-links a:hover::after {
+.nav-links li:not(.nav-cta) a:hover::after {
+  width: 100%;
+}
+
+/* Active nav link for current page */
+.nav-links a[aria-current="page"] {
+  color: var(--text-primary);
+}
+.nav-links li:not(.nav-cta) a[aria-current="page"]::after {
   width: 100%;
 }
 

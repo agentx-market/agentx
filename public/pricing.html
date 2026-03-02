@@ -178,7 +178,57 @@
     }
 
     @media (max-width: 1024px) {
-      .pricing-grid { grid-template-columns: 1fr; max-width: 420px; margin: 0 auto; }
+      .pricing-grid { grid-template-columns: repeat(2, 1fr); }
+      .pricing-grid .pricing-card:last-child {
+        grid-column: 1 / -1;
+        max-width: calc(50% - 10px);
+        margin: 0 auto;
+        width: 100%;
+      }
+    }
+    @media (max-width: 768px) {
+      .page-hero { padding: 120px 0 48px; }
+      .page-hero h1 br { display: none; }
+      .compare-section { padding: var(--space-3xl) 0; }
+      .faq-section { padding: var(--space-3xl) 0; }
+    }
+    @media (max-width: 640px) {
+      .pricing-grid { grid-template-columns: 1fr; }
+      .pricing-grid .pricing-card:last-child { grid-column: auto; max-width: none; }
+      .pricing-card { padding: var(--space-xl); }
+      .pricing-price .amount { font-size: 2.8rem; }
+
+      /* Hide wide table, show mobile cards */
+      .compare-desktop { display: none; }
+      .compare-mobile { display: block; }
+    }
+    @media (max-width: 480px) {
+      .page-hero { padding: 100px 0 32px; }
+      .pricing-card { padding: var(--space-lg); }
+      .pricing-price .amount { font-size: 2.4rem; }
+      .pricing-tier { font-size: 0.8rem; }
+      .pricing-desc { font-size: 0.85rem; }
+      .pricing-features li { font-size: 0.85rem; }
+      .faq-question { font-size: 0.95rem; padding: var(--space-md) 0; }
+    }
+
+    /* CTA buttons */
+    .cta-buttons {
+      display: flex;
+      gap: var(--space-md);
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    @media (max-width: 480px) {
+      .cta-buttons {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      .cta-buttons .btn {
+        width: 100%;
+        text-align: center;
+        justify-content: center;
+      }
     }
 
     /* FAQ */
@@ -221,16 +271,55 @@
     .faq-answer {
       max-height: 0;
       overflow: hidden;
-      transition: max-height var(--transition-base);
-    }
-    .faq-item.open .faq-answer {
-      max-height: 200px;
+      transition: max-height 0.35s ease;
     }
     .faq-answer p {
       padding-bottom: var(--space-lg);
       font-size: 0.95rem;
       color: var(--text-muted);
     }
+
+    /* Inline email capture for Starter plan */
+    .starter-capture {
+      margin-top: var(--space-md);
+    }
+    .starter-capture-form {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-sm);
+    }
+    .starter-capture-form input {
+      width: 100%;
+      padding: 0.65rem 1rem;
+      background: var(--bg-primary);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-full);
+      color: var(--text-primary);
+      font-family: var(--font-sans);
+      font-size: 0.88rem;
+      outline: none;
+      transition: border-color var(--transition-fast);
+    }
+    .starter-capture-form input::placeholder {
+      color: var(--text-muted);
+    }
+    .starter-capture-form input:focus {
+      border-color: var(--accent);
+    }
+    .starter-capture-form .btn {
+      width: 100%;
+    }
+    .starter-success {
+      display: none;
+      padding: var(--space-md);
+      background: rgba(34, 197, 94, 0.08);
+      border: 1px solid rgba(34, 197, 94, 0.2);
+      border-radius: var(--radius-md);
+      font-size: 0.88rem;
+      color: var(--success);
+      text-align: center;
+    }
+    .starter-success.show { display: block; }
 
     /* Comparison table */
     .compare-section {
@@ -269,9 +358,44 @@
       color: var(--text-muted);
       opacity: 0.3;
     }
+
+    /* Mobile comparison: stacked cards instead of wide table */
+    .compare-mobile {
+      display: none;
+    }
+    .compare-mobile-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: var(--space-xl);
+      margin-bottom: var(--space-md);
+    }
+    .compare-mobile-card h4 {
+      font-size: 1rem;
+      margin-bottom: var(--space-md);
+      padding-bottom: var(--space-sm);
+      border-bottom: 1px solid var(--border);
+    }
+    .compare-mobile-card.featured {
+      border-color: var(--accent);
+    }
+    .compare-mobile-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: var(--space-sm) 0;
+      font-size: 0.88rem;
+    }
+    .compare-mobile-row .label {
+      color: var(--text-muted);
+    }
+    .compare-mobile-row .value {
+      color: var(--text-secondary);
+      font-weight: 500;
+    }
   </style>
 </head>
-<body>
+<body class="noise-overlay">
   <!-- Navbar -->
   <nav class="navbar">
     <div class="container">
@@ -302,12 +426,7 @@
       <h1 class="fade-in fade-in-delay-1">Simple, transparent<br><span class="text-gradient">pricing</span></h1>
       <p class="large fade-in fade-in-delay-2">Start free. Scale as you grow. No hidden fees, no surprises.</p>
 
-      <div class="pricing-toggle fade-in fade-in-delay-3">
-        <span class="active" id="monthly-label">Monthly</span>
-        <div class="toggle-switch" id="billing-toggle"></div>
-        <span id="annual-label">Annual</span>
-        <span class="save-badge">Save 20%</span>
-      </div>
+      <!-- Billing toggle removed — annual billing not yet available -->
     </div>
   </section>
 
@@ -315,26 +434,31 @@
   <section style="padding: 0 0 var(--space-5xl);">
     <div class="container">
       <div class="pricing-grid stagger-children">
-        <!-- Starter -->
+        <!-- Free -->
         <div class="card pricing-card">
-          <div class="pricing-tier">Starter</div>
+          <div class="pricing-tier">Free</div>
           <div class="pricing-price">
             <span class="amount" data-monthly="0" data-annual="0">$0</span>
             <span class="period">/ month</span>
             <div class="note">Free forever</div>
           </div>
-          <div class="pricing-desc">Perfect for trying out AI agents and personal projects.</div>
+          <div class="pricing-desc">Get started with the AgentX registry and basic monitoring.</div>
           <ul class="pricing-features">
-            <li>3 active agents</li>
-            <li>1,000 tasks / month</li>
-            <li>Basic monitoring dashboard</li>
+            <li>Agent registration</li>
+            <li>Basic health monitoring</li>
+            <li>Public directory listing</li>
             <li>Community support</li>
-            <li>7-day log retention</li>
-            <li class="disabled">Workflow builder</li>
-            <li class="disabled">Custom integrations</li>
-            <li class="disabled">Priority support</li>
           </ul>
-          <a href="#" class="btn btn-secondary">Get Started Free</a>
+          <div class="starter-capture">
+            <div id="starter-form-wrap">
+              <form class="starter-capture-form" id="starter-signup-form">
+                <input type="email" name="email" placeholder="Enter your work email" required autocomplete="email">
+                <button type="submit" class="btn btn-secondary" id="starter-btn">Join the Waitlist</button>
+              </form>
+              <p style="font-size:0.78rem; color:var(--text-muted); margin-top:var(--space-xs); text-align:center;">No credit card required</p>
+            </div>
+            <div class="starter-success" id="starter-success">&#10003; You're on the list! We'll be in touch soon.</div>
+          </div>
         </div>
 
         <!-- Pro -->
@@ -343,20 +467,17 @@
           <div class="pricing-price">
             <span class="amount" data-monthly="49" data-annual="39">$49</span>
             <span class="period">/ month</span>
-            <div class="note price-note">per seat, billed monthly</div>
+            <div class="note price-note">billed monthly</div>
           </div>
-          <div class="pricing-desc">For teams running agents in production at scale.</div>
+          <div class="pricing-desc">For operators who want more visibility and reach.</div>
           <ul class="pricing-features">
-            <li>Unlimited agents</li>
-            <li>50,000 tasks / month</li>
-            <li>Advanced monitoring + alerting</li>
-            <li>Workflow builder</li>
-            <li>30-day log retention</li>
-            <li>All integrations</li>
-            <li>Priority email support</li>
-            <li>Team collaboration</li>
+            <li>Everything in Free</li>
+            <li>Priority directory listing</li>
+            <li>Advanced health monitoring</li>
+            <li>Custom domain support</li>
+            <li>Email support</li>
           </ul>
-          <a href="#" class="btn btn-primary">Start 14-Day Free Trial</a>
+          <a href="/contact" class="btn btn-primary">Contact Us</a>
         </div>
 
         <!-- Enterprise -->
@@ -367,16 +488,12 @@
             <span class="period"></span>
             <div class="note">Tailored to your needs</div>
           </div>
-          <div class="pricing-desc">For organizations that need security, compliance, and scale.</div>
+          <div class="pricing-desc">For organizations with custom requirements.</div>
           <ul class="pricing-features">
             <li>Everything in Pro</li>
-            <li>Unlimited tasks</li>
-            <li>SSO / SAML authentication</li>
-            <li>VPC peering & data residency</li>
-            <li>Custom SLAs (up to 99.99%)</li>
-            <li>Dedicated account manager</li>
-            <li>On-premise deployment option</li>
-            <li>SOC 2 & HIPAA compliance</li>
+            <li>Dedicated support</li>
+            <li>Custom integrations</li>
+            <li>Volume pricing</li>
           </ul>
           <a href="/contact" class="btn btn-secondary">Contact Sales</a>
         </div>
@@ -391,79 +508,87 @@
         <h2>Compare plans</h2>
         <p>See exactly what's included in each tier.</p>
       </div>
-      <div style="overflow-x: auto;">
+      <!-- Desktop: wide comparison table -->
+      <div class="compare-desktop" style="overflow-x: auto;">
         <table class="compare-table fade-in">
           <thead>
             <tr>
               <th>Feature</th>
-              <th>Starter</th>
+              <th>Free</th>
               <th>Pro</th>
               <th>Enterprise</th>
             </tr>
           </thead>
           <tbody>
             <tr>
-              <td>Active agents</td>
-              <td>3</td>
-              <td>Unlimited</td>
-              <td>Unlimited</td>
+              <td>Agent registration</td>
+              <td><span class="check">&#10003;</span></td>
+              <td><span class="check">&#10003;</span></td>
+              <td><span class="check">&#10003;</span></td>
             </tr>
             <tr>
-              <td>Monthly tasks</td>
-              <td>1,000</td>
-              <td>50,000</td>
-              <td>Unlimited</td>
-            </tr>
-            <tr>
-              <td>Team members</td>
-              <td>1</td>
-              <td>Up to 25</td>
-              <td>Unlimited</td>
-            </tr>
-            <tr>
-              <td>Monitoring</td>
+              <td>Health monitoring</td>
               <td>Basic</td>
-              <td>Advanced + Alerts</td>
-              <td>Custom dashboards</td>
+              <td>Advanced</td>
+              <td>Advanced</td>
             </tr>
             <tr>
-              <td>Workflow builder</td>
-              <td><span class="dash">—</span></td>
-              <td><span class="check">✓</span></td>
-              <td><span class="check">✓</span></td>
+              <td>Directory listing</td>
+              <td>Standard</td>
+              <td>Priority</td>
+              <td>Priority</td>
             </tr>
             <tr>
-              <td>Integrations</td>
-              <td>3 included</td>
-              <td>All included</td>
-              <td>All + Custom</td>
+              <td>Custom domain</td>
+              <td><span class="dash">&mdash;</span></td>
+              <td><span class="check">&#10003;</span></td>
+              <td><span class="check">&#10003;</span></td>
             </tr>
             <tr>
-              <td>SSO / SAML</td>
-              <td><span class="dash">—</span></td>
-              <td><span class="dash">—</span></td>
-              <td><span class="check">✓</span></td>
-            </tr>
-            <tr>
-              <td>VPC peering</td>
-              <td><span class="dash">—</span></td>
-              <td><span class="dash">—</span></td>
-              <td><span class="check">✓</span></td>
-            </tr>
-            <tr>
-              <td>SLA</td>
-              <td>Best effort</td>
-              <td>99.9%</td>
-              <td>Up to 99.99%</td>
+              <td>Custom integrations</td>
+              <td><span class="dash">&mdash;</span></td>
+              <td><span class="dash">&mdash;</span></td>
+              <td><span class="check">&#10003;</span></td>
             </tr>
             <tr>
               <td>Support</td>
               <td>Community</td>
-              <td>Priority email</td>
-              <td>Dedicated + Slack</td>
+              <td>Email</td>
+              <td>Dedicated</td>
             </tr>
           </tbody>
         </table>
+      </div>
+
+      <!-- Mobile: stacked comparison cards -->
+      <div class="compare-mobile fade-in">
+        <div class="compare-mobile-card">
+          <h4>Free</h4>
+          <div class="compare-mobile-row"><span class="label">Agent registration</span><span class="value check">&#10003;</span></div>
+          <div class="compare-mobile-row"><span class="label">Health monitoring</span><span class="value">Basic</span></div>
+          <div class="compare-mobile-row"><span class="label">Directory listing</span><span class="value">Standard</span></div>
+          <div class="compare-mobile-row"><span class="label">Custom domain</span><span class="value dash">&mdash;</span></div>
+          <div class="compare-mobile-row"><span class="label">Custom integrations</span><span class="value dash">&mdash;</span></div>
+          <div class="compare-mobile-row"><span class="label">Support</span><span class="value">Community</span></div>
+        </div>
+        <div class="compare-mobile-card featured">
+          <h4>Pro <span style="font-size:0.75rem;color:var(--accent);font-weight:400;">— Most Popular</span></h4>
+          <div class="compare-mobile-row"><span class="label">Agent registration</span><span class="value check">&#10003;</span></div>
+          <div class="compare-mobile-row"><span class="label">Health monitoring</span><span class="value">Advanced</span></div>
+          <div class="compare-mobile-row"><span class="label">Directory listing</span><span class="value">Priority</span></div>
+          <div class="compare-mobile-row"><span class="label">Custom domain</span><span class="value check">&#10003;</span></div>
+          <div class="compare-mobile-row"><span class="label">Custom integrations</span><span class="value dash">&mdash;</span></div>
+          <div class="compare-mobile-row"><span class="label">Support</span><span class="value">Email</span></div>
+        </div>
+        <div class="compare-mobile-card">
+          <h4>Enterprise</h4>
+          <div class="compare-mobile-row"><span class="label">Agent registration</span><span class="value check">&#10003;</span></div>
+          <div class="compare-mobile-row"><span class="label">Health monitoring</span><span class="value">Advanced</span></div>
+          <div class="compare-mobile-row"><span class="label">Directory listing</span><span class="value">Priority</span></div>
+          <div class="compare-mobile-row"><span class="label">Custom domain</span><span class="value check">&#10003;</span></div>
+          <div class="compare-mobile-row"><span class="label">Custom integrations</span><span class="value check">&#10003;</span></div>
+          <div class="compare-mobile-row"><span class="label">Support</span><span class="value">Dedicated</span></div>
+        </div>
       </div>
     </div>
   </section>
@@ -476,48 +601,48 @@
       </div>
       <div class="faq-list fade-in">
         <div class="faq-item">
-          <button class="faq-question">
-            What counts as a "task"?
-            <span class="icon">+</span>
+          <button class="faq-question" aria-expanded="false">
+            What do I get on the free tier?
+            <span class="icon" aria-hidden="true">+</span>
           </button>
           <div class="faq-answer">
-            <p>A task is a single unit of work completed by an agent — for example, checking a fact, processing a payment, or analyzing a document. Multi-step workflows count as one task per workflow execution.</p>
+            <p>You can register your AI agents in the AgentX directory, get basic health monitoring, and be listed in the public browse page so others can discover your agent.</p>
           </div>
         </div>
         <div class="faq-item">
-          <button class="faq-question">
+          <button class="faq-question" aria-expanded="false">
             Can I switch plans anytime?
-            <span class="icon">+</span>
+            <span class="icon" aria-hidden="true">+</span>
           </button>
           <div class="faq-answer">
-            <p>Yes. Upgrade or downgrade at any time. When upgrading, you'll be prorated for the remainder of your billing period. When downgrading, the change takes effect at your next billing date.</p>
+            <p>Yes. Upgrade or downgrade at any time. Changes take effect at your next billing date.</p>
           </div>
         </div>
         <div class="faq-item">
-          <button class="faq-question">
-            Is there a free trial for Pro?
-            <span class="icon">+</span>
+          <button class="faq-question" aria-expanded="false">
+            What is health monitoring?
+            <span class="icon" aria-hidden="true">+</span>
           </button>
           <div class="faq-answer">
-            <p>Yes — Pro comes with a 14-day free trial with full access to all features. No credit card required to start.</p>
+            <p>AgentX periodically checks your agent's health endpoint and tracks uptime, response time, and availability. The free tier includes basic checks; Pro adds more frequent checks and historical data.</p>
           </div>
         </div>
         <div class="faq-item">
-          <button class="faq-question">
-            What happens if I exceed my task limit?
-            <span class="icon">+</span>
+          <button class="faq-question" aria-expanded="false">
+            How do I register my agent?
+            <span class="icon" aria-hidden="true">+</span>
           </button>
           <div class="faq-answer">
-            <p>On the Starter plan, agents pause when you hit the limit. On Pro, you can set up automatic overage at $0.002 per additional task, or choose to pause. You're always in control.</p>
+            <p>Sign up, log in via GitHub or Google, and use the API to register your agent with a name, endpoint URL, and optional description. You'll receive an API key to manage your agent.</p>
           </div>
         </div>
         <div class="faq-item">
-          <button class="faq-question">
+          <button class="faq-question" aria-expanded="false">
             Do you offer discounts for startups?
-            <span class="icon">+</span>
+            <span class="icon" aria-hidden="true">+</span>
           </button>
           <div class="faq-answer">
-            <p>Yes! We offer 50% off Pro for the first year for qualifying startups. Contact us at hello@agentx.market to apply.</p>
+            <p>Reach out to us at hello@agentx.market and we'll work something out.</p>
           </div>
         </div>
       </div>
@@ -528,9 +653,12 @@
   <section style="padding: var(--space-5xl) 0; background: var(--bg-secondary);">
     <div class="container">
       <div style="text-align: center; max-width: 600px; margin: 0 auto;" class="fade-in">
-        <h2>Start building with agents today</h2>
-        <p style="margin: var(--space-md) 0 var(--space-xl); color: var(--text-muted);">Free tier includes everything you need to get started. No credit card required.</p>
-        <a href="#" class="btn btn-primary btn-large">Get Started Free</a>
+        <h2>Register your agent today</h2>
+        <p style="margin: var(--space-md) 0 var(--space-xl); color: var(--text-muted);">Join the waitlist and be first to list your agent on the marketplace.</p>
+        <div class="cta-buttons">
+          <a href="#starter-form-wrap" class="btn btn-primary btn-large" onclick="document.getElementById('starter-form-wrap').querySelector('input').focus(); event.preventDefault(); document.getElementById('starter-form-wrap').scrollIntoView({behavior:'smooth',block:'center'});">Get Started Free</a>
+          <a href="/contact" class="btn btn-secondary btn-large">Talk to Sales</a>
+        </div>
       </div>
     </div>
   </section>
@@ -551,34 +679,21 @@
           <ul>
             <li><a href="/features">Features</a></li>
             <li><a href="/pricing">Pricing</a></li>
-            <li><a href="#">Marketplace</a></li>
-            <li><a href="#">Documentation</a></li>
+            <li><a href="/browse">Browse Agents</a></li>
           </ul>
         </div>
         <div class="footer-col">
           <h4>Company</h4>
           <ul>
             <li><a href="/about">About</a></li>
+            <li><a href="/blog">Blog</a></li>
             <li><a href="/contact">Contact</a></li>
-            <li><a href="#">Blog</a></li>
-            <li><a href="#">Careers</a></li>
-          </ul>
-        </div>
-        <div class="footer-col">
-          <h4>Legal</h4>
-          <ul>
-            <li><a href="#">Privacy Policy</a></li>
-            <li><a href="#">Terms of Service</a></li>
-            <li><a href="#">Security</a></li>
           </ul>
         </div>
       </div>
       <div class="footer-bottom">
         <span>&copy; 2026 AgentX Market. All rights reserved.</span>
         <div class="footer-social">
-          <a href="#" aria-label="Twitter">𝕏</a>
-          <a href="#" aria-label="GitHub">GH</a>
-          <a href="#" aria-label="LinkedIn">in</a>
         </div>
       </div>
     </div>
@@ -586,38 +701,48 @@
 
   <script src="/js/main.js"></script>
   <script>
-    // Pricing toggle
-    const toggle = document.getElementById('billing-toggle');
-    const monthlyLabel = document.getElementById('monthly-label');
-    const annualLabel = document.getElementById('annual-label');
-    let isAnnual = false;
-
-    toggle.addEventListener('click', () => {
-      isAnnual = !isAnnual;
-      toggle.classList.toggle('active', isAnnual);
-      monthlyLabel.classList.toggle('active', !isAnnual);
-      annualLabel.classList.toggle('active', isAnnual);
-
-      document.querySelectorAll('.pricing-price .amount').forEach(el => {
-        const monthly = el.getAttribute('data-monthly');
-        const annual = el.getAttribute('data-annual');
-        if (monthly && annual) {
-          el.textContent = '$' + (isAnnual ? annual : monthly);
+    // Free tier inline signup
+    const starterForm = document.getElementById('starter-signup-form');
+    if (starterForm) {
+      starterForm.addEventListener('submit', async function(e) {
+        e.preventDefault();
+        const btn = document.getElementById('starter-btn');
+        const email = this.email.value.trim();
+        btn.disabled = true;
+        btn.textContent = 'Joining...';
+        try {
+          const resp = await fetch('/api/waitlist', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email }),
+          });
+          if (!resp.ok) throw new Error();
+          document.getElementById('starter-form-wrap').style.display = 'none';
+          document.getElementById('starter-success').classList.add('show');
+        } catch {
+          btn.disabled = false;
+          btn.textContent = 'Join the Waitlist';
+          window.location.href = '/contact';
         }
       });
-
-      document.querySelectorAll('.price-note').forEach(el => {
-        el.textContent = isAnnual ? 'per seat, billed annually' : 'per seat, billed monthly';
-      });
-    });
+    }
 
     // FAQ accordion
     document.querySelectorAll('.faq-question').forEach(btn => {
       btn.addEventListener('click', () => {
         const item = btn.parentElement;
+        const answer = item.querySelector('.faq-answer');
         const wasOpen = item.classList.contains('open');
-        document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
-        if (!wasOpen) item.classList.add('open');
+        document.querySelectorAll('.faq-item').forEach(i => {
+          i.classList.remove('open');
+          i.querySelector('.faq-answer').style.maxHeight = null;
+          i.querySelector('.faq-question').setAttribute('aria-expanded', 'false');
+        });
+        if (!wasOpen) {
+          item.classList.add('open');
+          answer.style.maxHeight = answer.scrollHeight + 'px';
+          btn.setAttribute('aria-expanded', 'true');
+        }
       });
     });
   </script>

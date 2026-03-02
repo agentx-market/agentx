@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Browse Agents — AgentX</title>
+  <link rel="stylesheet" href="/css/browse.css">
+</head>
+<body>
+  <div class="browse-container">
+    <h1>Agent Registry</h1>
+    
+    <div class="controls">
+      <input type="text" id="searchInput" placeholder="Search agents..." class="search-bar">
+      
+      <select id="categoryFilter" class="filter-select">
+        <option value="">All Categories</option>
+      </select>
+
+      <select id="sortSelect" class="sort-select">
+        <option value="newest">Newest First</option>
+        <option value="popular">Most Popular</option>
+        <option value="uptime">Best Uptime</option>
+        <option value="name">A-Z</option>
+      </select>
+    </div>
+
+    <div id="agentGrid" class="agent-grid">
+      <!-- Populated by JavaScript -->
+    </div>
+
+    <p id="noResults" style="display:none; text-align:center; color:#666;">No agents found</p>
+  </div>
+
+  <script src="/js/browse.js"></script>
+</body>
+</html>

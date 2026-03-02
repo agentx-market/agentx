@@ -122,6 +122,13 @@ cmd_pick() {
 }
 
 cmd_next() {
+  # Auto-reset stale in_progress items (>2h old, no commit/branch = never completed)
+  local stale=$(sqlite3 "$DB" "SELECT COUNT(*) FROM features WHERE status='in_progress' AND branch IS NULL AND commit_hash IS NULL AND started_at < datetime('now', '-2 hours');")
+  if [ "$stale" -gt 0 ] 2>/dev/null; then
+    sqlite3 "$DB" "UPDATE features SET status='ready', started_at=NULL WHERE status='in_progress' AND branch IS NULL AND commit_hash IS NULL AND started_at < datetime('now', '-2 hours');"
+    echo "Auto-reset $stale stale in_progress items back to ready."
+  fi
+
   local id=$(sqlite3 "$DB" "SELECT id FROM features WHERE status='ready' AND (requires_approval=0 OR approval_status='approved') ORDER BY CASE priority WHEN 'critical' THEN 0 WHEN 'high' THEN 1 WHEN 'medium' THEN 2 WHEN 'low' THEN 3 END, CASE effort WHEN 'tiny' THEN 0 WHEN 'small' THEN 1 WHEN 'medium' THEN 2 WHEN 'large' THEN 3 END LIMIT 1;")
   if [ -z "$id" ]; then echo "No ready features to pick."; exit 0; fi
   cmd_start "$id"
@@ -144,10 +151,58 @@ cmd_start() {
 
 cmd_complete() {
   local id="$1" hash="$2" model="${3:-qwen}"
-  local set="status='done', completed_at=datetime('now'), built_by='$model'"
-  [ -n "$hash" ] && set="$set, commit_hash='$hash'"
+  local verified=0
+  local diff_stat=""
+
+  # Check for actual code changes (git diff or uncommitted changes)
+  cd "$HOME/marco_web" 2>/dev/null
+  if [ -n "$hash" ] && [ "$hash" != "none" ]; then
+    diff_stat=$(git diff --stat HEAD~1 2>/dev/null || echo "")
+  fi
+  if [ -z "$diff_stat" ]; then
+    diff_stat=$(git status --porcelain 2>/dev/null || echo "")
+  fi
+
+  if [ -n "$diff_stat" ]; then
+    verified=1
+  fi
+
+  # If no code changes detected, set to 'review' instead of 'done' (guardrail)
+  local target_status="done"
+  if [ "$verified" -eq 0 ]; then
+    target_status="review"
+  fi
+
+  local set="status='$target_status', completed_at=datetime('now'), built_by='$model', verified=$verified"
+  [ -n "$hash" ] && [ "$hash" != "none" ] && set="$set, commit_hash='$hash'"
   sqlite3 "$DB" "UPDATE features SET $set WHERE id=$id;"
-  echo "Feature #$id marked as done. [built by: $model]"
+
+  # Get feature title for log
+  local title=$(sqlite3 "$DB" "SELECT title FROM features WHERE id=$id;" 2>/dev/null)
+
+  # Append to WORK_LOG.md for cross-agent visibility
+  local log_file="$HOME/marco_web/WORK_LOG.md"
+  local timestamp=$(date '+%Y-%m-%d %H:%M')
+  local verify_label="no"
+  [ "$verified" -eq 1 ] && verify_label="yes"
+  local files_info="no git changes detected"
+  [ -n "$diff_stat" ] && files_info=$(echo "$diff_stat" | head -10)
+
+  {
+    echo ""
+    echo "## $timestamp — Feature #$id: $title"
+    echo "Status: done | Built by: $model | Verified: $verify_label"
+    echo "Files changed:"
+    echo '```'
+    echo "$files_info"
+    echo '```'
+  } >> "$log_file"
+
+  if [ "$target_status" = "review" ]; then
+    echo "Feature #$id set to REVIEW (no code changes detected). [built by: $model]"
+  else
+    echo "Feature #$id marked as done. [built by: $model, verified: yes]"
+  fi
 }
 
 cmd_ship() {

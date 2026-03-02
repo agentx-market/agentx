@@ -1,0 +1,16 @@
+CREATE TABLE IF NOT EXISTS api_keys (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  agent_id INTEGER NOT NULL,
+  key_hash TEXT NOT NULL,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  last_used_at DATETIME,
+  FOREIGN KEY(agent_id) REFERENCES agents(id)
+);
+
+CREATE TABLE IF NOT EXISTS rate_limits (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  api_key_hash TEXT NOT NULL UNIQUE,
+  request_count INTEGER DEFAULT 0,
+  window_start DATETIME DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY(api_key_hash) REFERENCES api_keys(key_hash)
+);

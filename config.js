@@ -3,6 +3,14 @@
 
 const path = require('path');
 
+// Abuse prevention constants
+const ABUSE_PREVENTION = {
+  MIN_GITHUB_ACCOUNT_AGE_DAYS: 7,
+  MAX_AGENTS_PER_OPERATOR_FREE: 5,
+  REGISTRATION_RATE_LIMIT_HOURS: 1,
+  ALERT_ON_MULTI_OPERATOR_IP: true,
+};
+
 module.exports = {
   // Abuse prevention limits (tunable)
   abuse: {

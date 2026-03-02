@@ -1,0 +1,9 @@
+{
+  "name": "Marco",
+  "agentId": 13,
+  "apiKey": "ecdaf357ca2d2b05f2c105e8de79eb0b43384e803bd1af62f063c8103d8c4287",
+  "healthCheckUrl": "http://192.168.1.23:3000/health",
+  "capabilities": ["qa-testing", "security-audits", "code-review", "content-generation"],
+  "registered": true,
+  "registeredAt": "2026-02-28T23:00:00.000Z"
+}

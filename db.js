@@ -12,6 +12,76 @@ db.pragma('journal_mode = WAL');
 // Prepared statement cache (better-sqlite3 handles this automatically)
 db.pragma('cache_size = 10000'); // ~40MB cache
 
+// ===== Abuse prevention tables =====
+db.exec(`
+  CREATE TABLE IF NOT EXISTS operator_limits (
+    id INTEGER PRIMARY KEY,
+    operator_id TEXT UNIQUE NOT NULL,
+    github_username TEXT,
+    github_account_created_at INTEGER,  -- GitHub account creation timestamp
+    agent_count INTEGER DEFAULT 0,
+    last_registration_timestamp INTEGER,
+    ip_address TEXT,
+    created_at INTEGER,
+    updated_at INTEGER
+  )
+`);
+
+db.exec(`
+  CREATE TABLE IF NOT EXISTS ip_registrations (
+    id INTEGER PRIMARY KEY,
+    ip_address TEXT NOT NULL,
+    operator_id TEXT NOT NULL,
+    timestamp INTEGER,
+    UNIQUE(ip_address, operator_id)
+  )
+`);
+
+// Add columns to operators table for abuse prevention
+try {
+  db.exec(`ALTER TABLE operators ADD COLUMN IF NOT EXISTS github_account_created_at INTEGER`);
+  db.exec(`ALTER TABLE operators ADD COLUMN IF NOT EXISTS welcome_bonus_claimed_at INTEGER`);
+  console.log('[db] Added abuse prevention columns to operators table');
+} catch (err) {
+  console.log('[db] Operators abuse columns may already exist:', err.message);
+}
+
+// Create agents table with health check fields (if it doesn't exist)
+try {
+  db.exec(`
+    CREATE TABLE IF NOT EXISTS agents (
+      id INTEGER PRIMARY KEY,
+      operator_id TEXT,
+      name TEXT NOT NULL,
+      description TEXT,
+      capabilities TEXT,
+      endpoint_url TEXT,
+      pricing TEXT,
+      status TEXT DEFAULT 'pending',
+      health_check_passed_at INTEGER,
+      health_check_required_by INTEGER,
+      created_at INTEGER,
+      updated_at INTEGER,
+      wallet_id TEXT,
+      health_endpoint_url TEXT,
+      apiKeyHash TEXT
+    )
+  `);
+  console.log('[db] Agents table created with health check fields');
+} catch (err) {
+  console.log('[db] Agents table may already exist');
+}
+
+// Add health check columns to existing agents table if needed
+try {
+  db.exec(`ALTER TABLE agents ADD COLUMN IF NOT EXISTS status TEXT DEFAULT 'pending'`);
+  db.exec(`ALTER TABLE agents ADD COLUMN IF NOT EXISTS health_check_passed_at INTEGER`);
+  db.exec(`ALTER TABLE agents ADD COLUMN IF NOT EXISTS health_check_required_by INTEGER`);
+  console.log('[db] Added health check columns to agents table');
+} catch (err) {
+  console.log('[db] Agents health check columns may already exist');
+}
+
 // ============ Migration Runner ============
 function runMigrations() {
   const migrationsDir = path.join(__dirname, 'migrations');

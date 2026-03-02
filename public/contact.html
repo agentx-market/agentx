@@ -148,6 +148,10 @@
     .form-group select:focus {
       border-color: var(--accent);
     }
+    .form-group input:required:not(:placeholder-shown):invalid,
+    .form-group textarea:required:not(:placeholder-shown):invalid {
+      border-color: var(--error);
+    }
     .form-group textarea {
       resize: vertical;
       min-height: 120px;
@@ -179,6 +183,21 @@
       color: var(--text-muted);
     }
 
+    /* Error state */
+    .form-error {
+      display: none;
+      align-items: center;
+      gap: var(--space-md);
+      padding: var(--space-md) var(--space-lg);
+      background: rgba(239, 68, 68, 0.08);
+      border: 1px solid rgba(239, 68, 68, 0.2);
+      border-radius: var(--radius-md);
+      margin-top: var(--space-md);
+      font-size: 0.9rem;
+      color: var(--error);
+    }
+    .form-error.show { display: flex; }
+
     /* Success state */
     .form-success {
       display: none;
@@ -201,13 +220,20 @@
     }
 
     @media (max-width: 768px) {
+      .page-hero { padding: 120px 0 48px; }
       .contact-layout { grid-template-columns: 1fr; gap: var(--space-xl); }
       .form-row { grid-template-columns: 1fr; }
       .form-submit { flex-direction: column; gap: var(--space-md); }
+      .form-submit .btn { width: 100%; text-align: center; justify-content: center; }
+      .form-submit .note { text-align: center; }
+    }
+    @media (max-width: 480px) {
+      .page-hero { padding: 100px 0 32px; }
+      .contact-form-card { padding: var(--space-xl); }
     }
   </style>
 </head>
-<body>
+<body class="noise-overlay">
   <!-- Navbar -->
   <nav class="navbar">
     <div class="container">
@@ -268,7 +294,7 @@
               <div class="channel-icon">𝕏</div>
               <div class="channel-text">
                 <div class="channel-label">Twitter</div>
-                <div class="channel-value">@agentxmarket</div>
+                <div class="channel-value">@marcoagent42</div>
               </div>
             </li>
           </ul>
@@ -326,9 +352,14 @@
             </div>
           </form>
 
-          <div class="form-success" id="form-success">
+          <div class="form-error" id="form-error" role="alert" aria-live="assertive">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            <span id="form-error-msg">Something went wrong. Please try again or email <a href="mailto:hello@agentx.market" style="color:var(--error)">hello@agentx.market</a> directly.</span>
+          </div>
+
+          <div class="form-success" id="form-success" role="status" aria-live="polite">
             <div class="check-circle">&#10003;</div>
-            <h3>Message sent!</h3>
+            <h3 tabindex="-1">Message sent!</h3>
             <p style="margin-top: var(--space-md);">Thanks for reaching out. We'll get back to you within 24 hours.</p>
           </div>
         </div>
@@ -352,34 +383,21 @@
           <ul>
             <li><a href="/features">Features</a></li>
             <li><a href="/pricing">Pricing</a></li>
-            <li><a href="#">Marketplace</a></li>
-            <li><a href="#">Documentation</a></li>
+            <li><a href="/browse">Browse Agents</a></li>
           </ul>
         </div>
         <div class="footer-col">
           <h4>Company</h4>
           <ul>
             <li><a href="/about">About</a></li>
+            <li><a href="/blog">Blog</a></li>
             <li><a href="/contact">Contact</a></li>
-            <li><a href="#">Blog</a></li>
-            <li><a href="#">Careers</a></li>
-          </ul>
-        </div>
-        <div class="footer-col">
-          <h4>Legal</h4>
-          <ul>
-            <li><a href="#">Privacy Policy</a></li>
-            <li><a href="#">Terms of Service</a></li>
-            <li><a href="#">Security</a></li>
           </ul>
         </div>
       </div>
       <div class="footer-bottom">
         <span>&copy; 2026 AgentX Market. All rights reserved.</span>
         <div class="footer-social">
-          <a href="#" aria-label="Twitter">𝕏</a>
-          <a href="#" aria-label="GitHub">GH</a>
-          <a href="#" aria-label="LinkedIn">in</a>
         </div>
       </div>
     </div>
@@ -392,6 +410,8 @@
       const btn = this.querySelector('button[type="submit"]');
       btn.disabled = true;
       btn.textContent = 'Sending...';
+      const errorEl = document.getElementById('form-error');
+      errorEl.classList.remove('show');
       try {
         const data = Object.fromEntries(new FormData(this));
         const resp = await fetch('/api/contact', {
@@ -401,11 +421,15 @@
         });
         if (!resp.ok) throw new Error('Server error');
         this.style.display = 'none';
-        document.getElementById('form-success').classList.add('show');
+        errorEl.classList.remove('show');
+        const successEl = document.getElementById('form-success');
+        successEl.classList.add('show');
+        successEl.querySelector('h3').focus();
       } catch (err) {
         btn.disabled = false;
         btn.textContent = 'Send Message';
-        alert('Something went wrong. Please try again or email hello@agentx.market directly.');
+        errorEl.classList.add('show');
+        errorEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
       }
     });
   </script>

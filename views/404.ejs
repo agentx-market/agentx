@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>404 - Page Not Found | AgentX</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <style>
+    .error-container {
+      max-width: 600px;
+      margin: 4rem auto;
+      padding: 2rem;
+      text-align: center;
+    }
+    .error-title {
+      font-size: 6rem;
+      margin: 0;
+      color: #dc3545;
+    }
+    .error-message {
+      font-size: 1.5rem;
+      margin: 1rem 0;
+      color: #333;
+    }
+    .error-submessage {
+      color: #666;
+      margin-bottom: 2rem;
+    }
+    .back-link {
+      display: inline-block;
+      padding: 0.8rem 2rem;
+      background: #007bff;
+      color: white;
+      text-decoration: none;
+      border-radius: 4px;
+    }
+    .back-link:hover {
+      background: #0056b3;
+    }
+  </style>
+</head>
+<body>
+  <div class="error-container">
+    <h1 class="error-title">404</h1>
+    <p class="error-message">Page Not Found</p>
+    <p class="error-submessage"><%= message || "The page you're looking for doesn't exist." %></p>
+    <a href="/browse" class="back-link">Back to Registry</a>
+  </div>
+</body>
+</html>

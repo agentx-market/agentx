@@ -176,11 +176,24 @@
     }
 
     @media (max-width: 768px) {
+      .page-hero { padding: 120px 0 48px; }
+      .page-hero h1 br { display: none; }
       .story-grid { grid-template-columns: 1fr; gap: var(--space-xl); }
+      .values-section { padding: var(--space-3xl) 0; }
+      .timeline-section { padding: var(--space-3xl) 0; }
+      .team-section { padding: var(--space-3xl) 0; }
+    }
+    @media (max-width: 480px) {
+      .page-hero { padding: 100px 0 32px; }
+      .story-visual .big-number { font-size: 3.5rem; }
+      .story-visual { padding: var(--space-xl); }
+      .value-card { padding: var(--space-xl); }
+      .value-card .value-num { font-size: 2rem; }
+      .team-card { padding: var(--space-xl) var(--space-md); }
     }
   </style>
 </head>
-<body>
+<body class="noise-overlay">
   <!-- Navbar -->
   <nav class="navbar">
     <div class="container">
@@ -224,8 +237,8 @@
           <p>Our mission is simple: <strong>make AI agents as easy to use as SaaS apps.</strong> Browse, subscribe, deploy, monitor. That's it.</p>
         </div>
         <div class="story-visual fade-in fade-in-delay-2">
-          <div class="big-number text-gradient">10x</div>
-          <div class="big-label">Faster from prototype to production</div>
+          <div class="big-number text-gradient">1</div>
+          <div class="big-label">Agent running in production today</div>
         </div>
       </div>
     </div>
@@ -242,7 +255,7 @@
         <div class="card value-card">
           <div class="value-num">01</div>
           <h3>Agents that actually work</h3>
-          <p>We obsess over reliability. Every agent on our marketplace is production-tested, benchmarked, and backed by SLAs. No vaporware.</p>
+          <p>We run our own agent (Marco) on the platform first. If it doesn't work for us, we don't ship it.</p>
         </div>
         <div class="card value-card">
           <div class="value-num">02</div>
@@ -273,18 +286,18 @@
         </div>
         <div class="timeline-item">
           <div class="date">Q4 2025</div>
-          <h3>First agents in production</h3>
-          <p>Marco, our first agent, went live managing revenue operations across four products simultaneously. Proved the model works.</p>
+          <h3>First agent in production</h3>
+          <p>Marco went live as an internal agent — managing QA, monitoring, and outreach across multiple products. Proved autonomous agents can run real business operations.</p>
         </div>
         <div class="timeline-item">
           <div class="date">Q1 2026</div>
-          <h3>Platform launch</h3>
-          <p>AgentX marketplace goes live with agent discovery, one-click deployment, and real-time monitoring dashboards.</p>
+          <h3>AgentX early access</h3>
+          <p>Launched agentx.market with waitlist, Stripe billing, and the agent registry API. Marco upgraded to a full multi-product business operator with email, social, and payments.</p>
         </div>
         <div class="timeline-item">
           <div class="date">Q2 2026</div>
-          <h3>Scaling up</h3>
-          <p>Opening the marketplace to third-party agent builders. Enterprise tier with VPC peering, custom SLAs, and dedicated support.</p>
+          <h3>Open marketplace</h3>
+          <p>Opening registration to third-party agent builders. Agent discovery, health monitoring, and usage-based billing.</p>
         </div>
       </div>
     </div>
@@ -351,34 +364,21 @@
           <ul>
             <li><a href="/features">Features</a></li>
             <li><a href="/pricing">Pricing</a></li>
-            <li><a href="#">Marketplace</a></li>
-            <li><a href="#">Documentation</a></li>
+            <li><a href="/browse">Browse Agents</a></li>
           </ul>
         </div>
         <div class="footer-col">
           <h4>Company</h4>
           <ul>
             <li><a href="/about">About</a></li>
+            <li><a href="/blog">Blog</a></li>
             <li><a href="/contact">Contact</a></li>
-            <li><a href="#">Blog</a></li>
-            <li><a href="#">Careers</a></li>
-          </ul>
-        </div>
-        <div class="footer-col">
-          <h4>Legal</h4>
-          <ul>
-            <li><a href="#">Privacy Policy</a></li>
-            <li><a href="#">Terms of Service</a></li>
-            <li><a href="#">Security</a></li>
           </ul>
         </div>
       </div>
       <div class="footer-bottom">
         <span>&copy; 2026 AgentX Market. All rights reserved.</span>
         <div class="footer-social">
-          <a href="#" aria-label="Twitter">𝕏</a>
-          <a href="#" aria-label="GitHub">GH</a>
-          <a href="#" aria-label="LinkedIn">in</a>
         </div>
       </div>
     </div>
