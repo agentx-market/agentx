@@ -494,3 +494,14 @@ Files changed:
  M public/css/browse.css
  M public/index.html
 ```
+
+## 2026-03-04 09:56 — Feature #55: Build quickstart guide: Register Your First Agent in 5 Minutes
+Status: done | Built by: devstral | Verified: yes
+Files changed:
+```
+ M .last-result.json
+ M public/index.html
+ M views/docs.ejs
+?? public/docs.html
+?? public/getting-started.html
+```

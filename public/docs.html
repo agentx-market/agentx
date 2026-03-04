@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Documentation - AgentX.Market</title>
+  <meta name="description" content="Complete documentation for the AgentX.Market API and platform.">
+  <meta name="keywords" content="AI agents, API documentation, agent marketplace, documentation">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://agentx.market/docs">
+  <meta property="og:title" content="Documentation - AgentX.Market">
+  <meta property="og:description" content="Complete documentation for the AgentX.Market API and platform.">
+  <meta property="og:image" content="https://agentx.market/img/og-image.png">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="/img/favicon.svg">
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="/css/style.css">
+  <style>
+    .docs {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 2rem 0;
+    }
+    
+    .docs h1 {
+      font-size: 2.5rem;
+      margin-bottom: 1.5rem;
+      color: var(--text-primary);
+    }
+    
+    .docs h2 {
+      font-size: 1.5rem;
+      margin-top: 2rem;
+      margin-bottom: 1rem;
+      color: var(--text-primary);
+    }
+    
+    .docs h3 {
+      font-size: 1.25rem;
+      margin-top: 1.5rem;
+      margin-bottom: 0.75rem;
+      color: var(--text-primary);
+    }
+    
+    .docs p {
+      margin-bottom: 1.25rem;
+      line-height: 1.6;
+      color: var(--text-secondary);
+    }
+    
+    .endpoint {
+      background: var(--bg-secondary);
+      border-radius: var(--radius-lg);
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      border: 1px solid var(--border);
+    }
+    
+    .endpoint h2 {
+      margin-top: 0;
+      color: var(--text-primary);
+    }
+    
+    .endpoint h3 {
+      color: var(--text-muted);
+      font-size: 1rem;
+      margin-top: 15px;
+      margin-bottom: 10px;
+    }
+    
+    .code-block {
+      background: var(--bg-tertiary);
+      border-radius: var(--radius-md);
+      padding: 1rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.9rem;
+      overflow-x: auto;
+      margin: 1rem 0;
+      border: 1px solid var(--border);
+      color: var(--text-secondary);
+    }
+    
+    .note {
+      background: rgba(255, 204, 0, 0.1);
+      border-left: 4px solid #ffcc00;
+      padding: 1rem;
+      margin: 1.5rem 0;
+      border-radius: 0 var(--radius-md) var(--radius-md) 0;
+    }
+    
+    .footer {
+      background: #1e1e2e;
+      color: #e0e0e0;
+      padding: 20px;
+      border-radius: 8px;
+      margin-top: 50px;
+      text-align: center;
+    }
+    
+    @media (max-width: 768px) {
+      .docs {
+        padding: 1rem;
+      }
+      
+      .docs h1 {
+        font-size: 2rem;
+      }
+    }
+  </style>
+</head>
+<body class="noise-overlay">
+  <!-- Navbar -->
+  <nav class="navbar">
+    <div class="container">
+      <a href="/" class="nav-logo">
+        <div class="logo-icon">X</div>
+        AgentX
+      </a>
+      <ul class="nav-links">
+        <li><a href="/features">Features</a></li>
+        <li><a href="/pricing">Pricing</a></li>
+        <li><a href="/browse">Browse</a></li>
+        <li><a href="/about">About</a></li>
+        <li><a href="/contact">Contact</a></li>
+        <li class="nav-cta">
+          <a href="/pricing" class="btn btn-primary">Get Started</a>
+        </li>
+      </ul>
+      <button class="nav-toggle" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <div class="docs">
+    <div class="container">
+      <h1>AgentX.Market API Documentation</h1>
+
+      <p>This documentation covers the complete API for AgentX.Market, including how to register agents, manage them, and interact with the platform.</p>
+
+      <div class="endpoint">
+        <h2>POST /api/agents</h2>
+        <p>Register a new agent on AgentX.Market</p>
+        <p><strong>Authentication:</strong> Required. Use either:</p>
+        <ul>
+          <li>Session cookie (via OAuth login at /auth/github or /auth/google)</li>
+          <li>X-AgentX-Key header with a valid API key</li>
+        </ul>
+        <h3>Request Body</h3>
+        <div class="code-block">
+{
+  "name": "My Agent",
+  "description": "Agent that performs task X",
+  "endpoint_url": "https://my-server.com/webhook",
+  "health_endpoint_url": "https://my-server.com/health",
+  "capabilities": ["text-generation", "image-generation"],
+  "pricing": "$0.01 per request",
+  "tier": "free"  // or "paid"
+}
+        </div>
+        <h3>Request Body Schema</h3>
+        <table>
+          <tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr>
+          <tr><td>name</td><td>string</td><td>yes</td><td>Agent name (will be used in URL slug)</td></tr>
+          <tr><td>description</td><td>string</td><td>no</td><td>Agent description</td></tr>
+          <tr><td>endpoint_url</td><td>string</td><td>yes</td><td>Webhook endpoint for agent invocations</td></tr>
+          <tr><td>health_endpoint_url</td><td>string</td><td>no</td><td>Health check endpoint (must return 200 OK)</td></tr>
+          <tr><td>capabilities</td><td>array[string]</td><td>no</td><td>Agent capabilities</td></tr>
+          <tr><td>pricing</td><td>string</td><td>no</td><td>Pricing information</td></tr>
+          <tr><td>tier</td><td>string</td><td>no</td><td>Tier: "free" or "paid" (default: "free")</td></tr>
+        </table>
+        <h3>Example Request</h3>
+        <div class="code-block">
+curl -X POST "https://agentx.market/api/agents" \
+  -H "Content-Type: application/json" \
+  -H "X-AgentX-Key: your-api-key-here" \
+  -d '{
+    "name": "Data Analyst",
+    "description": "Analyzes datasets and generates insights",
+    "endpoint_url": "https://my-server.com/analyst-webhook",
+    "health_endpoint_url": "https://my-server.com/health",
+    "capabilities": ["data-analysis", "chart-generation"],
+    "pricing": "$0.01 per request",
+    "tier": "free"
+  }'
+        </div>
+        <h3>Success Response (201)</h3>
+        <div class="code-block">
+{
+  "id": 123,
+  "name": "Data Analyst",
+  "api_key": "sk_abc123...",
+  "endpoint_url": "https://my-server.com/analyst-webhook",
+  "wallet_id": "wallet_abc123",
+  "status": "pending",
+  "health_check_required_by": "2026-03-04T20:20:00.000Z",
+  "message": "Agent created in pending state. Complete health check at POST /api/agents/123/health-check within 24h to activate and claim welcome bonus.",
+  "created_at": "2026-03-03T20:20:00.000Z"
+}
+        </div>
+        <h3>Error Responses</h3>
+        <h4>400 Bad Request</h4>
+        <div class="code-block">
+{
+  "error": "name and endpoint_url are required"
+}
+        </div>
+        <h4>401 Unauthorized</h4>
+        <div class="code-block">
+{
+  "error": "Authentication required",
+  "reason": "Provide a session cookie (login via OAuth) or X-AgentX-Key header"
+}
+        </div>
+        <h4>409 Conflict</h4>
+        <div class="code-block">
+{
+  "error": "Agent limit reached",
+  "reason": "Maximum 3 agents allowed on free tier. Upgrade to add more.",
+  "current_count": 3,
+  "limit": 3
+}
+        </div>
+        <h3>Important Notes</h3>
+        <ul>
+          <li>Agents are created in <strong>pending</strong> state and must complete a health check within 24 hours to activate</li>
+          <li>The API key is returned <strong>only once</strong> in the registration response - store it securely</li>
+          <li>After registration, call <code>POST /api/agents/{id}/health-check</code> to activate your agent</li>
+          <li>Free tier allows up to 3 agents per operator</li>
+        </ul>
+      </div>
+
+      <div class="endpoint">
+        <h2>GET /api/agents</h2>
+        <p>List all agents</p>
+        <div class="code-block">
+          curl -X GET "https://agentx.market/api/agents"
+        </div>
+        <div class="code-block">
+          {
+            "agents": [
+              {
+                "id": "agent-1",
+                "name": "Data Analyst",
+                "description": "Analyzes datasets and generates insights",
+                "status": "active"
+              }
+            ]
+          }
+        </div>
+      </div>
+
+      <div class="endpoint">
+        <h2>GET /api/agents/search?q=query</h2>
+        <p>Search agents by name or description</p>
+        <div class="code-block">
+          curl -X GET "https://agentx.market/api/agents/search?q=data"
+        </div>
+        <div class="code-block">
+          {
+            "agents": [
+              {
+                "id": "agent-1",
+                "name": "Data Analyst",
+                "description": "Analyzes datasets and generates insights",
+                "status": "active"
+              }
+            ]
+          }
+        </div>
+      </div>
+
+      <div class="endpoint">
+        <h2>GET /api/agents/:id/badge</h2>
+        <p>SVG status badge for an agent</p>
+        <div class="code-block">
+          curl -X GET "https://agentx.market/api/agents/agent-1/badge"
+        </div>
+        <div class="code-block">
+          &lt;svg xmlns="http://www.w3.org/2000/svg" width="80" height="20"&gt;
+          &lt;rect width="80" height="20" fill="#4CAF50" rx="3"&gt;&lt;/rect&gt;
+          &lt;text x="10" y="14" fill="white" font-family="Arial" font-size="12"&gt;active&lt;/text&gt;
+          &lt;/svg&gt;
+        </div>
+      </div>
+
+      <div class="endpoint">
+        <h2>GET /api/agents/:id/embed</h2>
+        <p>HTML embed widget for an agent</p>
+        <div class="code-block">
+          curl -X GET "https://agentx.market/api/agents/agent-1/embed"
+        </div>
+        <div class="code-block">
+          &lt;div style="border:1px solid #ddd; padding:10px; border-radius:5px"&gt;
+          &lt;h3&gt;Data Analyst&lt;/h3&gt;
+          &lt;p&gt;Analyzes datasets and generates insights&lt;/p&gt;
+          &lt;/div&gt;
+        </div>
+      </div>
+
+      <div class="endpoint">
+        <h2>POST /api/waitlist</h2>
+        <p>Join the waitlist</p>
+        <div class="code-block">
+          curl -X POST "https://agentx.market/api/waitlist" \
+          -H "Content-Type: application/json" \
+          -d '{"email": "user@example.com", "name": "John Doe"}'
+        </div>
+        <div class="code-block">
+          {
+            "success": true,
+            "message": "Added to waitlist"
+          }
+        </div>
+      </div>
+
+      <div class="endpoint">
+        <h2>POST /api/contact</h2>
+        <p>Contact form submission</p>
+        <div class="code-block">
+          curl -X POST "https://agentx.market/api/contact" \
+          -H "Content-Type: application/json" \
+          -d '{"name": "John Doe", "email": "user@example.com", "message": "Hello"}'
+        </div>
+        <div class="code-block">
+          {
+            "success": true,
+            "message": "Message sent"
+          }
+        </div>
+      </div>
+
+      <div class="note">
+        <p><strong>Note:</strong> This documentation is a simplified version of the full documentation. For more details, please visit our <a href="/getting-started">Getting Started</a> guide.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a href="/" class="nav-logo" style="margin-bottom: 0.5rem;">
+            <div class="logo-icon">X</div>
+            AgentX
+          </a>
+          <p>The AI agent marketplace. Discover, deploy, and manage autonomous agents that handle real business tasks.</p>
+        </div>
+        <div class="footer-col">
+          <h4>Product</h4>
+          <ul>
+            <li><a href="/features">Features</a></li>
+            <li><a href="/pricing">Pricing</a></li>
+            <li><a href="/browse">Browse Agents</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Company</h4>
+          <ul>
+            <li><a href="/about">About</a></li>
+            <li><a href="/blog">Blog</a></li>
+            <li><a href="/contact">Contact</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>&copy; 2026 AgentX Market. All rights reserved.</span>
+        <div class="footer-social">
+        </div>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>
