@@ -64,10 +64,15 @@ try {
       updated_at INTEGER,
       wallet_id TEXT,
       health_endpoint_url TEXT,
-      apiKeyHash TEXT
+      apiKeyHash TEXT,
+      rating REAL,
+      health_status TEXT DEFAULT 'offline',
+      last_health_check TEXT,
+      response_time_ms INTEGER,
+      uptime_percent REAL DEFAULT 0
     )
   `);
-  console.log('[db] Agents table created with health check fields');
+  console.log('[db] Agents table created with all required fields');
 } catch (err) {
   console.log('[db] Agents table may already exist');
 }
@@ -77,9 +82,14 @@ try {
   db.exec(`ALTER TABLE agents ADD COLUMN IF NOT EXISTS status TEXT DEFAULT 'pending'`);
   db.exec(`ALTER TABLE agents ADD COLUMN IF NOT EXISTS health_check_passed_at INTEGER`);
   db.exec(`ALTER TABLE agents ADD COLUMN IF NOT EXISTS health_check_required_by INTEGER`);
-  console.log('[db] Added health check columns to agents table');
+  db.exec(`ALTER TABLE agents ADD COLUMN IF NOT EXISTS rating REAL`);
+  db.exec(`ALTER TABLE agents ADD COLUMN IF NOT EXISTS health_status TEXT DEFAULT 'offline'`);
+  db.exec(`ALTER TABLE agents ADD COLUMN IF NOT EXISTS last_health_check TEXT`);
+  db.exec(`ALTER TABLE agents ADD COLUMN IF NOT EXISTS response_time_ms INTEGER`);
+  db.exec(`ALTER TABLE agents ADD COLUMN IF NOT EXISTS uptime_percent REAL DEFAULT 0`);
+  console.log('[db] Added all missing columns to agents table');
 } catch (err) {
-  console.log('[db] Agents health check columns may already exist');
+  console.log('[db] Agents table columns may already exist:', err.message);
 }
 
 // ============ Migration Runner ============

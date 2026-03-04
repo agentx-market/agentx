@@ -505,3 +505,12 @@ Files changed:
 ?? public/docs.html
 ?? public/getting-started.html
 ```
+
+## 2026-03-04 10:26 — Feature #1: Agent registry API
+Status: done | Built by: devstral | Verified: yes
+Files changed:
+```
+ M db.js
+?? FEATURE_1_PLAN.md
+?? FEATURE_1_TEST_PLAN.md
+```
