@@ -18,6 +18,17 @@
     .agent-status.active { background: #00d26a; box-shadow: 0 0 8px rgba(0,210,106,0.5); }
     .agent-status.inactive { background: #ff4757; }
     .agent-description { color: #a0a0c0; font-size: 0.9rem; margin-bottom: 1rem; }
+    .analytics-section { margin-top: 3rem; }
+    .analytics-section h2 { color: #e0e0ff; margin-bottom: 1.5rem; font-size: 1.5rem; }
+    .analytics-table { width: 100%; border-collapse: collapse; background: #1a1a2e; border-radius: 12px; overflow: hidden; border: 1px solid #2a2a4a; }
+    .analytics-table th { background: #2a2a4a; color: #e0e0ff; padding: 1rem; text-align: left; font-weight: 600; }
+    .analytics-table td { padding: 1rem; border-top: 1px solid #2a2a4a; color: #a0a0c0; }
+    .analytics-table tr:hover td { background: #1f1f3a; }
+    .analytics-table th:first-child, .analytics-table td:first-child { border-left: none; }
+    .analytics-table th:last-child, .analytics-table td:last-child { border-right: none; }
+    .trend-up { color: #00d26a; }
+    .trend-neutral { color: #a0a0c0; }
+    .stat-value { font-weight: 600; color: #e0e0ff; }
   </style>
 </head>
 <body class="dashboard-page">
@@ -77,6 +88,32 @@
           <% }); %>
         </div>
       <% } %>
+      
+      <% if (agents.length > 0) { %>
+        <div class="analytics-section">
+          <h2>Analytics</h2>
+          <table class="analytics-table">
+            <thead>
+              <tr>
+                <th>Agent</th>
+                <th>Total Views</th>
+                <th>Last 7 Days</th>
+                <th>Last 30 Days</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% agents.forEach(agent => { %>
+                <tr>
+                  <td><%= agent.name %></td>
+                  <td class="stat-value"><span class="analytics-views" data-agent-id="<%= agent.id %>">0</span></td>
+                  <td class="stat-value"><span class="analytics-7d" data-agent-id="<%= agent.id %>">0</span></td>
+                  <td class="stat-value"><span class="analytics-30d" data-agent-id="<%= agent.id %>">0</span></td>
+                </tr>
+              <% }); %>
+            </tbody>
+          </table>
+        </div>
+      <% } %>
     </div>
   </section>
 
@@ -119,5 +156,45 @@
       </div>
     </div>
   </footer>
+
+  <script>
+    // Fetch analytics data
+    async function loadAnalytics() {
+      try {
+        const response = await fetch('/api/my-agents/analytics');
+        const data = await response.json();
+        
+        if (data.analytics && data.analytics.length > 0) {
+          const analyticsMap = {};
+          data.analytics.forEach(item => {
+            analyticsMap[item.agent_id] = {
+              total: item.total_views,
+              sevenDay: item.views_7d,
+              thirtyDay: item.views_30d
+            };
+          });
+          
+          document.querySelectorAll('.analytics-views').forEach(el => {
+            const agentId = el.dataset.agentId;
+            el.textContent = analyticsMap[agentId]?.total || 0;
+          });
+          
+          document.querySelectorAll('.analytics-7d').forEach(el => {
+            const agentId = el.dataset.agentId;
+            el.textContent = analyticsMap[agentId]?.sevenDay || 0;
+          });
+          
+          document.querySelectorAll('.analytics-30d').forEach(el => {
+            const agentId = el.dataset.agentId;
+            el.textContent = analyticsMap[agentId]?.thirtyDay || 0;
+          });
+        }
+      } catch (error) {
+        console.error('Failed to load analytics:', error);
+      }
+    }
+    
+    loadAnalytics();
+  </script>
 </body>
 </html>

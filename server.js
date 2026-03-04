@@ -1041,6 +1041,33 @@ app.get('/my-agents', (req, res) => {
   res.render('dashboard', { agents, operator: { id: req.operatorId } });
 });
 
+// API: Get analytics for operator's agents
+app.get('/api/my-agents/analytics', (req, res) => {
+  if (!req.operatorId) return res.status(401).json({ error: 'Unauthorized' });
+  
+  const agents = db.all('SELECT id FROM agents WHERE operator_id = ?', [req.operatorId]);
+  const agentIds = agents.map(a => a.id);
+  
+  if (agentIds.length === 0) {
+    return res.json({ analytics: [] });
+  }
+  
+  const placeholders = agentIds.map(() => '?').join(',');
+  
+  const analytics = db.prepare(`
+    SELECT 
+      agent_id,
+      COUNT(*) as total_views,
+      SUM(CASE WHEN created_at >= datetime('now', '-7 days') THEN 1 ELSE 0 END) as views_7d,
+      SUM(CASE WHEN created_at >= datetime('now', '-30 days') THEN 1 ELSE 0 END) as views_30d
+    FROM analytics_events
+    WHERE agent_id IN (${placeholders}) AND event_type = 'page_view'
+    GROUP BY agent_id
+  `).all(...agentIds);
+  
+  res.json({ analytics });
+});
+
 app.get('/docs', (req, res) => res.render('docs'));
 
 // Sitemap route
@@ -1145,6 +1172,18 @@ app.get('/agents/:slug', (req, res) => {
   
   if (!agent) {
     return res.status(404).render('404', { message: 'Agent not found' });
+  }
+  
+  // Track page view analytics
+  if (agent.id) {
+    const ip = req.ip || req.connection.remoteAddress;
+    const ipHash = require('crypto').createHash('sha256').update(ip).digest('hex').substring(0, 16);
+    db.prepare('INSERT INTO analytics_events (agent_id, event_type, referrer, ip_hash) VALUES (?, ?, ?, ?)').run(
+      agent.id,
+      'page_view',
+      req.get('Referrer') || null,
+      ipHash
+    );
   }
   
   const uptimeTrend = agentQueries.getAgentUptimeTrend(agent.id);
