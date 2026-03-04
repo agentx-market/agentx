@@ -7,30 +7,42 @@
   <link rel="stylesheet" href="/css/style.css">
   <link rel="stylesheet" href="/css/browse.css">
   <style>
+    body { background: #0a0a1a; color: #e0e0ff; }
     .agent-detail { max-width: 900px; margin: 2rem auto; padding: 0 1rem; }
-    .agent-header { background: #f5f5f5; padding: 2rem; border-radius: 8px; margin-bottom: 2rem; }
-    .agent-title { font-size: 2.5rem; margin: 0 0 0.5rem 0; }
+    .agent-header { background: #1a1a2e; border: 1px solid #2a2a4a; border-radius: 12px; padding: 2rem; margin-bottom: 2rem; }
+    .agent-title { font-size: 2.5rem; margin: 0 0 0.5rem 0; color: #e0e0ff; }
     .agent-meta { display: flex; gap: 1rem; margin: 1rem 0; flex-wrap: wrap; }
     .badge { display: inline-block; padding: 0.4rem 0.8rem; border-radius: 4px; font-size: 0.85rem; font-weight: bold; }
-    .badge-category { background: #007bff; color: white; }
-    .badge-status { background: #28a745; color: white; }
+    .badge-pricing { background: #6c5ce7; color: white; }
+    .badge-healthy { background: #4ade80; color: white; }
+    .badge-unhealthy { background: #ef4444; color: white; }
     .section { margin: 2rem 0; }
-    .section h2 { border-bottom: 2px solid #007bff; padding-bottom: 0.5rem; }
-    .stat-row { display: flex; justify-content: space-between; padding: 1rem 0; border-bottom: 1px solid #eee; }
-    .stat-label { font-weight: bold; }
+    .section h2 { color: #e0e0ff; border-bottom: 2px solid #6c5ce7; padding-bottom: 0.5rem; }
+    .stat-row { display: flex; justify-content: space-between; padding: 1rem 0; border-bottom: 1px solid #2a2a4a; }
+    .stat-label { font-weight: bold; color: #a0a0c0; }
     .capabilities { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-top: 1rem; }
-    .capability-tag { background: #e8e8e8; padding: 0.3rem 0.8rem; border-radius: 4px; font-size: 0.9rem; }
+    .capability-tag { background: #2a2a4a; color: #e0e0ff; padding: 0.3rem 0.8rem; border-radius: 4px; font-size: 0.9rem; }
     .uptime-trend { display: flex; gap: 3px; margin-top: 1rem; flex-wrap: wrap; }
-    .uptime-bar { width: 20px; height: 40px; border-radius: 3px; background: #d3d3d3; }
-    .uptime-bar.high { background: #28a745; }
-    .uptime-bar.medium { background: #ffc107; }
-    .uptime-bar.low { background: #dc3545; }
+    .uptime-bar { width: 20px; height: 40px; border-radius: 3px; background: #2a2a4a; }
+    .uptime-bar.high { background: #4ade80; }
+    .uptime-bar.medium { background: #6c5ce7; }
+    .uptime-bar.low { background: #ef4444; }
   </style>
 </head>
 <body>
   <nav class="navbar">
-    <a href="/browse" class="nav-link">← Back to Registry</a>
-    <a href="/" class="nav-link">Home</a>
+    <div class="container">
+      <a href="/" class="nav-logo"><div class="logo-icon">X</div>AgentX</a>
+      <ul class="nav-links">
+        <li><a href="/features">Features</a></li>
+        <li><a href="/pricing">Pricing</a></li>
+        <li><a href="/browse">Browse</a></li>
+        <li><a href="/about">About</a></li>
+        <li><a href="/contact">Contact</a></li>
+        <li><a href="/login">Login</a></li>
+        <li class="nav-cta"><a href="/pricing" class="btn btn-primary">Get Started</a></li>
+      </ul>
+    </div>
   </nav>
 
   <div class="agent-detail">
@@ -38,9 +50,12 @@
       <h1 class="agent-title"><%= agent.name %></h1>
       <p><%= agent.description %></p>
       <div class="agent-meta">
-        <span class="badge badge-category"><%= agent.category || 'general' %></span>
-        <span class="badge badge-status"><%= agent.status || 'active' %></span>
-        <span class="badge"><%= agent.pricing || 'free' %></span>
+        <span class="badge badge-pricing"><%= agent.pricing || 'Free' %></span>
+        <% if (agent.health_check_passed_at && Date.now() - agent.health_check_passed_at < 300000) { %>
+          <span class="badge badge-healthy">Healthy</span>
+        <% } else { %>
+          <span class="badge badge-unhealthy">Unhealthy</span>
+        <% } %>
       </div>
     </div>
 
@@ -48,7 +63,7 @@
       <h2>Performance</h2>
       <div class="stat-row">
         <span class="stat-label">7-Day Uptime</span>
-        <span><%= uptime7d %>%</span>
+        <span><%= uptime7d %></span>
       </div>
       <div class="uptime-trend">
         <% uptimeTrend.forEach(point => {
@@ -72,19 +87,9 @@
     <% } %>
 
     <div class="section">
-      <h2>Contact</h2>
-      <% if (agent.website) { %>
-      <div class="stat-row">
-        <span class="stat-label">Website</span>
-        <span><a href="<%= agent.website %>" target="_blank"><%= agent.website %></a></span>
-      </div>
-      <% } %>
-      <% if (agent.contact_email) { %>
-      <div class="stat-row">
-        <span class="stat-label">Email</span>
-        <span><a href="mailto:<%= agent.contact_email %>"><%= agent.contact_email %></a></span>
-      </div>
-      <% } %>
+      <a href="/alternatives/<%= agent.name.toLowerCase().replace(/ /g, '-') %>">
+        <button class="btn btn-secondary" style="margin-top: 1rem;">Explore Alternatives</button>
+      </a>
     </div>
   </div>
 </body>

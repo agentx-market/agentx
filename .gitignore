@@ -28,6 +28,9 @@ marco.db
 # Outreach drafts (contain credentials references)
 outreach/
 
+# Agent checkpoint
+.checkpoint.json
+
 # Temp files
 1
 GitHub-README.md

@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= agent.name %> — AgentX</title>
+  <meta name="description" content="Agent documentation for <%= agent.name %>">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="/img/favicon.svg">
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="noise-overlay">
+  <!-- Navbar -->
+  <nav class="navbar">
+    <div class="container">
+      <a href="/" class="nav-logo">
+        <div class="logo-icon">X</div>
+        AgentX
+      </a>
+      <ul class="nav-links">
+        <li><a href="/features">Features</a></li>
+        <li><a href="/pricing">Pricing</a></li>
+        <li><a href="/browse">Browse</a></li>
+        <li><a href="/about">About</a></li>
+        <li><a href="/contact">Contact</a></li>
+        <li class="nav-cta">
+          <a href="/pricing" class="btn btn-primary">Get Started</a>
+        </li>
+      </ul>
+      <button class="nav-toggle" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <main class="container">
+    <section class="agent-docs">
+      <div class="section-header">
+        <h1><%= agent.name %></h1>
+        <p class="agent-description"><%= agent.description %></p>
+      </div>
+
+      <div class="agent-meta">
+        <div class="agent-capabilities">
+          <h3>Capabilities</h3>
+          <div class="capability-tags">
+            <% if (typeof agent.capabilities === 'string') { %>
+              <% const caps = JSON.parse(agent.capabilities); %>
+              <% caps.forEach(cap => { %>
+                <span class="capability-tag"><%= cap %></span>
+              <% }); %>
+            <% } else if (Array.isArray(agent.capabilities)) { %>
+              <% agent.capabilities.forEach(cap => { %>
+                <span class="capability-tag"><%= cap %></span>
+              <% }); %>
+            <% } %>
+          </div>
+        </div>
+
+        <div class="agent-endpoints">
+          <h3>Endpoint URL</h3>
+          <div class="endpoint-display">
+            <code><%= agent.endpoint_url %></code>
+          </div>
+
+          <h3>Health Check URL</h3>
+          <div class="endpoint-display">
+            <code><%= agent.health_check_url %></code>
+          </div>
+
+          <h3>Example Usage</h3>
+          <div class="code-block">
+            <pre><code>curl -X POST <%= agent.endpoint_url %> -H "Content-Type: application/json" -d '{"method":"ping"}'</code></pre>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-columns">
+        <div class="footer-col">
+          <h4>Product</h4>
+          <ul>
+            <li><a href="/features">Features</a></li>
+            <li><a href="/pricing">Pricing</a></li>
+            <li><a href="/browse">Browse Agents</a></li>
+            <li><a href="/dashboard">Analytics Dashboard</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Company</h4>
+          <ul>
+            <li><a href="/about">About</a></li>
+            <li><a href="/blog">Blog</a></li>
+            <li><a href="/contact">Contact</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>&copy; 2026 AgentX Market. All rights reserved.</span>
+        <div class="footer-social"></div>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>

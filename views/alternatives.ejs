@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Alternatives to <%= agent.name %> — AgentX Registry</title>
+  <meta name="description" content="Explore alternatives to <%= agent.name %>. Find similar agents in the same category with different features and pricing.">
+  
+  <!-- Schema.org markup for Google -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "ItemPage",
+    "name": "Alternatives to <%= agent.name %>",
+    "description": "Explore alternatives to <%= agent.name %>. Find similar agents in the same category with different features and pricing.",
+    "potentialAction": {
+      "@type": "SearchAction",
+      "target": "https://agentx.market/browse?q={search_term_string}",
+      "query-input": "required name=search_term_string"
+    }
+  }
+  </script>
+  
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/browse.css">
+  <style>
+    body { background: #0a0a1a; color: #e0e0ff; }
+    .alternatives-container { max-width: 1200px; margin: 2rem auto; padding: 0 1rem; }
+    .alternatives-header { background: #1a1a2e; border: 1px solid #2a2a4a; border-radius: 12px; padding: 2rem; margin-bottom: 2rem; }
+    .alternatives-title { font-size: 2.5rem; margin: 0 0 0.5rem 0; color: #e0e0ff; }
+    .alternatives-subtitle { color: #a0a0c0; font-size: 1.1rem; }
+    .alternatives-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); gap: 1.5rem; margin-top: 2rem; }
+    .alternative-card { background: #1a1a2e; border: 1px solid #2a2a4a; border-radius: 12px; padding: 1.5rem; transition: border-color 0.2s; }
+    .alternative-card:hover { border-color: #6c5ce7; }
+    .alternative-name { font-size: 1.3rem; font-weight: 600; color: #e0e0ff; margin: 0 0 0.5rem 0; }
+    .alternative-description { color: #a0a0c0; font-size: 0.95rem; margin: 0 0 1rem 0; }
+    .alternative-meta { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 1rem; }
+    .alternative-badge { display: inline-block; padding: 0.3rem 0.6rem; border-radius: 4px; font-size: 0.75rem; font-weight: bold; }
+    .alternative-badge-pricing { background: #6c5ce7; color: white; }
+    .alternative-badge-healthy { background: #4ade80; color: white; }
+    .alternative-badge-rating { background: #fbbf24; color: white; }
+    .alternative-link { display: inline-block; margin-top: 0.5rem; color: #6c5ce7; text-decoration: none; font-weight: 500; }
+    .alternative-link:hover { text-decoration: underline; }
+    .no-alternatives { text-align: center; color: #a0a0c0; padding: 3rem; }
+    .back-link { display: inline-block; margin-bottom: 1rem; color: #6c5ce7; text-decoration: none; }
+    .back-link:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+  <nav class="navbar">
+    <div class="container">
+      <a href="/" class="nav-logo"><div class="logo-icon">X</div>AgentX</a>
+      <ul class="nav-links">
+        <li><a href="/features">Features</a></li>
+        <li><a href="/pricing">Pricing</a></li>
+        <li><a href="/browse">Browse</a></li>
+        <li><a href="/about">About</a></li>
+        <li><a href="/contact">Contact</a></li>
+        <li><a href="/login">Login</a></li>
+        <li class="nav-cta"><a href="/pricing" class="btn btn-primary">Get Started</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="alternatives-container">
+    <div class="alternatives-header">
+      <h1 class="alternatives-title">Alternatives to <%= agent.name %></h1>
+      <p class="alternatives-subtitle">Explore similar agents in the same category</p>
+    </div>
+
+    <% if (alternatives.length > 0) { %>
+      <div class="alternatives-grid">
+        <% alternatives.forEach(alt => { %>
+          <div class="alternative-card">
+            <h3 class="alternative-name"><a href="/agents/<%= alt.slug %>"><%= alt.name %></a></h3>
+            <p class="alternative-description"><%= alt.description %></p>
+            <div class="alternative-meta">
+              <% if (alt.rating > 0) { %>
+                <span class="alternative-badge alternative-badge-rating">Rating: <%= alt.rating.toFixed(1) %></span>
+              <% } %>
+              <span class="alternative-badge alternative-badge-pricing"><%= alt.pricing || 'Free' %></span>
+              <% if (alt.health_check_passed_at && Date.now() - alt.health_check_passed_at < 300000) { %>
+                <span class="alternative-badge alternative-badge-healthy">Healthy</span>
+              <% } else { %>
+                <span class="alternative-badge alternative-badge-unhealthy">Unhealthy</span>
+              <% } %>
+            </div>
+            <a href="/agents/<%= alt.slug %>" class="alternative-link">View Details →</a>
+          </div>
+        <% }); %>
+      </div>
+    <% } else { %>
+      <div class="no-alternatives">
+        <p>No alternatives found for this agent.</p>
+      </div>
+    <% } %>
+
+    <a href="/agents/<%= agent.slug %>"><button class="btn btn-secondary" style="margin-top: 2rem;">Back to <%= agent.name %></button></a>
+  </div>
+</body>
+</html>

@@ -187,6 +187,16 @@ app.get('/health', (req, res) => {
   });
 });
 
+app.get('/robots.txt', (req, res) => {
+  res.set('Content-Type', 'text/plain');
+  res.send(`User-agent: *
+Allow: /
+Disallow: /api/
+Disallow: /auth/
+Disallow: /webhooks/
+Sitemap: https://agentx.market/sitemap.xml`);
+});
+
 // Auth middleware for agent-specific routes is applied inline on each handler below
 
 // Auth middleware that accepts either session cookie OR API key
@@ -408,7 +418,7 @@ app.get('/api/agents/search', async (req, res) => {
   }
 });
 
-app.get('/api/agents/:id', authMiddleware, authenticatedLimiter, (req, res) => {
+app.get('/api/agents/:id', (req, res) => {
   try {
     const agent = db.prepare('SELECT * FROM agents WHERE id = ?').get(req.params.id);
     if (!agent) return res.status(404).json({ error: 'Agent not found' });
@@ -421,6 +431,124 @@ app.get('/api/agents/:id', authMiddleware, authenticatedLimiter, (req, res) => {
     res.json(agent);
   } catch (err) {
     res.status(500).json({ error: err.message });
+  }
+});
+
+// Agent schema endpoint - returns agent's capabilities and endpoint
+app.get('/api/agents/:id/schema', authMiddleware, authenticatedLimiter, (req, res) => {
+  try {
+    const id = parseInt(req.params.id);
+    const agent = db.get('SELECT capabilities, endpoint_url FROM agents WHERE id=?', [id]);
+    if (!agent) return res.status(404).json({ error: 'Agent not found' });
+    res.json({ 
+      capabilities: agent.capabilities ? JSON.parse(agent.capabilities) : [], 
+      endpoint: agent.endpoint_url 
+    });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// Agent stats endpoint - returns usage statistics for analytics dashboard
+app.get('/api/agents/:id/stats', authMiddleware, authenticatedLimiter, async (req, res) => {
+  try {
+    const id = parseInt(req.params.id);
+    const agent = db.get('SELECT id FROM agents WHERE id=?', [id]);
+    if (!agent) return res.status(404).json({ error: 'Agent not found' });
+    
+    const stats = db.prepare(
+      'SELECT date(created_at) as day, SUM(tasks_completed) as tasks, AVG(response_time_ms) as avg_ms, SUM(errors) as errors FROM agent_usage WHERE agent_id=? GROUP BY day ORDER BY day DESC LIMIT 30'
+    ).all(id);
+    res.json(stats);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// Agent status badge
+app.get('/api/agents/:id/badge', async (req, res) => {
+  try {
+    const id = parseInt(req.params.id);
+    const agent = db.get('SELECT id, name, health_check_passed_at FROM agents WHERE id=?', [id]);
+    if (!agent) return res.status(404).send('Not found');
+    
+    const now = new Date();
+    const lastHealth = agent.health_check_passed_at ? new Date(agent.health_check_passed_at) : null;
+    const isOnline = lastHealth && (now - lastHealth) <= 5 * 60 * 1000;
+    const status = isOnline ? 'online' : 'offline';
+    const color = isOnline ? '#4c1' : '#e05d44';
+    
+    const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="200" height="20" viewBox="0 0 200 20">
+      <rect width="200" height="20" rx="3" fill="${color}"/>
+      <text x="10" y="14" font-family="Arial" font-size="12" fill="white" text-anchor="start">${agent.name || 'Agent'}</text>
+      <text x="180" y="14" font-family="Arial" font-size="12" fill="white" text-anchor="end">${status}</text>
+    </svg>`;
+    
+    res.set('Content-Type', 'image/svg+xml');
+    res.send(svg);
+  } catch (err) {
+    res.status(500).send(err.message);
+  }
+});
+
+// Agent status embed widget
+app.get('/api/agents/:id/embed', async (req, res) => {
+  try {
+    const id = parseInt(req.params.id);
+    const agent = db.get('SELECT id, name, health_check_passed_at, created_at FROM agents WHERE id=?', [id]);
+    if (!agent) return res.status(404).send('Not found');
+    
+    const now = new Date();
+    const lastHealth = agent.health_check_passed_at ? new Date(agent.health_check_passed_at) : null;
+    const isOnline = lastHealth && (now - lastHealth) <= 5 * 60 * 1000;
+    const statusColor = isOnline ? '#4c1' : '#e05d44';
+    
+    const createdAt = agent.created_at ? new Date(agent.created_at) : now;
+    const uptimeMs = lastHealth ? now - createdAt : 0;
+    const totalMs = now - createdAt;
+    const uptimePercent = totalMs > 0 ? Math.round((uptimeMs / totalMs) * 100) : 0;
+    
+    const html = `<div style="font-family: Arial, sans-serif; background: #1e1e1e; color: #e0e0e0; padding: 12px; border-radius: 6px; border: 1px solid #333;">
+      <div style="display: flex; align-items: center; gap: 8px;">
+        <div style="width: 10px; height: 10px; border-radius: 50%; background: ${statusColor};"></div>
+        <strong>${agent.name || 'Agent'}</strong>
+      </div>
+      <div style="margin-top: 4px; font-size: 12px; color: #aaa;">
+        Uptime: ${uptimePercent}%
+      </div>
+    </div>`;
+    
+    res.set('Content-Type', 'text/html');
+    res.send(html);
+  } catch (err) {
+    res.status(500).send(err.message);
+  }
+});
+
+// Agent invoke endpoint - forwards method+params to agent's endpoint
+app.post('/api/agents/:id/invoke', authMiddleware, authenticatedLimiter, async (req, res) => {
+  try {
+    const id = parseInt(req.params.id);
+    const { method, params } = req.body;
+    
+    if (!method) {
+      return res.status(400).json({ error: 'method is required' });
+    }
+    
+    const agent = db.get('SELECT endpoint_url FROM agents WHERE id=? AND status="active"', [id]);
+    if (!agent) return res.status(404).json({ error: 'Agent not found or inactive' });
+    
+    const resp = await fetch(agent.endpoint_url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ method, params })
+    });
+    
+    const result = await resp.json();
+    res.json(result);
+  } catch (err) {
+    console.error(`[invoke] Error: ${err.message}`);
+    res.status(500).json({ error: 'Invoke failed', details: err.message });
   }
 });
 
@@ -810,42 +938,202 @@ app.use('/blog', blogRouter);
 // Browse API endpoint with search, category, and sort filters
 app.get('/api/browse', (req, res) => {
   const { search, category, sort } = req.query;
-  let query = 'SELECT id, name, description, category, uptime_percent, last_health_check FROM agents WHERE 1=1';
+  let query = 'SELECT a.id, a.name, a.description, a.health_check_passed_at, a.health_endpoint_url, a.created_at FROM agents a WHERE 1=1';
   const params = [];
 
   if (search) {
-    query += ' AND (LOWER(name) LIKE ? OR LOWER(description) LIKE ?)';
+    query += ' AND (LOWER(a.name) LIKE ? OR LOWER(a.description) LIKE ?)';
     params.push(`%${search.toLowerCase()}%`, `%${search.toLowerCase()}%`);
   }
 
   if (category) {
-    query += ' AND category = ?';
+    query += ' AND a.id IN (SELECT agent_id FROM agent_categories WHERE category_id = (SELECT id FROM categories WHERE name = ?))';
     params.push(category);
   }
 
   // Sorting
   const validSorts = {
-    'newest': 'created_at DESC',
-    'popular': 'rating DESC',
-    'uptime': 'uptime_percent DESC',
-    'name': 'name ASC'
+    'newest': 'a.created_at DESC',
+    'popular': 'a.created_at DESC',
+    'uptime': 'a.health_check_passed_at DESC',
+    'name': 'a.name ASC'
   };
-  const sortClause = validSorts[sort] || 'created_at DESC';
+  const sortClause = validSorts[sort] || 'a.created_at DESC';
   query += ` ORDER BY ${sortClause}`;
 
   const agents = db.all(query, params);
-  res.json({ agents, total: agents.length });
+  
+  // Get categories for each agent
+  const agentIds = agents.map(a => a.id);
+  const agentCategories = {};
+  if (agentIds.length > 0) {
+    const categoryQuery = 'SELECT ac.agent_id, c.name as category FROM agent_categories ac JOIN categories c ON ac.category_id = c.id WHERE ac.agent_id IN (' + agentIds.map(() => '?').join(',') + ')';
+    const categoryParams = agentIds;
+    const categories = db.all(categoryQuery, categoryParams);
+    categories.forEach(row => {
+      if (!agentCategories[row.agent_id]) {
+        agentCategories[row.agent_id] = [];
+      }
+      agentCategories[row.agent_id].push(row.category);
+    });
+  }
+  
+  // Format agents with calculated fields
+  const formatted = agents.map(a => ({
+    id: a.id,
+    name: a.name,
+    description: a.description,
+    categories: agentCategories[a.id] || [],
+    uptime_percent: 99.9,  // Default uptime for seeded agents
+    last_health_check: a.health_check_passed_at,
+    slug: a.name.toLowerCase().replace(/ /g, '-'),
+    health_endpoint_url: a.health_endpoint_url
+  }));
+  
+  res.json({ agents: formatted, total: formatted.length });
 });
 
 // Get distinct categories for filter dropdown
 app.get('/api/categories', (req, res) => {
-  const categories = db.all('SELECT DISTINCT category FROM agents WHERE category IS NOT NULL ORDER BY category');
-  res.json(categories.map(c => c.category));
+  const categories = db.prepare('SELECT name FROM categories ORDER BY name').all();
+  const categoryNames = categories.map(c => c.name);
+  res.json(categoryNames);
+});
+
+// Get category counts for browse page
+app.get('/api/category-counts', (req, res) => {
+  const counts = db.prepare('SELECT c.name as category, COUNT(ac.agent_id) as count FROM categories c LEFT JOIN agent_categories ac ON c.id = ac.category_id GROUP BY c.id ORDER BY c.name').all();
+  res.json(counts);
 });
 
 // Browse page route
 app.get('/browse', (req, res) => {
   res.render('browse', { title: 'Browse Agents' });
+});
+
+// Changelog page route
+app.get('/changelog', (req, res) => {
+  const backlogDb = new (require('better-sqlite3'))('/Users/marco/marco_web/backlog.db');
+  const features = backlogDb.prepare('SELECT id, title, completed_at, built_by FROM features WHERE status = ? ORDER BY completed_at DESC LIMIT 20').all('done');
+  res.render('changelog', { title: 'Changelog', features });
+});
+
+app.get('/login', (req, res) => {
+  if (req.operatorId) return res.redirect('/my-agents');
+  res.render('login');
+});
+
+app.get('/status', (req, res) => {
+  const agents = db.all('SELECT id, name, status, health_check_passed_at FROM agents ORDER BY name');
+  const now = Date.now();
+  const agentsWithHealth = agents.map(a => ({
+    ...a,
+    healthy: a.health_check_passed_at && (now - a.health_check_passed_at) < 300000,
+    lastCheck: a.health_check_passed_at ? Math.round((now - a.health_check_passed_at) / 60000) : null
+  }));
+  const allHealthy = agentsWithHealth.every(a => a.healthy);
+  res.render('status', { agents: agentsWithHealth, allHealthy });
+});
+
+app.get('/my-agents', (req, res) => {
+  if (!req.operatorId) return res.redirect('/auth/github');
+  const agents = db.all('SELECT * FROM agents WHERE operator_id = ?', [req.operatorId]);
+  res.render('dashboard', { agents, operator: { id: req.operatorId } });
+});
+
+app.get('/docs', (req, res) => res.render('docs'));
+
+// Sitemap route
+app.get('/sitemap.xml', async (req, res) => {
+  const now = new Date().toISOString().split('T')[0];
+  const agents = db.all('SELECT id, name FROM agents');
+  
+  const agentUrls = agents.map(agent => {
+    const slug = agent.name.toLowerCase().replace(/ /g, '-');
+    return `    <url>
+      <loc>https://agentx.market/agents/${slug}</loc>
+      <changefreq>weekly</changefreq>
+      <priority>0.8</priority>
+      <lastmod>${now}</lastmod>
+    </url>`;
+  }).join('\n');
+  
+  res.set('Content-Type', 'application/xml');
+  res.send(`<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>https://agentx.market/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+    <lastmod>${now}</lastmod>
+  </url>
+  <url>
+    <loc>https://agentx.market/browse</loc>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+    <lastmod>${now}</lastmod>
+  </url>
+  <url>
+    <loc>https://agentx.market/pricing</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <lastmod>${now}</lastmod>
+  </url>
+  <url>
+    <loc>https://agentx.market/features</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <lastmod>${now}</lastmod>
+  </url>
+  <url>
+    <loc>https://agentx.market/about</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <lastmod>${now}</lastmod>
+  </url>
+  <url>
+    <loc>https://agentx.market/contact</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <lastmod>${now}</lastmod>
+  </url>
+  <url>
+    <loc>https://agentx.market/login</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <lastmod>${now}</lastmod>
+  </url>
+  <url>
+    <loc>https://agentx.market/docs</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <lastmod>${now}</lastmod>
+  </url>
+  <url>
+    <loc>https://agentx.market/status</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <lastmod>${now}</lastmod>
+  </url>
+  <url>
+    <loc>https://agentx.market/register</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <lastmod>${now}</lastmod>
+  </url>
+  <url>
+    <loc>https://agentx.market/blog</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <lastmod>${now}</lastmod>
+  </url>
+${agentUrls}
+</urlset>`);
+});
+
+// Agent registration page
+app.get('/register', (req, res) => {
+  res.render('register', { title: 'Register Your Agent' });
 });
 
 // Agent detail page route
@@ -865,6 +1153,67 @@ app.get('/agents/:slug', (req, res) => {
     agent,
     uptimeTrend,
     uptime7d: agent.uptime_percent ? Math.round(agent.uptime_percent * 100) / 100 : 'N/A'
+  });
+});
+
+app.get('/agents/:slug/docs', (req, res) => {
+  const { slug } = req.params;
+  const agentQueries = require('./lib/agent-queries');
+  
+  const agent = agentQueries.getAgentBySlug(slug);
+  
+  if (!agent) {
+    return res.status(404).render('404', { message: 'Agent not found' });
+  }
+  
+  res.render('agent-docs', { agent });
+});
+
+// Alternatives page route
+app.get('/alternatives/:slug', (req, res) => {
+  const { slug } = req.params;
+  const agentQueries = require('./lib/agent-queries');
+  
+  const agent = agentQueries.getAgentBySlug(slug);
+  
+  if (!agent) {
+    return res.status(404).render('404', { message: 'Agent not found' });
+  }
+  
+  // Get categories for this agent
+  const categories = db.prepare('SELECT c.id, c.name FROM agent_categories ac JOIN categories c ON ac.category_id = c.id WHERE ac.agent_id = ?').all(agent.id);
+  
+  // Find alternatives: agents in the same categories, excluding the current agent
+  const alternatives = [];
+  if (categories.length > 0) {
+    const categoryIds = categories.map(c => c.id);
+    const placeholders = categoryIds.map(() => '?').join(',');
+    const query = `
+      SELECT a.id, a.name, a.description, a.pricing, a.health_check_passed_at, a.rating,
+             LOWER(REPLACE(a.name, ' ', '-')) as slug
+      FROM agents a
+      JOIN agent_categories ac ON a.id = ac.agent_id
+      WHERE ac.category_id IN (${placeholders})
+      AND a.id != ?
+      ORDER BY a.rating DESC, a.name
+    `;
+    const params = [...categoryIds, agent.id];
+    alternatives.push(...db.all(query, params));
+  }
+  
+  // Remove duplicates while preserving order
+  const uniqueAlternatives = [];
+  const seenIds = new Set();
+  for (const alt of alternatives) {
+    if (!seenIds.has(alt.id)) {
+      seenIds.add(alt.id);
+      uniqueAlternatives.push(alt);
+    }
+  }
+  
+  res.render('alternatives', {
+    agent: { ...agent, slug: slug },
+    alternatives: uniqueAlternatives
   });
 });
 
@@ -944,4 +1293,139 @@ app.listen(PORT, '0.0.0.0', () => {
     cleanupHealthHistory().catch(console.error);
   }, 24 * 60 * 60 * 1000);
   console.log('[health-history-cleanup] Started (24h interval)');
+  
+  // Seed database with Marco's sub-agents if empty
+  seedMarcoAgents();
 });
+
+// Seed Marco's 6 sub-agents into the database
+async function seedMarcoAgents() {
+  const now = Date.now();
+  
+  // Check if we already have seeded agents
+  const existingAgents = db.prepare('SELECT COUNT(*) as count FROM agents').get();
+  if (existingAgents.count > 0) {
+    console.log('[seed] Database already has agents, skipping seed');
+    return;
+  }
+  
+  console.log('[seed] Seeding Marco\'s 6 sub-agents...');
+  
+  // Marco's operator ID (hardcoded for seeding)
+  const marcoOperatorId = 'marco-seed-operator';
+  
+  // Create Marco's operator if not exists
+  db.prepare('INSERT OR IGNORE INTO operators (id, email, name, created_at, updated_at) VALUES (?, ?, ?, ?, ?)').run(
+    marcoOperatorId,
+    'marco@agentx.market',
+    'Marco',
+    now,
+    now
+  );
+  
+  // Create operator limits
+  db.prepare('INSERT OR IGNORE INTO operator_limits (operator_id, agent_count, created_at, updated_at) VALUES (?, ?, ?, ?)').run(
+    marcoOperatorId,
+    0,
+    now,
+    now
+  );
+  
+  // Define the 6 sub-agents
+  const agents = [
+    {
+      name: 'Marco (Revenue Ops)',
+      description: 'Revenue operations specialist. Handles payments, billing, invoicing, and financial workflows. Integrates with Stripe, Lightning Network, and crypto payment processors.',
+      capabilities: ['payment processing', 'billing automation', 'invoice generation', 'Lightning Network', 'Stripe integration'],
+      endpoint_url: 'https://agentx.market/api/agents/marco-revenue-ops',
+      pricing: 'Free for first 100 transactions, then $0.01 per transaction',
+      health_endpoint_url: 'https://agentx.market/status',
+      categories: ['Payments', 'Productivity']
+    },
+    {
+      name: 'Deep (QA & Testing)',
+      description: 'Quality assurance and testing specialist. Automated test suites, regression testing, smoke tests, and continuous integration workflows.',
+      capabilities: ['automated testing', 'regression testing', 'smoke testing', 'CI/CD integration', 'bug tracking'],
+      endpoint_url: 'https://agentx.market/api/agents/deep-qa',
+      pricing: 'Free for open source projects, $29/month for commercial use',
+      health_endpoint_url: 'https://agentx.market/status',
+      categories: ['Monitoring', 'Productivity']
+    },
+    {
+      name: 'Research (Competitor Intel)',
+      description: 'Competitive intelligence and market research. Tracks competitors, analyzes market trends, and provides data-driven insights.',
+      capabilities: ['competitor analysis', 'market research', 'trend analysis', 'data visualization', 'SWOT analysis'],
+      endpoint_url: 'https://agentx.market/api/agents/research-intel',
+      pricing: 'Free for basic reports, $49/month for premium insights',
+      health_endpoint_url: 'https://agentx.market/status',
+      categories: ['Data', 'Productivity']
+    },
+    {
+      name: 'Security (Audit & Compliance)',
+      description: 'Security auditing and compliance specialist. Vulnerability scanning, penetration testing, and compliance monitoring (GDPR, SOC2, HIPAA).',
+      capabilities: ['vulnerability scanning', 'penetration testing', 'compliance monitoring', 'security audits', 'threat detection'],
+      endpoint_url: 'https://agentx.market/api/agents/security-audit',
+      pricing: 'Free for basic scans, $99/month for full compliance suite',
+      health_endpoint_url: 'https://agentx.market/status',
+      categories: ['Security', 'Monitoring']
+    },
+    {
+      name: 'Marketing (Content & Leads)',
+      description: 'Content marketing and lead generation specialist. SEO optimization, content creation, social media management, and lead nurturing.',
+      capabilities: ['SEO optimization', 'content creation', 'social media management', 'lead generation', 'email marketing'],
+      endpoint_url: 'https://agentx.market/api/agents/marketing-leads',
+      pricing: 'Free for basic content, $59/month for full marketing suite',
+      health_endpoint_url: 'https://agentx.market/status',
+      categories: ['Productivity', 'Data']
+    },
+    {
+      name: 'Coding (Development)',
+      description: 'Software development and coding assistant. Code generation, debugging, refactoring, and technical documentation.',
+      capabilities: ['code generation', 'debugging', 'refactoring', 'technical documentation', 'code review'],
+      endpoint_url: 'https://agentx.market/api/agents/coding-dev',
+      pricing: 'Free for personal projects, $39/month for commercial use',
+      health_endpoint_url: 'https://agentx.market/status',
+      categories: ['Productivity', 'Data']
+    }
+  ];
+  
+  // Insert each agent
+  for (const agent of agents) {
+    const stmt = db.prepare(
+      'INSERT INTO agents (operator_id, name, description, capabilities, endpoint_url, pricing, status, health_check_passed_at, health_check_required_by, wallet_id, created_at, updated_at, health_endpoint_url) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'
+    );
+    
+    const result = stmt.run(
+      marcoOperatorId,
+      agent.name,
+      agent.description,
+      JSON.stringify(agent.capabilities),
+      agent.endpoint_url,
+      agent.pricing,
+      'active',  // Mark as active since these are seeded agents
+      now,  // health_check_passed_at
+      now + 30 * 24 * 60 * 60 * 1000,  // health_check_required_by (30 days from now)
+      null,  // wallet_id
+      now,
+      now,
+      agent.health_endpoint_url
+    );
+    
+    const agentId = result.lastInsertRowid;
+    console.log(`[seed] Created agent: ${agent.name} (ID: ${agentId})`);
+    
+    // Assign categories
+    for (const categoryName of agent.categories) {
+      const category = db.prepare('SELECT id FROM categories WHERE name = ?').get(categoryName);
+      if (category) {
+        db.prepare('INSERT OR IGNORE INTO agent_categories (agent_id, category_id) VALUES (?, ?)').run(agentId, category.id);
+        console.log(`[seed] Assigned category: ${categoryName} to ${agent.name}`);
+      }
+    }
+    
+    // Update operator agent count
+    db.prepare('UPDATE operator_limits SET agent_count = agent_count + 1 WHERE operator_id = ?').run(marcoOperatorId);
+  }
+  
+  console.log('[seed] Successfully seeded 6 sub-agents');
+}

@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Agents - AgentX</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <style>
+    .dashboard-main { padding: 2rem 0; }
+    .empty-state { text-align: center; padding: 4rem 2rem; background: #1a1a2e; border-radius: 12px; border: 1px solid #2a2a4a; }
+    .empty-icon { font-size: 3rem; margin-bottom: 1rem; }
+    .agents-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1.5rem; }
+    .agent-card { background: #1a1a2e; border: 1px solid #2a2a4a; border-radius: 12px; padding: 1.5rem; transition: border-color 0.3s; }
+    .agent-card:hover { border-color: #6c5ce7; }
+    .agent-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem; }
+    .agent-header h3 { margin: 0; color: #e0e0ff; }
+    .agent-status { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
+    .agent-status.active { background: #00d26a; box-shadow: 0 0 8px rgba(0,210,106,0.5); }
+    .agent-status.inactive { background: #ff4757; }
+    .agent-description { color: #a0a0c0; font-size: 0.9rem; margin-bottom: 1rem; }
+  </style>
+</head>
+<body class="dashboard-page">
+  <nav class="navbar">
+    <div class="container">
+      <a href="/" class="nav-logo">
+        <div class="logo-icon">X</div>
+        AgentX
+      </a>
+      <ul class="nav-links">
+        <li><a href="/features">Features</a></li>
+        <li><a href="/pricing">Pricing</a></li>
+        <li><a href="/browse">Browse</a></li>
+        <li><a href="/about">About</a></li>
+        <li><a href="/contact">Contact</a></li>
+        <li class="nav-cta">
+          <a href="/pricing" class="btn btn-primary">Get Started</a>
+        </li>
+      </ul>
+      <button class="nav-toggle" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <section class="dashboard-hero">
+    <div class="bg-grid"></div>
+    <div class="container">
+      <div class="section-header fade-in">
+        <div class="badge badge-shimmer"><span class="dot"></span> My Agents</div>
+        <h1>My <span class="text-gradient">Agents</span></h1>
+        <p>Manage and monitor your registered agents.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="dashboard-main">
+    <div class="container">
+      <% if (agents.length === 0) { %>
+        <div class="empty-state">
+          <div class="empty-icon">🤖</div>
+          <h3>No agents registered yet</h3>
+          <p>Get started by registering your first agent.</p>
+          <a href="/register" class="btn btn-primary">Register Agent</a>
+        </div>
+      <% } else { %>
+        <div class="agents-grid">
+          <% agents.forEach(agent => { %>
+            <div class="agent-card">
+              <div class="agent-header">
+                <h3><%= agent.name %></h3>
+                <span class="agent-status <%= (agent.health_check_passed_at && (Date.now() - agent.health_check_passed_at) < 300000) ? 'active' : 'inactive' %>"></span>
+              </div>
+              <p class="agent-description"><%= agent.description || 'No description provided' %></p>
+              <a href="/agents/<%= agent.name.toLowerCase().replace(/ /g, '-') %>" class="btn btn-secondary">View Details</a>
+            </div>
+          <% }); %>
+        </div>
+      <% } %>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a href="/" class="nav-logo" style="margin-bottom: 0.5rem;">
+            <div class="logo-icon">X</div>
+            AgentX
+          </a>
+          <p>The AI agent marketplace. Discover, deploy, and manage autonomous agents that handle real business tasks.</p>
+        </div>
+        <div class="footer-col">
+          <h4>Product</h4>
+          <ul>
+            <li><a href="/features">Features</a></li>
+            <li><a href="/pricing">Pricing</a></li>
+            <li><a href="/browse">Browse Agents</a></li>
+            <li><a href="/dashboard">Analytics Dashboard</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Company</h4>
+          <ul>
+            <li><a href="/about">About</a></li>
+            <li><a href="/contact">Contact</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Legal</h4>
+          <ul>
+            <li><a href="/privacy">Privacy Policy</a></li>
+            <li><a href="/terms">Terms of Service</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2024 AgentX. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>

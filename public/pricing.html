@@ -444,10 +444,10 @@
           </div>
           <div class="pricing-desc">Get started with the AgentX registry and basic monitoring.</div>
           <ul class="pricing-features">
-            <li>Agent registration</li>
+            <li>3 agent listings</li>
             <li>Basic health monitoring</li>
+            <li>Community badge</li>
             <li>Public directory listing</li>
-            <li>Community support</li>
           </ul>
           <div class="starter-capture">
             <div id="starter-form-wrap">
@@ -465,19 +465,21 @@
         <div class="card pricing-card featured">
           <div class="pricing-tier">Pro</div>
           <div class="pricing-price">
-            <span class="amount" data-monthly="49" data-annual="39">$49</span>
+            <span class="amount" data-monthly="29" data-annual="29">$29</span>
             <span class="period">/ month</span>
             <div class="note price-note">billed monthly</div>
           </div>
           <div class="pricing-desc">For operators who want more visibility and reach.</div>
           <ul class="pricing-features">
             <li>Everything in Free</li>
-            <li>Priority directory listing</li>
-            <li>Advanced health monitoring</li>
-            <li>Custom domain support</li>
-            <li>Email support</li>
+            <li>Unlimited agent listings</li>
+            <li>Advanced analytics (views, clicks, conversion funnel)</li>
+            <li>Webhook notifications for health events</li>
+            <li>Verified badge</li>
+            <li>Featured placement rotation</li>
+            <li>Priority support (24h response time)</li>
           </ul>
-          <a href="/contact" class="btn btn-primary">Contact Us</a>
+          <a href="#" class="btn btn-primary" onclick="upgradeToPro(); return false;">Upgrade to Pro</a>
         </div>
 
         <!-- Enterprise -->
@@ -495,7 +497,7 @@
             <li>Custom integrations</li>
             <li>Volume pricing</li>
           </ul>
-          <a href="/contact" class="btn btn-secondary">Contact Sales</a>
+          <a href="/contact" class="btn btn-secondary">Talk to the Founder</a>
         </div>
       </div>
     </div>
@@ -521,10 +523,10 @@
           </thead>
           <tbody>
             <tr>
-              <td>Agent registration</td>
-              <td><span class="check">&#10003;</span></td>
-              <td><span class="check">&#10003;</span></td>
-              <td><span class="check">&#10003;</span></td>
+              <td>Agent listings</td>
+              <td>3</td>
+              <td>Unlimited</td>
+              <td>Custom</td>
             </tr>
             <tr>
               <td>Health monitoring</td>
@@ -533,27 +535,33 @@
               <td>Advanced</td>
             </tr>
             <tr>
-              <td>Directory listing</td>
-              <td>Standard</td>
-              <td>Priority</td>
-              <td>Priority</td>
+              <td>Analytics</td>
+              <td><span class="dash">&mdash;</span></td>
+              <td>Views, clicks, conversion funnel</td>
+              <td>Custom</td>
             </tr>
             <tr>
-              <td>Custom domain</td>
+              <td>Webhook notifications</td>
               <td><span class="dash">&mdash;</span></td>
               <td><span class="check">&#10003;</span></td>
               <td><span class="check">&#10003;</span></td>
             </tr>
             <tr>
-              <td>Custom integrations</td>
+              <td>Directory badge</td>
+              <td>Community</td>
+              <td>Verified</td>
+              <td>Custom</td>
+            </tr>
+            <tr>
+              <td>Featured placement</td>
               <td><span class="dash">&mdash;</span></td>
-              <td><span class="dash">&mdash;</span></td>
-              <td><span class="check">&#10003;</span></td>
+              <td>Rotation</td>
+              <td>Dedicated</td>
             </tr>
             <tr>
               <td>Support</td>
               <td>Community</td>
-              <td>Email</td>
+              <td>Priority (24h)</td>
               <td>Dedicated</td>
             </tr>
           </tbody>
@@ -564,29 +572,32 @@
       <div class="compare-mobile fade-in">
         <div class="compare-mobile-card">
           <h4>Free</h4>
-          <div class="compare-mobile-row"><span class="label">Agent registration</span><span class="value check">&#10003;</span></div>
+          <div class="compare-mobile-row"><span class="label">Agent listings</span><span class="value">3</span></div>
           <div class="compare-mobile-row"><span class="label">Health monitoring</span><span class="value">Basic</span></div>
-          <div class="compare-mobile-row"><span class="label">Directory listing</span><span class="value">Standard</span></div>
-          <div class="compare-mobile-row"><span class="label">Custom domain</span><span class="value dash">&mdash;</span></div>
-          <div class="compare-mobile-row"><span class="label">Custom integrations</span><span class="value dash">&mdash;</span></div>
+          <div class="compare-mobile-row"><span class="label">Analytics</span><span class="value dash">&mdash;</span></div>
+          <div class="compare-mobile-row"><span class="label">Webhook notifications</span><span class="value dash">&mdash;</span></div>
+          <div class="compare-mobile-row"><span class="label">Directory badge</span><span class="value">Community</span></div>
+          <div class="compare-mobile-row"><span class="label">Featured placement</span><span class="value dash">&mdash;</span></div>
           <div class="compare-mobile-row"><span class="label">Support</span><span class="value">Community</span></div>
         </div>
         <div class="compare-mobile-card featured">
           <h4>Pro <span style="font-size:0.75rem;color:var(--accent);font-weight:400;">— Most Popular</span></h4>
-          <div class="compare-mobile-row"><span class="label">Agent registration</span><span class="value check">&#10003;</span></div>
+          <div class="compare-mobile-row"><span class="label">Agent listings</span><span class="value">Unlimited</span></div>
           <div class="compare-mobile-row"><span class="label">Health monitoring</span><span class="value">Advanced</span></div>
-          <div class="compare-mobile-row"><span class="label">Directory listing</span><span class="value">Priority</span></div>
-          <div class="compare-mobile-row"><span class="label">Custom domain</span><span class="value check">&#10003;</span></div>
-          <div class="compare-mobile-row"><span class="label">Custom integrations</span><span class="value dash">&mdash;</span></div>
-          <div class="compare-mobile-row"><span class="label">Support</span><span class="value">Email</span></div>
+          <div class="compare-mobile-row"><span class="label">Analytics</span><span class="value">Views, clicks, conversion funnel</span></div>
+          <div class="compare-mobile-row"><span class="label">Webhook notifications</span><span class="value check">&#10003;</span></div>
+          <div class="compare-mobile-row"><span class="label">Directory badge</span><span class="value">Verified</span></div>
+          <div class="compare-mobile-row"><span class="label">Featured placement</span><span class="value">Rotation</span></div>
+          <div class="compare-mobile-row"><span class="label">Support</span><span class="value">Priority (24h)</span></div>
         </div>
         <div class="compare-mobile-card">
           <h4>Enterprise</h4>
-          <div class="compare-mobile-row"><span class="label">Agent registration</span><span class="value check">&#10003;</span></div>
+          <div class="compare-mobile-row"><span class="label">Agent listings</span><span class="value">Custom</span></div>
           <div class="compare-mobile-row"><span class="label">Health monitoring</span><span class="value">Advanced</span></div>
-          <div class="compare-mobile-row"><span class="label">Directory listing</span><span class="value">Priority</span></div>
-          <div class="compare-mobile-row"><span class="label">Custom domain</span><span class="value check">&#10003;</span></div>
-          <div class="compare-mobile-row"><span class="label">Custom integrations</span><span class="value check">&#10003;</span></div>
+          <div class="compare-mobile-row"><span class="label">Analytics</span><span class="value">Custom</span></div>
+          <div class="compare-mobile-row"><span class="label">Webhook notifications</span><span class="value check">&#10003;</span></div>
+          <div class="compare-mobile-row"><span class="label">Directory badge</span><span class="value">Custom</span></div>
+          <div class="compare-mobile-row"><span class="label">Featured placement</span><span class="value">Dedicated</span></div>
           <div class="compare-mobile-row"><span class="label">Support</span><span class="value">Dedicated</span></div>
         </div>
       </div>
@@ -656,8 +667,8 @@
         <h2>Register your agent today</h2>
         <p style="margin: var(--space-md) 0 var(--space-xl); color: var(--text-muted);">Join the waitlist and be first to list your agent on the marketplace.</p>
         <div class="cta-buttons">
-          <a href="#starter-form-wrap" class="btn btn-primary btn-large" onclick="document.getElementById('starter-form-wrap').querySelector('input').focus(); event.preventDefault(); document.getElementById('starter-form-wrap').scrollIntoView({behavior:'smooth',block:'center'});">Get Started Free</a>
-          <a href="/contact" class="btn btn-secondary btn-large">Talk to Sales</a>
+          <a href="/browse" class="btn btn-primary btn-large">Browse Agents</a>
+          <a href="/contact" class="btn btn-secondary btn-large">Talk to the Founder</a>
         </div>
       </div>
     </div>
@@ -745,6 +756,27 @@
         }
       });
     });
+  </script>
+  <script>
+    async function upgradeToPro() {
+      const btn = event.target;
+      btn.disabled = true;
+      btn.textContent = 'Redirecting...';
+      try {
+        const res = await fetch('/api/create-payment-link', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ plan: 'pro' })
+        });
+        const data = await res.json();
+        if (data.url) window.location.href = data.url;
+        else throw new Error('No checkout URL');
+      } catch (e) {
+        btn.disabled = false;
+        btn.textContent = 'Upgrade to Pro';
+        alert('Could not start checkout. Please try again.');
+      }
+    }
   </script>
 </body>
 </html>

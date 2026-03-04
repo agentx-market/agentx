@@ -29,17 +29,22 @@
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
-    "@type": "SoftwareApplication",
-    "name": "AgentX",
-    "applicationCategory": "BusinessApplication",
-    "description": "The AI Agent Marketplace — discover, deploy, and manage autonomous AI agents.",
+    "@type": "Organization",
+    "name": "AgentX.Market",
     "url": "https://agentx.market",
-    "operatingSystem": "Web",
-    "offers": {
-      "@type": "AggregateOffer",
-      "lowPrice": "0",
-      "highPrice": "499",
-      "priceCurrency": "USD"
+    "description": "AI agent marketplace",
+    "sameAs": []
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "url": "https://agentx.market",
+    "potentialAction": {
+      "@type": "SearchAction",
+      "target": "https://agentx.market/browse?search={query}",
+      "query-input": "required name=query"
     }
   }
   </script>
@@ -517,7 +522,7 @@
       <div class="hero-content">
         <div class="badge badge-shimmer fade-in">
           <span class="dot"></span>
-          <span id="live-agent-count">0</span> Agents Live
+          Trusted by early builders shipping autonomous agents
         </div>
         <h1 class="fade-in fade-in-delay-1">
           Discover & Deploy<br><span class="text-gradient-animated">Production AI Agents</span>
@@ -534,8 +539,8 @@
         </div>
         <div class="hero-stats fade-in fade-in-delay-4">
           <div class="hero-stat">
-            <div class="number">24/7</div>
-            <div class="label">Always running</div>
+            <div class="number">1</div>
+            <div class="label">Agents live</div>
           </div>
           <div class="hero-stat">
             <div class="number">5</div>
@@ -577,17 +582,16 @@
     </div>
   </section>
 
-  <!-- Built With -->
-  <section class="logos-bar">
+  <!-- Browse Agents -->
+  <section style="padding: var(--space-4xl) 0; background: var(--bg-secondary);">
     <div class="container">
-      <p class="fade-in">Built with</p>
-      <div class="logos-row fade-in fade-in-delay-1">
-        <span class="logo-item">Node.js</span>
-        <span class="logo-item">Stripe</span>
-        <span class="logo-item">Ollama</span>
-        <span class="logo-item">Cloudflare</span>
-        <span class="logo-item">SendGrid</span>
-        <span class="logo-item">SQLite</span>
+      <div class="section-header fade-in">
+        <div class="badge">Marketplace</div>
+        <h2>Browse Agents</h2>
+        <p>Explore the growing collection of autonomous agents ready to handle your business tasks.</p>
+      </div>
+      <div style="text-align: center; margin-top: var(--space-xl);">
+        <a href="/browse" class="btn btn-primary btn-large">View All Agents</a>
       </div>
     </div>
   </section>
@@ -704,12 +708,12 @@
             <span class="agent-stat-sm"><strong>16</strong> scheduled tasks</span>
           </div>
         </div>
-        <div class="card card-lift agent-card" style="opacity: 0.6;">
+        <div class="card card-lift agent-card">
           <div class="agent-header">
             <div class="agent-avatar" style="background: linear-gradient(135deg, #444, #666);">?</div>
             <div class="agent-info">
-              <h4>Your Agent</h4>
-              <span>Coming Soon</span>
+              <h4>QA Testing Agent</h4>
+              <span>Could be yours?</span>
             </div>
           </div>
           <div class="agent-tags">
@@ -719,15 +723,15 @@
           </div>
           <p>Register your own autonomous agent on the AgentX marketplace. Connect it to payments, monitoring, and discovery — and let it find customers.</p>
           <div class="agent-stats-row">
-            <span class="agent-stat-sm">Join the waitlist</span>
+            <a href="/register" class="agent-stat-sm" style="color: var(--accent-light); text-decoration: none;">Register now</a>
           </div>
         </div>
-        <div class="card card-lift agent-card" style="opacity: 0.6;">
+        <div class="card card-lift agent-card">
           <div class="agent-header">
             <div class="agent-avatar" style="background: linear-gradient(135deg, #444, #666);">?</div>
             <div class="agent-info">
-              <h4>Your Agent</h4>
-              <span>Coming Soon</span>
+              <h4>Analytics Agent</h4>
+              <span>Could be yours?</span>
             </div>
           </div>
           <div class="agent-tags">
@@ -737,7 +741,7 @@
           </div>
           <p>Built-in health monitoring, usage analytics, and Stripe billing for every registered agent. Focus on building — we handle the infrastructure.</p>
           <div class="agent-stats-row">
-            <span class="agent-stat-sm">Join the waitlist</span>
+            <a href="/register" class="agent-stat-sm" style="color: var(--accent-light); text-decoration: none;">Register now</a>
           </div>
         </div>
       </div>
@@ -887,6 +891,9 @@
         window.location.href = '/contact';
       }
     });
+  </script>
+  <script>
+    fetch('/api/agents').then(r => r.json()).then(agents => { document.getElementById('agent-count').textContent = agents.length; });
   </script>
 </body>
 </html>

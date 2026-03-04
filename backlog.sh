@@ -65,7 +65,7 @@ Commands:
   pick                          Pick the next ready feature (highest priority, smallest effort)
   start <id>                    Mark feature as in_progress
   complete <id> [commit_hash] [model]
-                                Mark feature as done (model: qwen or claude)
+                                Mark feature as done (model: devstral or claude)
   ship <id>                     Mark feature as shipped (deployed to production)
   deploy <feature_ids> <hash> [notes]
                                 Record a deployment (feature_ids: comma-separated)
@@ -150,20 +150,28 @@ cmd_start() {
 }
 
 cmd_complete() {
-  local id="$1" hash="$2" model="${3:-qwen}"
+  local id="$1" hash="$2" model="${3:-devstral}"
   local verified=0
   local diff_stat=""
+  local source_changes=""
 
-  # Check for actual code changes (git diff or uncommitted changes)
+  # Check for actual source code changes (not just config/checkpoint files)
   cd "$HOME/marco_web" 2>/dev/null
+
+  # Source file extensions that count as real work
+  local src_pattern='\.(js|ejs|html|css|json|py|sh|sql|svg|md)$'
+
   if [ -n "$hash" ] && [ "$hash" != "none" ]; then
     diff_stat=$(git diff --stat HEAD~1 2>/dev/null || echo "")
+    source_changes=$(git diff --name-only HEAD~1 2>/dev/null | grep -E "$src_pattern" | grep -v -E '(^\.(checkpoint|last-result)|^WORK_LOG\.md$)' || echo "")
   fi
   if [ -z "$diff_stat" ]; then
     diff_stat=$(git status --porcelain 2>/dev/null || echo "")
+    source_changes=$(git status --porcelain 2>/dev/null | awk '{print $2}' | grep -E "$src_pattern" | grep -v -E '(^\.(checkpoint|last-result)|^WORK_LOG\.md$)' || echo "")
   fi
 
-  if [ -n "$diff_stat" ]; then
+  # Only verified if actual source files were changed (not just .checkpoint.json etc.)
+  if [ -n "$source_changes" ]; then
     verified=1
   fi
 
@@ -202,6 +210,8 @@ cmd_complete() {
     echo "Feature #$id set to REVIEW (no code changes detected). [built by: $model]"
   else
     echo "Feature #$id marked as done. [built by: $model, verified: yes]"
+    # Auto-close matching GitHub issue (non-blocking, best-effort)
+    cmd_gh_close "$id" "$model" 2>/dev/null &
   fi
 }
 
@@ -271,11 +281,11 @@ cmd_velocity() {
     printf "  %-20s %s features\n" "$model" "$count"
   done
   local total=$(sqlite3 "$DB" "SELECT COUNT(*) FROM features WHERE status IN ('done','shipped');")
-  local qwen=$(sqlite3 "$DB" "SELECT COUNT(*) FROM features WHERE status IN ('done','shipped') AND built_by='qwen';")
+  local devstral=$(sqlite3 "$DB" "SELECT COUNT(*) FROM features WHERE status IN ('done','shipped') AND built_by IN ('devstral','qwen');")
   local claude=$(sqlite3 "$DB" "SELECT COUNT(*) FROM features WHERE status IN ('done','shipped') AND built_by='claude';")
   if [ "$total" -gt 0 ] 2>/dev/null; then
     echo ""
-    echo "  Qwen:   $qwen/$total ($(( qwen * 100 / total ))%)"
+    echo "  Local:  $devstral/$total ($(( devstral * 100 / total ))%)"
     echo "  Claude: $claude/$total ($(( claude * 100 / total ))%)"
   fi
 
@@ -345,17 +355,24 @@ $fdesc"
 }
 
 cmd_gh_close() {
-  local fid="$1" model="${2:-qwen}"
+  local fid="$1" model="${2:-devstral}"
   local title=$(sqlite3 "$DB" "SELECT title FROM features WHERE id=$fid;")
   if [ -z "$title" ]; then echo "Feature #$fid not found"; exit 1; fi
 
+  # Look up the actual GitHub issue number from notes (format: "gh:#77")
+  local gh_num=$(sqlite3 "$DB" "SELECT notes FROM features WHERE id=$fid;" | grep -o 'gh:#[0-9]*' | head -1 | tr -d 'gh:#')
+  if [ -z "$gh_num" ]; then
+    echo "Feature #$fid has no linked GitHub issue — skipping gh close"
+    return 0
+  fi
+
   # Close the matching GitHub issue
-  gh issue close "$fid" --repo "$GITHUB_REPO" --comment "Shipped! Built by: $model" 2>&1
+  gh issue close "$gh_num" --repo "$GITHUB_REPO" --comment "Shipped! Built by: $model" 2>&1
 
   # Add built-by label
-  gh issue edit "$fid" --repo "$GITHUB_REPO" --add-label "built-by-$model" 2>&1
+  gh issue edit "$gh_num" --repo "$GITHUB_REPO" --add-label "built-by-$model" 2>&1
 
-  echo "GitHub Issue #$fid closed [built-by-$model]"
+  echo "GitHub Issue #$gh_num closed for feature #$fid [built-by-$model]"
 }
 
 cmd_history() {

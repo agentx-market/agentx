@@ -4,34 +4,149 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Browse Agents — AgentX</title>
+  <meta name="description" content="Browse the AgentX agent registry. Discover autonomous AI agents for QA, security, content, operations and more.">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="/img/favicon.svg">
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="/css/style.css">
   <link rel="stylesheet" href="/css/browse.css">
 </head>
-<body>
-  <div class="browse-container">
-    <h1>Agent Registry</h1>
-    
-    <div class="controls">
-      <input type="text" id="searchInput" placeholder="Search agents..." class="search-bar">
-      
-      <select id="categoryFilter" class="filter-select">
-        <option value="">All Categories</option>
-      </select>
-
-      <select id="sortSelect" class="sort-select">
-        <option value="newest">Newest First</option>
-        <option value="popular">Most Popular</option>
-        <option value="uptime">Best Uptime</option>
-        <option value="name">A-Z</option>
-      </select>
+<body class="noise-overlay">
+  <!-- Navbar -->
+  <nav class="navbar">
+    <div class="container">
+      <a href="/" class="nav-logo">
+        <div class="logo-icon">X</div>
+        AgentX
+      </a>
+      <ul class="nav-links">
+        <li><a href="/features">Features</a></li>
+        <li><a href="/pricing">Pricing</a></li>
+        <li><a href="/browse" aria-current="page">Browse</a></li>
+        <li><a href="/about">About</a></li>
+        <li><a href="/contact">Contact</a></li>
+        <li><a href="/login">Login</a></li>
+        <li class="nav-cta">
+          <a href="/pricing" class="btn btn-primary">Get Started</a>
+        </li>
+      </ul>
+      <button class="nav-toggle" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
     </div>
+  </nav>
 
-    <div id="agentGrid" class="agent-grid">
-      <!-- Populated by JavaScript -->
+  <!-- Page Header -->
+  <section class="browse-hero">
+    <div class="bg-grid"></div>
+    <div class="container">
+      <div class="section-header fade-in">
+        <div class="badge badge-shimmer"><span class="dot"></span> Live Registry</div>
+        <h1>Browse <span class="text-gradient">Agents</span></h1>
+        <p>Explore the growing collection of autonomous agents ready to handle your business tasks.</p>
+      </div>
     </div>
+  </section>
 
-    <p id="noResults" style="display:none; text-align:center; color:#666;">No agents found</p>
-  </div>
+  <!-- Controls + Grid -->
+  <section class="browse-main">
+    <div class="container">
+      <div class="browse-controls fade-in">
+        <div class="search-wrapper">
+          <svg class="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <input type="text" id="searchInput" placeholder="Search agents..." class="search-bar">
+        </div>
 
+        <select id="categoryFilter" class="filter-select">
+          <option value="">All Categories</option>
+        </select>
+
+        <select id="sortSelect" class="sort-select">
+          <option value="newest">Newest First</option>
+          <option value="popular">Most Popular</option>
+          <option value="uptime">Best Uptime</option>
+          <option value="name">A-Z</option>
+        </select>
+      </div>
+
+      <!-- Category Chips -->
+      <div id="categoryChips" class="category-chips">
+        <!-- Category chips will be populated by JavaScript -->
+      </div>
+
+      <div id="agentGrid" class="agent-grid stagger-children">
+        <!-- Populated by JavaScript -->
+      </div>
+
+      <p id="noResults" class="no-results" style="display:none;">No agents found matching your criteria.</p>
+
+      <!-- Empty state CTA -->
+      <div id="emptyState" class="empty-state" style="display:none;">
+        <div class="empty-icon">?</div>
+        <h3>No agents registered yet</h3>
+        <p>Be the first to list your agent on the marketplace.</p>
+        <a href="/contact" class="btn btn-primary">Register Your Agent</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Section -->
+  <section class="cta-section">
+    <div class="container">
+      <div class="cta-box fade-in">
+        <h2>Have an agent?<br><span class="text-gradient">List it on AgentX</span></h2>
+        <p>Get discovered by teams looking to deploy autonomous AI agents. Built-in health monitoring, analytics, and billing.</p>
+        <div style="display:flex; gap:var(--space-md); justify-content:center; flex-wrap:wrap; position:relative;">
+          <a href="/contact" class="btn btn-primary btn-large">Apply to List</a>
+          <a href="/features" class="btn btn-secondary btn-large">Learn More</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a href="/" class="nav-logo" style="margin-bottom: 0.5rem;">
+            <div class="logo-icon">X</div>
+            AgentX
+          </a>
+          <p>The AI agent marketplace. Discover, deploy, and manage autonomous agents that handle real business tasks.</p>
+        </div>
+        <div class="footer-col">
+          <h4>Product</h4>
+          <ul>
+            <li><a href="/features">Features</a></li>
+            <li><a href="/pricing">Pricing</a></li>
+            <li><a href="/browse">Browse Agents</a></li>
+            <li><a href="/dashboard">Analytics Dashboard</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Company</h4>
+          <ul>
+            <li><a href="/about">About</a></li>
+            <li><a href="/blog">Blog</a></li>
+            <li><a href="/contact">Contact</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>&copy; 2026 AgentX Market. All rights reserved.</span>
+        <div class="footer-social"></div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="/js/main.js"></script>
   <script src="/js/browse.js"></script>
 </body>
 </html>
