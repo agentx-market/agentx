@@ -1274,28 +1274,24 @@ app.get('/best/:useCase', (req, res) => {
   const { useCase } = req.params;
   const agentQueries = require('./lib/agent-queries');
   
-  // Map use-case slugs to category names
+  // Map use-case slugs to category names (matches actual categories table)
   const useCaseToCategory = {
-    'customer-support': 'Customer Support',
-    'code-review': 'Code Review',
+    'ai-chatbots': 'AI Chatbots',
+    'code-assistants': 'Code Assistants',
     'marketing': 'Marketing',
     'data-analysis': 'Data Analysis',
     'content-creation': 'Content Creation',
-    'project-management': 'Project Management',
     'sales': 'Sales',
-    'hr': 'HR & Recruiting',
-    'finance': 'Finance',
-    'healthcare': 'Healthcare',
-    'education': 'Education',
-    'design': 'Design',
-    'devops': 'DevOps',
+    'social-media': 'Social Media',
     'security': 'Security',
     'research': 'Research',
-    'writing': 'Writing',
-    'translation': 'Translation',
     'productivity': 'Productivity',
-    'social-media': 'Social Media',
-    'ecommerce': 'E-commerce'
+    'design-tools': 'Design Tools',
+    'ecommerce': 'E-commerce',
+    'email-assistants': 'Email Assistants',
+    'video-tools': 'Video Tools',
+    'voice-assistants': 'Voice Assistants',
+    'web-development': 'Web Development'
   };
   
   const categoryName = useCaseToCategory[useCase];
@@ -1372,20 +1368,30 @@ app.get('/best/:useCase', (req, res) => {
 
 function generateUseCaseFAQ(useCase, categoryName) {
   const faqMap = {
-    'customer-support': [
-      { q: "What is the best AI agent for customer support?", a: "The best customer support AI agent depends on your specific needs. Top options include Intercom's Fin, Zendesk's AI, and custom solutions on AgentX.Market that offer 24/7 support, multi-language capabilities, and seamless integration with your existing tools." },
-      { q: "How much do customer support AI agents cost?", a: "Customer support AI agents range from free tiers to $500+/month for enterprise solutions. Most agents on AgentX.Market offer flexible pricing based on conversation volume, features, and customization needs." },
-      { q: "Can AI agents handle complex customer queries?", a: "Modern AI agents can handle 80-90% of common queries autonomously. For complex issues, they seamlessly escalate to human agents with full context, improving resolution times and customer satisfaction." }
+    'ai-chatbots': [
+      { q: "What is the best AI chatbot agent?", a: "The best AI chatbot agent depends on your use case. Top options on AgentX.Market offer natural language understanding, multi-turn conversations, integrations with messaging platforms, and customizable responses." },
+      { q: "How much do AI chatbot agents cost?", a: "AI chatbot agents range from free tiers to $500+/month for enterprise solutions. Most agents on AgentX.Market offer flexible pricing based on conversation volume, features, and customization needs." },
+      { q: "Can AI chatbots integrate with my messaging platforms?", a: "Yes, most AI chatbot agents on AgentX.Market integrate with Slack, Discord, Telegram, WhatsApp, and web chat widgets. Check individual agent documentation for specific integrations." }
     ],
-    'code-review': [
-      { q: "What is the best AI code review tool?", a: "Top AI code review tools include GitHub Copilot, CodeRabbit, and custom agents on AgentX.Market that provide real-time feedback, security vulnerability detection, and style guide enforcement." },
-      { q: "How do AI code reviewers improve code quality?", a: "AI code reviewers catch bugs, security issues, and style violations before merge. They provide consistent feedback, reduce review time by 40-60%, and help teams maintain coding standards at scale." },
-      { q: "Do AI code reviewers support all programming languages?", a: "Most AI code reviewers support popular languages like JavaScript, Python, Java, and TypeScript. Custom agents on AgentX.Market can be trained on specific frameworks and language versions." }
+    'code-assistants': [
+      { q: "What is the best AI code assistant?", a: "Top AI code assistants include GitHub Copilot, CodeRabbit, and custom agents on AgentX.Market that provide real-time code suggestions, bug detection, and style guide enforcement." },
+      { q: "How do AI code assistants improve productivity?", a: "AI code assistants reduce development time by 30-50% by providing intelligent code suggestions, auto-completion, and helping developers learn new languages and frameworks faster." },
+      { q: "Do AI code assistants support all programming languages?", a: "Most AI code assistants support popular languages like JavaScript, Python, Java, TypeScript, Go, and Rust. Custom agents on AgentX.Market can be trained on specific frameworks and language versions." }
     ],
     'marketing': [
       { q: "What AI agents help with marketing?", a: "Marketing AI agents handle content creation, social media posting, email campaigns, ad optimization, and analytics. Top agents integrate with major platforms and provide ROI tracking." },
       { q: "How much time can AI save on marketing tasks?", a: "Marketing teams report 50-70% time savings with AI agents. They automate content creation, scheduling, A/B testing, and performance analysis, freeing marketers for strategy." },
       { q: "Can AI agents create marketing content?", a: "Yes, AI agents can generate blog posts, social media content, email copy, ad creatives, and landing pages. They maintain brand voice and can be trained on your style guidelines." }
+    ],
+    'data-analysis': [
+      { q: "What AI agents help with data analysis?", a: "Data analysis AI agents process datasets, generate insights, create visualizations, and automate reporting. Top agents support SQL, Python, and integrate with popular data platforms." },
+      { q: "How do AI agents improve data analysis workflows?", a: "AI agents automate data cleaning, pattern detection, and insight generation. They reduce analysis time by 60-80% and help non-technical users extract value from their data." },
+      { q: "Can AI agents handle large datasets?", a: "Most data analysis AI agents on AgentX.Market can process datasets from thousands to millions of rows. Enterprise solutions handle even larger datasets with distributed processing." }
+    ],
+    'content-creation': [
+      { q: "What AI agents help with content creation?", a: "Content creation AI agents generate blog posts, articles, social media posts, videos, and images. Top agents support multiple formats and can maintain brand voice consistency." },
+      { q: "How much time can AI save on content creation?", a: "Content creators report 70-90% time savings with AI agents. They automate drafting, editing, and optimization, allowing creators to focus on strategy and creativity." },
+      { q: "Can AI agents maintain brand voice?", a: "Yes, AI agents can be trained on your brand guidelines, past content, and style preferences to maintain consistent voice and tone across all generated content." }
     ]
   };
   
