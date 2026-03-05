@@ -773,3 +773,21 @@ Files changed:
  M WORK_LOG.md
  M db.js
 ```
+
+## 2026-03-05 12:02 — Feature #37: Live agent count on homepage
+Status: done | Built by: qwen3.5 | Verified: yes
+Files changed:
+```
+ .last-result.json | 24 +++++++++++-------------
+ WORK_LOG.md       | 24 ++++++++++++++++++++++++
+ db.js             | 18 ++++++++++++++++++
+ 3 files changed, 53 insertions(+), 13 deletions(-)
+```
+
+## 2026-03-05 12:17 — Feature #1: Agent registry API
+Status: done | Built by: qwen3.5 | Verified: no
+Files changed:
+```
+ M .last-result.json
+ M WORK_LOG.md
+```
