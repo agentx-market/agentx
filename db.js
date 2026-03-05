@@ -90,7 +90,9 @@ try {
       health_status TEXT DEFAULT 'offline',
       last_health_check TEXT,
       response_time_ms INTEGER,
-      uptime_percent REAL DEFAULT 0
+      uptime_percent REAL DEFAULT 0,
+      featured INTEGER DEFAULT 0,
+      featured_until INTEGER
     )
   `);
   console.log('[db] Agents table created with all required fields');
@@ -109,6 +111,8 @@ try {
   db.exec(`ALTER TABLE agents ADD COLUMN IF NOT EXISTS last_health_check TEXT`);
   db.exec(`ALTER TABLE agents ADD COLUMN IF NOT EXISTS response_time_ms INTEGER`);
   db.exec(`ALTER TABLE agents ADD COLUMN IF NOT EXISTS uptime_percent REAL DEFAULT 0`);
+  db.exec(`ALTER TABLE agents ADD COLUMN IF NOT EXISTS featured INTEGER DEFAULT 0`);
+  db.exec(`ALTER TABLE agents ADD COLUMN IF NOT EXISTS featured_until INTEGER`);
   console.log('[db] Added all missing columns to agents table');
 } catch (err) {
   console.log('[db] Agents table columns may already exist:', err.message);

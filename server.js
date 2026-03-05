@@ -369,7 +369,7 @@ app.post('/api/agents', requireAuth, authenticatedLimiter, registrationRateLimit
 
 app.get('/api/agents', (req, res) => {
   try {
-    const agents = db.prepare('SELECT * FROM agents ORDER BY created_at DESC').all();
+    const agents = db.prepare('SELECT * FROM agents ORDER BY featured DESC, featured_until DESC, created_at DESC').all();
     const formatted = agents.map(a => {
       const uptime = calculateUptime(a.id);
       return {
@@ -378,7 +378,9 @@ app.get('/api/agents', (req, res) => {
         healthStatus: a.health_status || 'offline',
         lastHealthCheck: a.last_health_check,
         responseTimeMs: a.response_time_ms,
-        uptimePercent: uptime.uptimePercent
+        uptimePercent: uptime.uptimePercent,
+        featured: a.featured || 0,
+        featured_until: a.featured_until
       };
     });
     res.json(formatted);
@@ -598,8 +600,8 @@ app.post('/api/agents/:id/health-check', authMiddleware, authenticatedLimiter, a
     // Health check passed - activate agent
     const now = Date.now();
     db.run(
-      'UPDATE agents SET status = ?, health_check_passed_at = ?, updated_at = ? WHERE id = ?',
-      ['active', now, now, agentId]
+      'UPDATE agents SET status = ?, health_check_passed_at = ?, updated_at = ?, featured = 1, featured_until = ? WHERE id = ?',
+      ['active', now, now, now + (30 * 24 * 60 * 60 * 1000), agentId]
     );
 
     // Award welcome bonus (10,000 sats)
@@ -938,7 +940,7 @@ app.use('/blog', blogRouter);
 // Browse API endpoint with search, category, and sort filters
 app.get('/api/browse', (req, res) => {
   const { search, category, sort } = req.query;
-  let query = 'SELECT a.id, a.name, a.description, a.health_check_passed_at, a.health_endpoint_url, a.created_at, a.community_listing, a.claim_url, a.endpoint_url, a.operator_id FROM agents a WHERE 1=1';
+  let query = 'SELECT a.id, a.name, a.description, a.health_check_passed_at, a.health_endpoint_url, a.created_at, a.community_listing, a.claim_url, a.endpoint_url, a.operator_id, a.featured, a.featured_until FROM agents a WHERE 1=1';
   const params = [];
 
   if (search) {
@@ -951,7 +953,7 @@ app.get('/api/browse', (req, res) => {
     params.push(category);
   }
 
-  // Sorting
+  // Sorting - featured agents first
   const validSorts = {
     'newest': 'a.created_at DESC',
     'popular': 'a.created_at DESC',
@@ -959,7 +961,7 @@ app.get('/api/browse', (req, res) => {
     'name': 'a.name ASC'
   };
   const sortClause = validSorts[sort] || 'a.created_at DESC';
-  query += ` ORDER BY ${sortClause}`;
+  query += ` ORDER BY a.featured DESC, a.featured_until DESC, ${sortClause}`;
 
   const agents = db.all(query, params);
   
@@ -1003,7 +1005,9 @@ app.get('/api/browse', (req, res) => {
     claim_url: a.claim_url,
     operator_id: a.operator_id,
     rating: reviewStats[a.id]?.avg_rating ? Math.round(reviewStats[a.id].avg_rating * 10) / 10 : null,
-    review_count: reviewStats[a.id]?.review_count || 0
+    review_count: reviewStats[a.id]?.review_count || 0,
+    featured: a.featured || 0,
+    featured_until: a.featured_until
   }));
   
   res.json({ agents: formatted, total: formatted.length });
