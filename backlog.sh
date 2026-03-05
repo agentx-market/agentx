@@ -392,7 +392,7 @@ case "${1:-}" in
   pick)     cmd_pick ;;
   next)     cmd_next ;;
   start)    cmd_start "$2" ;;
-  complete) cmd_complete "$2" "$3" ;;
+  complete) cmd_complete "$2" "$3" "${4:-}" ;;
   ship)     cmd_ship "$2" ;;
   deploy)   shift; cmd_deploy "$@" ;;
   wontdo)   cmd_wontdo "$2" "$3" ;;

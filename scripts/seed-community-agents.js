@@ -1,567 +1,584 @@
 #!/usr/bin/env node
 /**
  * Seed community agent listings from public directories
- * Feature #71: Create skeleton listings for 50+ agents
- * Sources: GitHub trending AI repos, Product Hunt AI launches, public directories
+ * Creates skeleton listings with "Claim this listing" for operators to claim
  */
 
-const db = require('./db');
+const db = require('../db');
 
-// Community listings data curated from public sources
-const communityListings = [
+// Community listings data from public sources
+const communityAgents = [
   // GitHub Trending AI Repos
   {
     name: 'LangChain',
-    description: 'Framework for developing applications powered by LLMs. Build contextual AI apps with chains, agents, and memory.',
-    categories: ['AI Chatbots', 'Code Assistants'],
-    externalUrl: 'https://github.com/langchain-ai/langchain',
-    community_listing: true
+    description: 'Build contextual AI applications with LangChain framework',
+    url: 'https://github.com/langchain-ai/langchain',
+    category: 'Development Framework',
+    capabilities: ['Chain orchestration', 'Memory management', 'Tool integration']
   },
   {
     name: 'LlamaIndex',
-    description: 'Data framework for LLM applications. Ingest, structure, and access your data for RAG and agent workflows.',
-    categories: ['Data Analysis', 'Code Assistants'],
-    externalUrl: 'https://github.com/run-llama/llama_index',
-    community_listing: true
+    description: 'Data framework for LLM applications to ingest, structure, and access private data',
+    url: 'https://github.com/run-llama/llama_index',
+    category: 'Development Framework',
+    capabilities: ['Data indexing', 'RAG pipelines', 'Query engines']
   },
   {
     name: 'AutoGen',
-    description: 'Multi-agent conversation framework for building AI agents. Enable collaborative problem-solving with multiple agents.',
-    categories: ['AI Chatbots', 'Code Assistants'],
-    externalUrl: 'https://github.com/microsoft/autogen',
-    community_listing: true
+    description: 'Framework for building multi-agent conversational systems',
+    url: 'https://github.com/microsoft/autogen',
+    category: 'Multi-Agent',
+    capabilities: ['Multi-agent conversations', 'Code generation', 'Task automation']
+  },
+  {
+    name: 'CrewAI',
+    description: 'Framework for orchestrating role-playing AI agents',
+    url: 'https://github.com/joaomdmoura/crewAI',
+    category: 'Multi-Agent',
+    capabilities: ['Role-playing agents', 'Task delegation', 'Collaborative workflows']
   },
   {
     name: 'Haystack',
-    description: 'End-to-end LLM toolkit for building production-ready search and QA systems. Modular and extensible.',
-    categories: ['AI Chatbots', 'Data Analysis'],
-    externalUrl: 'https://github.com/deepset-ai/haystack',
-    community_listing: true
+    description: 'End-to-end LLM toolkits for building search and QA applications',
+    url: 'https://github.com/deepset-ai/haystack',
+    category: 'Development Framework',
+    capabilities: ['Document search', 'Question answering', 'RAG pipelines']
+  },
+  {
+    name: 'Semantic Kernel',
+    description: 'SDK for integrating LLMs into traditional code',
+    url: 'https://github.com/microsoft/semantic-kernel',
+    category: 'Development Framework',
+    capabilities: ['Plugin system', 'Orchestration', 'Memory management']
   },
   {
     name: 'Dify',
-    description: 'LLM app development platform. Build, deploy, and manage AI applications with a visual workflow builder.',
-    categories: ['AI Chatbots', 'Code Assistants'],
-    externalUrl: 'https://github.com/langgenius/dify',
-    community_listing: true
+    description: 'LLM app development platform with visual workflow builder',
+    url: 'https://github.com/langgenius/dify',
+    category: 'Development Platform',
+    capabilities: ['Visual workflow', 'API management', 'Observability']
   },
   {
     name: 'Flowise',
-    description: 'Drag & drop UI to build your customized LLM flow. Visual workflow builder for AI agents.',
-    categories: ['AI Chatbots', 'Code Assistants'],
-    externalUrl: 'https://github.com/FlowiseAI/Flowise',
-    community_listing: true
+    description: 'Drag & drop UI to build your own LLM applications',
+    url: 'https://github.com/FlowiseAI/Flowise',
+    category: 'No-Code',
+    capabilities: ['Visual builder', 'LLM integration', 'Chat interface']
+  },
+  {
+    name: 'Langflow',
+    description: 'Streamlined UI for LangChain with drag-and-drop interface',
+    url: 'https://github.com/langflow-ai/langflow',
+    category: 'No-Code',
+    capabilities: ['Visual workflow', 'Component library', 'Real-time preview']
   },
   {
     name: 'OpenWebUI',
-    description: 'Feature-rich LLM UI. Self-hosted chat interface with support for multiple models and RAG.',
-    categories: ['AI Chatbots', 'Code Assistants'],
-    externalUrl: 'https://github.com/open-webui/open-webui',
-    community_listing: true
+    description: 'Feature-rich chat interface for self-hosted LLMs',
+    url: 'https://github.com/open-webui/open-webui',
+    category: 'Chat Interface',
+    capabilities: ['Chat UI', 'Model management', 'Knowledge base']
   },
   {
-    name: 'Ollama',
-    description: 'Run LLMs locally on your machine. Easy setup for running Llama, Mistral, and other models.',
-    categories: ['AI Chatbots', 'Code Assistants'],
-    externalUrl: 'https://github.com/ollama/ollama',
-    community_listing: true
+    name: 'OpenHands',
+    description: 'Open-source software engineering agent',
+    url: 'https://github.com/All-Hands-AI/OpenHands',
+    category: 'Code Assistants',
+    capabilities: ['Code editing', 'Terminal access', 'Browser automation']
   },
   {
-    name: 'ComfyUI',
-    description: 'The most powerful and modular GUI for Stable Diffusion. Node-based interface for image generation.',
-    categories: ['Design Tools', 'Video Tools'],
-    externalUrl: 'https://github.com/comfyanonymous/ComfyUI',
-    community_listing: true
+    name: 'Continue',
+    description: 'Open-source AI code assistant for VS Code',
+    url: 'https://github.com/continuedev/continue',
+    category: 'Code Assistants',
+    capabilities: ['Code completion', 'Chat interface', 'Context management']
   },
-  {
-    name: 'AnythingLLM',
-    description: 'All-in-one AI workspace. RAG, chat, and document management in a single desktop app.',
-    categories: ['AI Chatbots', 'Data Analysis'],
-    externalUrl: 'https://github.com/Mintplex-Labs/anything-llm',
-    community_listing: true
-  },
-  
-  // Product Hunt AI Launches
   {
     name: 'Cursor',
-    description: 'AI-first code editor. Build software faster with AI-powered code completion and refactoring.',
-    categories: ['Code Assistants', 'Productivity'],
-    externalUrl: 'https://cursor.com',
-    community_listing: true
+    description: 'AI-first code editor built on VS Code',
+    url: 'https://github.com/getcursor/cursor',
+    category: 'Code Assistants',
+    capabilities: ['AI code editing', 'Chat with codebase', 'Auto-debug']
+  },
+  {
+    name: 'Copilot',
+    description: 'AI pair programmer by GitHub',
+    url: 'https://github.com/features/copilot',
+    category: 'Code Assistants',
+    capabilities: ['Code completion', 'Chat assistance', 'Refactoring']
   },
   {
     name: 'Replit AI',
-    description: 'Cloud-based IDE with AI coding assistant. Build, deploy, and collaborate in the browser.',
-    categories: ['Code Assistants', 'Productivity'],
-    externalUrl: 'https://replit.com',
-    community_listing: true
+    description: 'AI-powered IDE with code generation and deployment',
+    url: 'https://replit.com/site/ai',
+    category: 'Code Assistants',
+    capabilities: ['Code generation', 'Deployment', 'Collaboration']
   },
   {
-    name: 'Gamma',
-    description: 'AI-powered presentation and document creation. Create beautiful decks in seconds.',
-    categories: ['Content Creation', 'Productivity'],
-    externalUrl: 'https://gamma.app',
-    community_listing: true
+    name: 'Devin',
+    description: 'AI software engineer that can handle complex tasks',
+    url: 'https://www.cognition-labs.com/introducing-devin',
+    category: 'Code Assistants',
+    capabilities: ['Full-stack development', 'Task planning', 'Self-correction']
   },
   {
-    name: 'Notion AI',
-    description: 'AI workspace assistant. Write, summarize, and organize content with AI help.',
-    categories: ['Productivity', 'Content Creation'],
-    externalUrl: 'https://notion.so',
-    community_listing: true
+    name: 'Claude Code',
+    description: 'AI coding assistant from Anthropic',
+    url: 'https://www.anthropic.com/claude',
+    category: 'Code Assistants',
+    capabilities: ['Code review', 'Debugging', 'Architecture design']
   },
   {
-    name: 'Jasper',
-    description: 'AI content platform for marketing teams. Create blogs, ads, and social posts at scale.',
-    categories: ['Content Creation', 'Marketing'],
-    externalUrl: 'https://jasper.ai',
-    community_listing: true
+    name: 'Phind',
+    description: 'AI search engine for developers',
+    url: 'https://www.phind.com',
+    category: 'Search',
+    capabilities: ['Code search', 'Documentation lookup', 'Stack Overflow integration']
   },
   {
-    name: 'Descript',
-    description: 'All-in-one audio and video editing with AI. Edit video by editing text transcripts.',
-    categories: ['Video Tools', 'Content Creation'],
-    externalUrl: 'https://descript.com',
-    community_listing: true
+    name: 'Perplexity',
+    description: 'AI-powered search engine with citations',
+    url: 'https://www.perplexity.ai',
+    category: 'Search',
+    capabilities: ['Web search', 'Citations', 'Follow-up questions']
   },
   {
-    name: 'Runway ML',
-    description: 'AI creative suite for video generation and editing. Text-to-video, image generation, and more.',
-    categories: ['Video Tools', 'Design Tools'],
-    externalUrl: 'https://runwayml.com',
-    community_listing: true
+    name: 'You.com',
+    description: 'AI search engine with chat interface',
+    url: 'https://you.com',
+    category: 'Search',
+    capabilities: ['Search', 'Chat', 'Code generation']
   },
+  // Product Hunt AI Launches
   {
     name: 'Midjourney',
-    description: 'AI art generator. Create stunning images from text prompts. Leading generative AI art tool.',
-    categories: ['Design Tools', 'Content Creation'],
-    externalUrl: 'https://midjourney.com',
-    community_listing: true
+    description: 'AI image generator creating stunning artwork from text prompts',
+    url: 'https://www.midjourney.com',
+    category: 'Image Generation',
+    capabilities: ['Text-to-image', 'Style transfer', 'Image editing']
+  },
+  {
+    name: 'DALL-E 3',
+    description: 'AI system that generates images from natural language descriptions',
+    url: 'https://openai.com/dall-e-3',
+    category: 'Image Generation',
+    capabilities: ['Text-to-image', 'Image editing', 'High fidelity']
+  },
+  {
+    name: 'Stable Diffusion',
+    description: 'Open-source AI image generation model',
+    url: 'https://stability.ai/stable-diffusion',
+    category: 'Image Generation',
+    capabilities: ['Text-to-image', 'Inpainting', 'ControlNet']
+  },
+  {
+    name: 'Runway',
+    description: 'AI video generation and editing platform',
+    url: 'https://runwayml.com',
+    category: 'Video Generation',
+    capabilities: ['Text-to-video', 'Video editing', 'Motion tracking']
+  },
+  {
+    name: 'Sora',
+    description: 'AI model for generating realistic videos from text',
+    url: 'https://openai.com/sora',
+    category: 'Video Generation',
+    capabilities: ['Text-to-video', 'Physics simulation', 'Long-form video']
   },
   {
     name: 'ElevenLabs',
-    description: 'AI voice generation and cloning. Create realistic speech from text with multiple voices.',
-    categories: ['Voice Assistants', 'Content Creation'],
-    externalUrl: 'https://elevenlabs.io',
-    community_listing: true
+    description: 'AI voice generation and cloning platform',
+    url: 'https://elevenlabs.io',
+    category: 'Audio Generation',
+    capabilities: ['Text-to-speech', 'Voice cloning', 'Speech synthesis']
+  },
+  {
+    name: 'Descript',
+    description: 'All-in-one video and podcast editing with AI',
+    url: 'https://www.descript.com',
+    category: 'Video Editing',
+    capabilities: ['Video editing', 'Audio editing', 'AI overdub']
+  },
+  {
+    name: 'Jasper',
+    description: 'AI content creation platform for marketing teams',
+    url: 'https://www.jasper.ai',
+    category: 'Content Creation',
+    capabilities: ['Copywriting', 'Blog posts', 'Social media']
+  },
+  {
+    name: 'Copy.ai',
+    description: 'AI writing assistant for marketing and sales',
+    url: 'https://www.copy.ai',
+    category: 'Content Creation',
+    capabilities: ['Copywriting', 'Email generation', 'Social posts']
+  },
+  {
+    name: 'Writesonic',
+    description: 'AI writing tool for ads, articles, and chatbots',
+    url: 'https://writesonic.com',
+    category: 'Content Creation',
+    capabilities: ['Ad copy', 'Article writing', 'Chatbot creation']
+  },
+  {
+    name: 'Chatbase',
+    description: 'Train AI chatbot on your website data',
+    url: 'https://www.chatbase.co',
+    category: 'AI Chatbots',
+    capabilities: ['Custom training', 'Website widget', 'Analytics']
+  },
+  {
+    name: 'Botpress',
+    description: 'Enterprise chatbot platform with visual builder',
+    url: 'https://botpress.com',
+    category: 'AI Chatbots',
+    capabilities: ['Visual builder', 'Multi-channel', 'Analytics']
+  },
+  {
+    name: 'Landbot',
+    description: 'No-code chatbot builder for websites',
+    url: 'https://landbot.io',
+    category: 'AI Chatbots',
+    capabilities: ['Visual builder', 'Form collection', 'Integrations']
+  },
+  {
+    name: 'Intercom',
+    description: 'AI-powered customer messaging platform',
+    url: 'https://www.intercom.com',
+    category: 'Customer Support',
+    capabilities: ['Chatbots', 'Ticketing', 'Customer data']
+  },
+  {
+    name: 'Drift',
+    description: 'Conversational marketing and sales platform',
+    url: 'https://www.drift.com',
+    category: 'Customer Support',
+    capabilities: ['Chatbots', 'Lead qualification', 'Meeting booking']
+  },
+  {
+    name: 'HubSpot AI',
+    description: 'AI-powered CRM and marketing automation',
+    url: 'https://www.hubspot.com/products/ai',
+    category: 'Marketing',
+    capabilities: ['Email marketing', 'Lead scoring', 'Content optimization']
+  },
+  {
+    name: 'MarketMuse',
+    description: 'AI content planning and optimization platform',
+    url: 'https://marketmuse.com',
+    category: 'Marketing',
+    capabilities: ['Content planning', 'SEO optimization', 'Competitor analysis']
+  },
+  {
+    name: 'Frase',
+    description: 'AI content writing and optimization tool',
+    url: 'https://frase.io',
+    category: 'Marketing',
+    capabilities: ['Content briefs', 'SEO writing', 'Analytics']
+  },
+  {
+    name: 'Notion AI',
+    description: 'AI assistant integrated into Notion workspace',
+    url: 'https://www.notion.so/product/ai',
+    category: 'Productivity',
+    capabilities: ['Text generation', 'Summarization', 'Task automation']
+  },
+  {
+    name: 'Mem',
+    description: 'AI-powered note-taking app that organizes itself',
+    url: 'https://www.mem.ai',
+    category: 'Productivity',
+    capabilities: ['Auto-organization', 'Search', 'Knowledge graph']
+  },
+  {
+    name: 'Taskade',
+    description: 'AI workspace for teams with project management',
+    url: 'https://www.taskade.com',
+    category: 'Productivity',
+    capabilities: ['Task management', 'AI generation', 'Collaboration']
+  },
+  {
+    name: 'Gamma',
+    description: 'AI-powered presentation and document creation',
+    url: 'https://gamma.app',
+    category: 'Content Creation',
+    capabilities: ['Slide generation', 'Document creation', 'Design automation']
+  },
+  {
+    name: 'Tome',
+    description: 'AI storytelling and presentation platform',
+    url: 'https://tome.app',
+    category: 'Content Creation',
+    capabilities: ['Storytelling', 'Presentations', 'Image generation']
+  },
+  {
+    name: 'Murf',
+    description: 'AI voice generator for videos and presentations',
+    url: 'https://murf.ai',
+    category: 'Audio Generation',
+    capabilities: ['Text-to-speech', 'Voice customization', 'Multi-language']
   },
   {
     name: 'Synthesia',
-    description: 'AI video generation with avatars. Create professional videos with AI presenters in 120+ languages.',
-    categories: ['Video Tools', 'Content Creation'],
-    externalUrl: 'https://synthesia.io',
-    community_listing: true
-  },
-  
-  // More GitHub & Public Directory Agents
-  {
-    name: 'Hugging Face Transformers',
-    description: 'State-of-the-art ML models for NLP, CV, and more. 500k+ models for every use case.',
-    categories: ['AI Chatbots', 'Data Analysis'],
-    externalUrl: 'https://huggingface.co',
-    community_listing: true
+    description: 'AI video generator with virtual avatars',
+    url: 'https://www.synthesia.io',
+    category: 'Video Generation',
+    capabilities: ['Avatar videos', 'Multi-language', 'Custom avatars']
   },
   {
-    name: 'Stability AI',
-    description: 'Open-source AI for image generation. Stable Diffusion models and tools for creators.',
-    categories: ['Design Tools', 'Video Tools'],
-    externalUrl: 'https://stability.ai',
-    community_listing: true
+    name: 'HeyGen',
+    description: 'AI video generation with avatar and voice cloning',
+    url: 'https://www.heygen.com',
+    category: 'Video Generation',
+    capabilities: ['Avatar videos', 'Voice cloning', 'Lip sync']
   },
   {
-    name: 'Perplexity AI',
-    description: 'AI search engine with citations. Get answers with sources from the web.',
-    categories: ['AI Chatbots', 'Research'],
-    externalUrl: 'https://perplexity.ai',
-    community_listing: true
+    name: 'Pika',
+    description: 'AI video generation and editing tool',
+    url: 'https://pika.art',
+    category: 'Video Generation',
+    capabilities: ['Text-to-video', 'Video editing', 'Style transfer']
   },
   {
-    name: 'Anthropic Claude',
-    description: 'Safe, helpful AI assistant. Large context window for complex tasks and document analysis.',
-    categories: ['AI Chatbots', 'Data Analysis'],
-    externalUrl: 'https://anthropic.com',
-    community_listing: true
+    name: 'Kling AI',
+    description: 'Advanced AI video generation model',
+    url: 'https://klingai.com',
+    category: 'Video Generation',
+    capabilities: ['Text-to-video', 'Image-to-video', 'Physics simulation']
   },
   {
-    name: 'OpenAI GPT',
-    description: 'Advanced language models for text, code, and vision. GPT-4o for multimodal tasks.',
-    categories: ['AI Chatbots', 'Code Assistants'],
-    externalUrl: 'https://openai.com',
-    community_listing: true
+    name: 'Suno',
+    description: 'AI music generation and composition platform',
+    url: 'https://suno.com',
+    category: 'Audio Generation',
+    capabilities: ['Music generation', 'Lyric writing', 'Style transfer']
   },
   {
-    name: 'Mistral AI',
-    description: 'Efficient open-weight models. Mixtral and Mistral models for production use.',
-    categories: ['AI Chatbots', 'Code Assistants'],
-    externalUrl: 'https://mistral.ai',
-    community_listing: true
+    name: 'Udio',
+    description: 'AI music creation platform with high-quality output',
+    url: 'https://www.udio.com',
+    category: 'Audio Generation',
+    capabilities: ['Music generation', 'Remixing', 'Voice synthesis']
   },
   {
-    name: 'Cohere',
-    description: 'Enterprise AI platform. RAG, search, and classification APIs for businesses.',
-    categories: ['AI Chatbots', 'Data Analysis'],
-    externalUrl: 'https://cohere.com',
-    community_listing: true
+    name: 'Riffusion',
+    description: 'AI music generation using diffusion models',
+    url: 'https://www.riffusion.com',
+    category: 'Audio Generation',
+    capabilities: ['Music generation', 'Audio editing', 'Style transfer']
+  },
+  {
+    name: 'Whisper',
+    description: 'Open-source speech recognition model by OpenAI',
+    url: 'https://github.com/openai/whisper',
+    category: 'Audio Generation',
+    capabilities: ['Speech-to-text', 'Transcription', 'Multi-language']
+  },
+  {
+    name: 'AssemblyAI',
+    description: 'AI speech-to-text API with advanced features',
+    url: 'https://www.assemblyai.com',
+    category: 'Audio Generation',
+    capabilities: ['Transcription', 'Speaker diarization', 'Sentiment analysis']
   },
   {
     name: 'Replicate',
-    description: 'Run ML models in the cloud. Deploy and scale AI models with simple API.',
-    categories: ['AI Chatbots', 'Code Assistants'],
-    externalUrl: 'https://replicate.com',
-    community_listing: true
+    description: 'Platform for running ML models as APIs',
+    url: 'https://replicate.com',
+    category: 'Development Platform',
+    capabilities: ['Model hosting', 'API management', 'GPU scaling']
   },
   {
-    name: 'Vercel AI SDK',
-    description: 'Build AI-powered chatbots and assistants. Stream tokens, handle errors, and more.',
-    categories: ['Code Assistants', 'AI Chatbots'],
-    externalUrl: 'https://sdk.vercel.ai',
-    community_listing: true
+    name: 'Hugging Face',
+    description: 'Platform for ML models and datasets',
+    url: 'https://huggingface.co',
+    category: 'Development Platform',
+    capabilities: ['Model hub', 'Inference API', 'Dataset hosting']
   },
   {
-    name: 'Langfuse',
-    description: 'LLM observability platform. Track, evaluate, and debug AI applications.',
-    categories: ['Monitoring', 'Data Analysis'],
-    externalUrl: 'https://langfuse.com',
-    community_listing: true
+    name: 'Banana',
+    description: 'Serverless GPU cloud for ML inference',
+    url: 'https://banan.ai',
+    category: 'Development Platform',
+    capabilities: ['GPU hosting', 'Auto-scaling', 'API endpoints']
+  },
+  {
+    name: 'Modal',
+    description: 'Serverless compute platform for Python',
+    url: 'https://modal.com',
+    category: 'Development Platform',
+    capabilities: ['Serverless compute', 'GPU support', 'Python native']
+  },
+  {
+    name: 'Baseten',
+    description: 'Deploy and scale ML models with ease',
+    url: 'https://baseten.co',
+    category: 'Development Platform',
+    capabilities: ['Model deployment', 'Auto-scaling', 'Monitoring']
+  },
+  {
+    name: 'Anyscale',
+    description: 'Platform for running AI workloads at scale',
+    url: 'https://www.anyscale.com',
+    category: 'Development Platform',
+    capabilities: ['Distributed computing', 'Ray framework', 'Model serving']
   },
   {
     name: 'Weights & Biases',
-    description: 'MLOps platform for ML experiments. Track, visualize, and reproduce ML workflows.',
-    categories: ['Monitoring', 'Data Analysis'],
-    externalUrl: 'https://wandb.ai',
-    community_listing: true
+    description: 'ML experiment tracking and model management',
+    url: 'https://wandb.ai',
+    category: 'Development Platform',
+    capabilities: ['Experiment tracking', 'Model registry', 'Visualization']
+  },
+  {
+    name: 'Comet',
+    description: 'MLOps platform for experiment tracking',
+    url: 'https://www.comet.com',
+    category: 'Development Platform',
+    capabilities: ['Experiment tracking', 'Model monitoring', 'Alerts']
+  },
+  {
+    name: 'Neptune',
+    description: 'Metadata store for ML experiments and models',
+    url: 'https://neptune.ai',
+    category: 'Development Platform',
+    capabilities: ['Experiment tracking', 'Model registry', 'Collaboration']
+  },
+  {
+    name: 'Paperspace',
+    description: 'GPU cloud for ML development and training',
+    url: 'https://www.paperspace.com',
+    category: 'Development Platform',
+    capabilities: ['GPU instances', 'Notebooks', 'Job scheduling']
+  },
+  {
+    name: 'Lambda',
+    description: 'GPU cloud platform for deep learning',
+    url: 'https://lambdalabs.com',
+    category: 'Development Platform',
+    capabilities: ['GPU instances', 'Managed services', 'High performance']
+  },
+  {
+    name: 'DataStax AI',
+    description: 'Vector database for AI applications',
+    url: 'https://www.datastax.com/products/datastax-astra',
+    category: 'Data',
+    capabilities: ['Vector search', 'Similarity search', 'Scalability']
   },
   {
     name: 'Pinecone',
-    description: 'Vector database for AI applications. Fast, scalable similarity search for RAG.',
-    categories: ['Data', 'Code Assistants'],
-    externalUrl: 'https://pinecone.io',
-    community_listing: true
+    description: 'Managed vector database for AI applications',
+    url: 'https://www.pinecone.io',
+    category: 'Data',
+    capabilities: ['Vector storage', 'Similarity search', 'Real-time indexing']
   },
   {
     name: 'Weaviate',
-    description: 'Open-source vector database. Hybrid search with GraphQL and machine learning.',
-    categories: ['Data', 'Code Assistants'],
-    externalUrl: 'https://weaviate.io',
-    community_listing: true
+    description: 'Open-source vector database with GraphQL',
+    url: 'https://weaviate.io',
+    category: 'Data',
+    capabilities: ['Vector search', 'Hybrid search', 'Multi-modal']
   },
   {
     name: 'Qdrant',
-    description: 'Vector search engine. High-performance similarity search with filtering.',
-    categories: ['Data', 'Code Assistants'],
-    externalUrl: 'https://qdrant.tech',
-    community_listing: true
+    description: 'Vector search engine for AI applications',
+    url: 'https://qdrant.tech',
+    category: 'Data',
+    capabilities: ['Vector search', 'Filtering', 'Real-time indexing']
+  },
+  {
+    name: 'Milvus',
+    description: 'Open-source vector database for scale',
+    url: 'https://milvus.io',
+    category: 'Data',
+    capabilities: ['Vector search', 'Horizontal scaling', 'Cloud-native']
   },
   {
     name: 'Chroma',
-    description: 'AI-native vector database. Simple, developer-friendly embeddings storage.',
-    categories: ['Data', 'Code Assistants'],
-    externalUrl: 'https://trychroma.com',
-    community_listing: true
+    description: 'Open-source embedding database',
+    url: 'https://www.trychroma.com',
+    category: 'Data',
+    capabilities: ['Embedding storage', 'Similarity search', 'Simple API']
   },
   {
     name: 'LanceDB',
-    description: 'Serverless vector database for AI apps. Built-in hybrid search and embeddings.',
-    categories: ['Data', 'Code Assistants'],
-    externalUrl: 'https://lancedb.com',
-    community_listing: true
+    description: 'Serverless vector database for AI apps',
+    url: 'https://lancedb.com',
+    category: 'Data',
+    capabilities: ['Vector search', 'Serverless', 'ACID transactions']
   },
   {
-    name: 'Supabase',
-    description: 'Open-source Firebase alternative. PostgreSQL with real-time subscriptions and auth.',
-    categories: ['Data', 'Code Assistants'],
-    externalUrl: 'https://supabase.com',
-    community_listing: true
+    name: 'Vespa',
+    description: 'Engine for scalable AI applications',
+    url: 'https://vespa.ai',
+    category: 'Data',
+    capabilities: ['Vector search', 'Machine learning', 'Real-time processing']
   },
   {
-    name: 'Vercel',
-    description: 'Deploy frontend and edge functions. Git-based deployment for modern web apps.',
-    categories: ['Code Assistants', 'Productivity'],
-    externalUrl: 'https://vercel.com',
-    community_listing: true
+    name: 'Elasticsearch',
+    description: 'Search analytics engine with vector capabilities',
+    url: 'https://www.elastic.co/elasticsearch',
+    category: 'Data',
+    capabilities: ['Full-text search', 'Vector search', 'Analytics']
   },
   {
-    name: 'Railway',
-    description: 'Cloud platform for developers. Deploy apps with one click. Full-stack hosting.',
-    categories: ['Code Assistants', 'Productivity'],
-    externalUrl: 'https://railway.app',
-    community_listing: true
-  },
-  {
-    name: 'Render',
-    description: 'Cloud hosting for apps, services, and websites. Automated deploys from Git.',
-    categories: ['Code Assistants', 'Productivity'],
-    externalUrl: 'https://render.com',
-    community_listing: true
-  },
-  {
-    name: 'Docker',
-    description: 'Container platform for building and shipping apps. Standardize development environments.',
-    categories: ['Code Assistants', 'Productivity'],
-    externalUrl: 'https://docker.com',
-    community_listing: true
-  },
-  {
-    name: 'Kubernetes',
-    description: 'Container orchestration platform. Automate deployment, scaling, and management.',
-    categories: ['Monitoring', 'Code Assistants'],
-    externalUrl: 'https://kubernetes.io',
-    community_listing: true
-  },
-  {
-    name: 'Prometheus',
-    description: 'Systems monitoring and alerting toolkit. Time-series database for metrics.',
-    categories: ['Monitoring', 'Data Analysis'],
-    externalUrl: 'https://prometheus.io',
-    community_listing: true
-  },
-  {
-    name: 'Grafana',
-    description: 'Analytics and monitoring platform. Visualize metrics, logs, and traces.',
-    categories: ['Monitoring', 'Data Analysis'],
-    externalUrl: 'https://grafana.com',
-    community_listing: true
-  },
-  {
-    name: 'Datadog',
-    description: 'Cloud monitoring service. Monitor infrastructure, applications, and logs.',
-    categories: ['Monitoring', 'Security'],
-    externalUrl: 'https://datadog.com',
-    community_listing: true
-  },
-  {
-    name: 'Sentry',
-    description: 'Application monitoring and error tracking. Real-time error detection and debugging.',
-    categories: ['Monitoring', 'Security'],
-    externalUrl: 'https://sentry.io',
-    community_listing: true
-  },
-  {
-    name: 'PostHog',
-    description: 'Product analytics platform. Track user behavior, feature flags, and A/B tests.',
-    categories: ['Data Analysis', 'Monitoring'],
-    externalUrl: 'https://posthog.com',
-    community_listing: true
-  },
-  {
-    name: 'Mixpanel',
-    description: 'Product analytics for user behavior. Track events and analyze user journeys.',
-    categories: ['Data Analysis', 'Marketing'],
-    externalUrl: 'https://mixpanel.com',
-    community_listing: true
-  },
-  {
-    name: 'Amplitude',
-    description: 'Digital analytics platform. Understand user behavior and optimize products.',
-    categories: ['Data Analysis', 'Marketing'],
-    externalUrl: 'https://amplitude.com',
-    community_listing: true
-  },
-  {
-    name: 'Stripe',
-    description: 'Online payment processing. Accept payments, manage subscriptions, and payouts.',
-    categories: ['Payments', 'E-commerce'],
-    externalUrl: 'https://stripe.com',
-    community_listing: true
-  },
-  {
-    name: 'PayPal',
-    description: 'Digital payments platform. Send, receive, and store payments online.',
-    categories: ['Payments', 'E-commerce'],
-    externalUrl: 'https://paypal.com',
-    community_listing: true
-  },
-  {
-    name: 'Square',
-    description: 'Payment and point-of-sale solutions. Accept card payments and manage business.',
-    categories: ['Payments', 'E-commerce'],
-    externalUrl: 'https://squareup.com',
-    community_listing: true
-  },
-  {
-    name: 'Shopify',
-    description: 'E-commerce platform for online stores. Build and manage your online business.',
-    categories: ['E-commerce', 'Marketing'],
-    externalUrl: 'https://shopify.com',
-    community_listing: true
-  },
-  {
-    name: 'WooCommerce',
-    description: 'WordPress e-commerce plugin. Turn your WordPress site into an online store.',
-    categories: ['E-commerce', 'Web Development'],
-    externalUrl: 'https://woocommerce.com',
-    community_listing: true
-  },
-  {
-    name: 'Mailchimp',
-    description: 'Email marketing and automation platform. Build audiences and grow revenue.',
-    categories: ['Email Assistants', 'Marketing'],
-    externalUrl: 'https://mailchimp.com',
-    community_listing: true
-  },
-  {
-    name: 'SendGrid',
-    description: 'Cloud-based email delivery service. Send transactional and marketing emails.',
-    categories: ['Email Assistants', 'Marketing'],
-    externalUrl: 'https://sendgrid.com',
-    community_listing: true
-  },
-  {
-    name: 'Twilio',
-    description: 'Cloud communications platform. SMS, voice, and video APIs for developers.',
-    categories: ['AI Chatbots', 'Code Assistants'],
-    externalUrl: 'https://twilio.com',
-    community_listing: true
-  },
-  {
-    name: 'Zapier',
-    description: 'Automation platform for apps. Connect 5000+ apps and automate workflows.',
-    categories: ['Productivity', 'Data'],
-    externalUrl: 'https://zapier.com',
-    community_listing: true
-  },
-  {
-    name: 'Make (Integromat)',
-    description: 'Visual automation platform. Build complex workflows with drag-and-drop.',
-    categories: ['Productivity', 'Data'],
-    externalUrl: 'https://make.com',
-    community_listing: true
-  },
-  {
-    name: 'n8n',
-    description: 'Workflow automation tool. Node-based automation with self-host option.',
-    categories: ['Productivity', 'Data'],
-    externalUrl: 'https://n8n.io',
-    community_listing: true
-  },
-  {
-    name: 'Airtable',
-    description: 'Database-spreadsheet hybrid. Flexible data management with powerful views.',
-    categories: ['Data', 'Productivity'],
-    externalUrl: 'https://airtable.com',
-    community_listing: true
-  },
-  {
-    name: 'Notion',
-    description: 'All-in-one workspace. Notes, docs, tasks, and databases in one place.',
-    categories: ['Productivity', 'Content Creation'],
-    externalUrl: 'https://notion.so',
-    community_listing: true
-  },
-  {
-    name: 'Slack',
-    description: 'Team communication platform. Channels, messages, and integrations for teams.',
-    categories: ['Productivity', 'AI Chatbots'],
-    externalUrl: 'https://slack.com',
-    community_listing: true
-  },
-  {
-    name: 'Discord',
-    description: 'Community communication platform. Voice, video, and text for communities.',
-    categories: ['AI Chatbots', 'Productivity'],
-    externalUrl: 'https://discord.com',
-    community_listing: true
-  },
-  {
-    name: 'GitHub Copilot',
-    description: 'AI pair programmer. Code completion and suggestions in your editor.',
-    categories: ['Code Assistants', 'Productivity'],
-    externalUrl: 'https://github.com/features/copilot',
-    community_listing: true
-  },
-  {
-    name: 'Tabnine',
-    description: 'AI code completion tool. Support for all major IDEs and languages.',
-    categories: ['Code Assistants', 'Productivity'],
-    externalUrl: 'https://tabnine.com',
-    community_listing: true
-  },
-  {
-    name: 'Codeium',
-    description: 'Free AI code completion and chat. Alternative to GitHub Copilot.',
-    categories: ['Code Assistants', 'Productivity'],
-    externalUrl: 'https://codeium.com',
-    community_listing: true
+    name: 'Postgres with pgvector',
+    description: 'PostgreSQL extension for vector similarity search',
+    url: 'https://github.com/pgvector/pgvector',
+    category: 'Data',
+    capabilities: ['Vector search', 'SQL integration', 'ACID compliance']
   }
 ];
 
-// Get category IDs
-function getCategoryIds(categoryNames) {
-  const categoryIds = [];
-  categoryNames.forEach(name => {
-    const cat = db.prepare('SELECT id FROM categories WHERE slug = ? OR name = ?').get(name.toLowerCase().replace(/ /g, '-'), name);
-    if (cat) {
-      categoryIds.push(cat.id);
-    }
-  });
-  return categoryIds;
+// Helper to find category ID
+function findCategoryId(name) {
+  const result = db.prepare('SELECT id FROM categories WHERE name = ?').get(name);
+  return result ? result.id : null;
 }
 
-// Insert community listings
-function seedCommunityListings() {
-  const now = Date.now();
-  let inserted = 0;
-  let skipped = 0;
-  
-  const insertAgent = db.prepare(`
-    INSERT OR IGNORE INTO agents (
-      operator_id, name, description, capabilities, endpoint_url, 
-      pricing, status, created_at, updated_at, community_listing
-    ) VALUES (?, ?, ?, ?, ?, ?, 'pending', ?, ?, ?)
-  `);
-  
-  const insertAgentCategory = db.prepare(`
-    INSERT OR IGNORE INTO agent_categories (agent_id, category_id) VALUES (?, ?)
-  `);
-  
-  const checkAgent = db.prepare('SELECT id FROM agents WHERE name = ?');
-  
-  communityListings.forEach(listing => {
-    const existing = checkAgent.get(listing.name);
-    
-    if (existing) {
-      skipped++;
-      console.log(`⏭️  Skipped (exists): ${listing.name}`);
-      return;
-    }
-    
-    const capabilities = JSON.stringify(['community_listing']);
-    const categoryIds = getCategoryIds(listing.categories);
-    
-    try {
-      const result = insertAgent.run(
-        null, // operator_id (null for community listing)
-        listing.name,
-        listing.description,
-        capabilities,
-        listing.externalUrl, // endpoint_url (external URL)
-        'Free', // pricing
-        now,
-        now,
-        true // community_listing
-      );
-      
-      inserted++;
-      console.log(`✅ Inserted: ${listing.name}`);
-      
-      // Insert categories
-      categoryIds.forEach(catId => {
-        insertAgentCategory.run(result.lastInsertRowid, catId);
-      });
-    } catch (err) {
-      console.error(`❌ Error inserting ${listing.name}:`, err.message);
-    }
-  });
-  
-  console.log(`\n📊 Summary:`);
-  console.log(`   Inserted: ${inserted}`);
-  console.log(`   Skipped: ${skipped}`);
-  console.log(`   Total: ${communityListings.length}`);
-  
-  // Verify
-  const communityCount = db.prepare('SELECT COUNT(*) as c FROM agents WHERE community_listing = 1').get();
-  console.log(`\n🎯 Community listings in DB: ${communityCount.c}`);
-}
+// Insert community agents
+let inserted = 0;
+let skipped = 0;
 
-// Run seeding
-seedCommunityListings();
+console.log('🌐 Seeding community agent listings...\n');
+
+communityAgents.forEach(agent => {
+  // Check if agent already exists by URL
+  const existing = db.prepare('SELECT id FROM agents WHERE endpoint_url = ?').get(agent.url);
+  
+  if (existing) {
+    skipped++;
+    console.log(`⏭️  Skipped (exists): ${agent.name}`);
+    return;
+  }
+  
+  // Insert agent
+  const agentId = db.prepare(`
+    INSERT INTO agents (operator_id, name, description, endpoint_url, status, created_at, updated_at, community_listing)
+    VALUES (?, ?, ?, ?, 'pending', ?, ?, 1)
+  `).run('community', agent.name, agent.description, agent.url, Date.now(), Date.now());
+  
+  // Insert capabilities as JSON
+  const capabilities = agent.capabilities || ['AI Agent'];
+  const capStmt = db.prepare('UPDATE agents SET capabilities = ? WHERE id = ?');
+  capStmt.run(JSON.stringify(capabilities), agentId);
+  
+  // Set claim URL for community listings
+  const claimStmt = db.prepare('UPDATE agents SET claim_url = ? WHERE id = ?');
+  claimStmt.run(`/agents/${agentId}/claim`, agentId);
+  
+  // Link to category
+  const categoryId = findCategoryId(agent.category);
+  if (categoryId) {
+    db.prepare(`
+      INSERT OR IGNORE INTO agent_categories (agent_id, category_id)
+      VALUES (?, ?)
+    `).run(agentId, categoryId);
+  }
+  
+  inserted++;
+  console.log(`✅ Added: ${agent.name} (${agent.category})`);
+});
+
+console.log(`\n📊 Results: ${inserted} inserted, ${skipped} skipped`);
+console.log(`💡 These are community listings - operators can claim them via "Claim this listing" button`);
