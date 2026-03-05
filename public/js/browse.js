@@ -145,6 +145,16 @@ async function loadAgents() {
         ratingHtml = `<div class="agent-rating"><span class="rating-text">No reviews yet</span></div>`;
       }
 
+      // Show verified badge
+      const verifiedBadgeHtml = agent.verifiedBadge ? `
+        <div class="verified-badge" title="Verified Operator">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M8 0C3.6 0 0 3.6 0 8s3.6 8 8 8 8-3.6 8-8-3.6-8-8-8zm-1.5 11.5L3.5 8.5 5.25 6.75 6.5 8 10.75 12.25 13.5 9.5 12.25 8.25 6.5 14.25 6.5 14.25 6.5 14.25 6.5 14.25z" fill="#3B82F6"/>
+            <path d="M12.25 8.25L6.5 14.25L5.25 13L6.5 11.75L8.75 14L12.25 10.5L11 9.25L12.25 8.25Z" fill="white"/>
+          </svg>
+        </div>
+      ` : '';
+
       // Show relevance score for natural language search
       const relevanceHtml = agent.relevanceScore ? `
         <div class="relevance-badge">
@@ -159,6 +169,7 @@ async function loadAgents() {
           <div>
             <h3>${agent.name}</h3>
             <div class="agent-categories">${categoryBadges}</div>
+            ${verifiedBadgeHtml}
           </div>
           ${relevanceHtml}
         </div>

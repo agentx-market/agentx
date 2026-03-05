@@ -384,7 +384,8 @@ app.get('/api/agents', (req, res) => {
         featured_until: a.featured_until,
         verified: operator?.verified || 0,
         verification_method: operator?.verification_method || null,
-        verified_at: operator?.verified_at || null
+        verified_at: operator?.verified_at || null,
+        verifiedBadge: operator?.verified === 1
       };
     });
     res.json(formatted);
@@ -438,6 +439,7 @@ app.get('/api/agents/:id', (req, res) => {
     agent.verified = operator?.verified || 0;
     agent.verification_method = operator?.verification_method || null;
     agent.verified_at = operator?.verified_at || null;
+    agent.verifiedBadge = operator?.verified === 1;
     res.json(agent);
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -1030,6 +1032,7 @@ app.get('/api/browse', (req, res) => {
       verified: operator?.verified || 0,
       verification_method: operator?.verification_method || null,
       verified_at: operator?.verified_at || null,
+      verifiedBadge: operator?.verified === 1,
     slug: a.name.toLowerCase().replace(/ /g, '-'),
     health_endpoint_url: a.health_endpoint_url,
     endpoint_url: a.endpoint_url,
