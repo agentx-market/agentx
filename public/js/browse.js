@@ -121,6 +121,21 @@ async function loadAgents() {
       const categoryBadges = agent.categories.map(cat => 
         `<span class="agent-category-badge">${cat}</span>`
       ).join('');
+      
+      // Build rating display
+      let ratingHtml = '';
+      if (agent.rating && agent.review_count > 0) {
+        ratingHtml = `
+          <div class="agent-rating">
+            <div class="star-rating-small">
+              ${generateStars(agent.rating)}
+            </div>
+            <span class="rating-text">${agent.rating.toFixed(1)} (${agent.review_count})</span>
+          </div>
+        `;
+      } else {
+        ratingHtml = `<div class="agent-rating"><span class="rating-text">No reviews yet</span></div>`;
+      }
 
       card.innerHTML = `
         <div class="card-header">
@@ -133,6 +148,7 @@ async function loadAgents() {
         <p class="description">${description}</p>
         <div class="agent-meta">
           <span class="meta-item"><strong class="${uptimeClass}">${uptime}%</strong> uptime</span>
+          ${ratingHtml}
         </div>
         <div class="agent-actions">
           <a href="/agents/${slug}" class="btn btn-secondary btn-small">View Details</a>
@@ -144,6 +160,24 @@ async function loadAgents() {
   } catch (err) {
     console.error('Failed to load agents:', err);
   }
+}
+
+function generateStars(rating) {
+  const fullStars = Math.floor(rating);
+  const hasHalfStar = rating % 1 >= 0.5;
+  let stars = '';
+  
+  for (let i = 1; i <= 5; i++) {
+    if (i <= fullStars) {
+      stars += '★';
+    } else if (i === fullStars + 1 && hasHalfStar) {
+      stars += '★';
+    } else {
+      stars += '☆';
+    }
+  }
+  
+  return stars;
 }
 
 function debounce(fn, ms) {

@@ -157,6 +157,7 @@
   padding-top: var(--space-md);
   border-top: 1px solid var(--border);
   margin-top: auto;
+  align-items: center;
 }
 
 .agent-card .meta-item {
@@ -165,6 +166,22 @@
 }
 .agent-card .meta-item strong {
   color: var(--text-secondary);
+}
+
+.agent-card .agent-rating {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.agent-card .star-rating-small {
+  font-size: 0.9rem;
+  color: #fbbf24;
+}
+
+.agent-card .rating-text {
+  font-size: 0.8rem;
+  color: var(--text-muted);
 }
 
 .agent-card .agent-tags {
