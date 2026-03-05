@@ -447,7 +447,7 @@ app.get('/api/agents/:id', (req, res) => {
 });
 
 // Agent schema endpoint - returns agent's capabilities and endpoint
-app.get('/api/agents/:id/schema', authMiddleware, authenticatedLimiter, (req, res) => {
+app.get('/api/agents/:id/schema', authenticatedLimiter, (req, res) => {
   try {
     const id = parseInt(req.params.id);
     const agent = db.get('SELECT capabilities, endpoint_url FROM agents WHERE id=?', [id]);
@@ -470,7 +470,7 @@ app.get('/api/agents/:id/stats', authenticatedLimiter, async (req, res) => {
     
     const stats = db.prepare(
       'SELECT date(created_at) as day, SUM(tasks_completed) as tasks, AVG(response_time_ms) as avg_ms, SUM(errors) as errors FROM agent_usage WHERE agent_id=? GROUP BY day ORDER BY day DESC LIMIT 30'
-    ).all(id);
+    ).all(String(id));
     res.json(stats);
   } catch (err) {
     res.status(500).json({ error: err.message });
