@@ -822,3 +822,28 @@ Files changed:
  server.js            |  4 ++--
  4 files changed, 28 insertions(+), 18 deletions(-)
 ```
+
+## 2026-03-05 13:03 — Feature #53: Remove agent counter and Coming Soon cards from homepage
+Status: done | Built by: qwen3.5 | Verified: yes
+Files changed:
+```
+ .last-result.json | 18 +++++++++---------
+ WORK_LOG.md       | 11 +++++++++++
+ public/index.html | 26 ++++++++++++--------------
+ 3 files changed, 32 insertions(+), 23 deletions(-)
+```
+
+## 2026-03-05 13:08 — Feature #53: Remove agent counter and Coming Soon cards from homepage
+Status: done | Built by: qwen3.5 | Verified: no
+Files changed:
+```
+ M WORK_LOG.md
+```
+
+## 2026-03-05 13:28 — Feature #1: Agent registry API
+Status: done | Built by: qwen3.5 | Verified: no
+Files changed:
+```
+ M .last-result.json
+ M WORK_LOG.md
+```
