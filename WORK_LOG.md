@@ -890,3 +890,15 @@ Files changed:
  server.js                  |  15 ++++--
  4 files changed, 153 insertions(+), 14 deletions(-)
 ```
+
+## 2026-03-05 14:59 — Feature #83: Add Stripe customer portal for subscription management
+Status: done | Built by: qwen3.5 | Verified: yes
+Files changed:
+```
+ .last-result.json   | 19 +++++++--------
+ WORK_LOG.md         | 11 +++++++++
+ public/docs.html    | 69 +++++++++++++++++++++++++++++++++++++++++++++++++++++
+ server.js           | 33 +++++++++++++++++++++++++
+ views/dashboard.ejs |  2 +-
+ 5 files changed, 123 insertions(+), 11 deletions(-)
+```
