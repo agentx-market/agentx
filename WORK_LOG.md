@@ -651,3 +651,10 @@ Files changed:
 ```
 no git changes detected
 ```
+
+## 2026-03-05 03:09 — Feature #45: Blog index page with post listing
+Status: done | Built by: devstral | Verified: yes
+Files changed:
+```
+ M public/css/style.css
+```
