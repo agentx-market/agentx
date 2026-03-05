@@ -754,7 +754,7 @@ function seedAgents() {
   
   categories.forEach(cat => {
     try {
-      conn.run(`
+      db.run(`
         INSERT OR IGNORE INTO categories (name, slug) VALUES (?, ?)
       `, [cat.name, cat.slug]);
     } catch (err) {
@@ -780,7 +780,7 @@ function seedAgents() {
     const catId = categoryMap[agent.category];
     if (catId) {
       try {
-        conn.run(
+        db.run(
           'INSERT OR IGNORE INTO agent_categories (agent_id, category_id) VALUES ((SELECT id FROM agents WHERE name = ?), ?)',
           [agent.name, catId]
         );
