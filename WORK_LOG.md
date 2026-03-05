@@ -619,3 +619,10 @@ Files changed:
 ```
  M .last-result.json
 ```
+
+## 2026-03-04 22:59 — Feature #1: Agent registry API
+Status: done | Built by: devstral | Verified: no
+Files changed:
+```
+ M .last-result.json
+```
