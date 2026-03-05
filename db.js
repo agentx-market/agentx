@@ -171,6 +171,24 @@ try {
   console.log('[db] Agent usage table may already exist:', err.message);
 }
 
+// Create api_keys table for agent API key management
+try {
+  db.exec(`
+    CREATE TABLE IF NOT EXISTS api_keys (
+      id INTEGER PRIMARY KEY,
+      agent_id TEXT NOT NULL,
+      key_hash TEXT UNIQUE NOT NULL,
+      key_prefix TEXT NOT NULL,
+      last_used_at INTEGER,
+      created_at INTEGER,
+      FOREIGN KEY (agent_id) REFERENCES agents(id) ON DELETE CASCADE
+    )
+  `);
+  console.log('[db] API keys table created');
+} catch (err) {
+  console.log('[db] API keys table may already exist:', err.message);
+}
+
 // ============ Migration Runner ============
 function runMigrations() {
   const migrationsDir = path.join(__dirname, 'migrations');

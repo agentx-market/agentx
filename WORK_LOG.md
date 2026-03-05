@@ -749,3 +749,27 @@ Files changed:
  M views/docs.ejs
  M views/status.ejs
 ```
+
+## 2026-03-05 11:43 — Feature #8: Usage tracking API
+Status: done | Built by: qwen3.5 | Verified: yes
+Files changed:
+```
+ .last-result.json           |  20 ++++----
+ WORK_LOG.md                 |  24 +++++++++
+ db.js                       |  20 ++++++++
+ public/about.html           |   6 +--
+ public/contact.html         |  17 +------
+ public/features.html        |   8 +--
+ public/getting-started.html |   1 -
+ public/index.html           |  20 ++------
+ public/pricing.html         |   3 +-
+ views/browse.ejs            |   2 +-
+```
+
+## 2026-03-05 12:02 — Feature #37: Live agent count on homepage
+Status: done | Built by: qwen3.5 | Verified: yes
+Files changed:
+```
+ M WORK_LOG.md
+ M db.js
+```
