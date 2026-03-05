@@ -4,58 +4,141 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>API Documentation - AgentX.Market</title>
+  <link rel="stylesheet" href="/css/style.css">
   <style>
     body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      line-height: 1.6;
-      color: #333;
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 20px;
+      background: #09090b;
+      color: #a1a1aa;
     }
-    .navbar {
-      background: #1e1e2e;
-      padding: 15px 20px;
-      border-radius: 8px;
-      margin-bottom: 30px;
+    .docs-nav {
+      background: #111113;
+      padding: 1rem 1.5rem;
+      border-radius: 12px;
+      margin-bottom: 2.5rem;
+      border: 1px solid #27272a;
+      display: flex;
+      gap: 1.5rem;
+      flex-wrap: wrap;
     }
-    .navbar a {
-      color: white;
+    .docs-nav a {
+      color: #a1a1aa;
       text-decoration: none;
-      margin-right: 20px;
+      font-size: 0.9rem;
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+    .docs-nav a:hover { color: #fafafa; }
+    .docs-container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 2rem 1.5rem 4rem;
+    }
+    .docs-container > h1 {
+      color: #fafafa;
+      font-size: 2.2rem;
+      margin-bottom: 2.5rem;
+      letter-spacing: -0.02em;
     }
     .endpoint {
-      background: #f5f5f5;
-      border-radius: 8px;
-      padding: 20px;
-      margin-bottom: 30px;
+      background: #141416;
+      border: 1px solid #27272a;
+      border-radius: 12px;
+      padding: 2rem;
+      margin-bottom: 2rem;
     }
     .endpoint h2 {
       margin-top: 0;
-      color: #1e1e2e;
+      margin-bottom: 1rem;
+      color: #fafafa;
+      font-size: 1.3rem;
+      font-family: 'JetBrains Mono', monospace;
+      letter-spacing: -0.01em;
+    }
+    .endpoint > p {
+      margin-bottom: 1.5rem;
+      font-size: 1rem;
+      color: #a1a1aa;
     }
     .endpoint h3 {
-      color: #666;
-      font-size: 14px;
-      margin-top: 15px;
-      margin-bottom: 10px;
+      color: #8f8fa3;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-top: 2rem;
+      margin-bottom: 0.75rem;
+    }
+    .endpoint h4 {
+      color: #a1a1aa;
+      font-size: 0.9rem;
+      margin-top: 1.5rem;
+      margin-bottom: 0.5rem;
+    }
+    .endpoint ul {
+      padding-left: 1.25rem;
+      margin-bottom: 1rem;
+    }
+    .endpoint li {
+      margin-bottom: 0.5rem;
+      line-height: 1.6;
+    }
+    .endpoint code {
+      background: #1a1a2e;
+      padding: 0.15rem 0.4rem;
+      border-radius: 4px;
+      font-size: 0.85rem;
+      color: #8b7dff;
     }
     .code {
-      background: #1e1e2e;
-      color: #e0e0e0;
-      padding: 15px;
-      border-radius: 6px;
-      font-family: 'JetBrains Mono', monospace;
-      overflow-x: auto;
-      margin: 10px 0;
-    }
-    .footer {
-      background: #1e1e2e;
-      color: #e0e0e0;
-      padding: 20px;
+      background: #0a0a1a;
+      color: #e0e0ff;
+      padding: 1.25rem;
       border-radius: 8px;
-      margin-top: 50px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85rem;
+      line-height: 1.7;
+      overflow-x: auto;
+      margin: 0.75rem 0 1.25rem;
+      border: 1px solid #1a1a2e;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 0.75rem 0 1.25rem;
+      font-size: 0.9rem;
+    }
+    th {
+      background: #1a1a2e;
+      color: #fafafa;
+      text-align: left;
+      padding: 0.75rem 1rem;
+      font-weight: 600;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    td {
+      padding: 0.75rem 1rem;
+      border-bottom: 1px solid #27272a;
+      color: #a1a1aa;
+    }
+    tr:last-child td { border-bottom: none; }
+    .docs-footer {
+      background: #111113;
+      border: 1px solid #27272a;
+      color: #8f8fa3;
+      padding: 1.5rem;
+      border-radius: 12px;
+      margin-top: 3rem;
       text-align: center;
+      font-size: 0.85rem;
+    }
+    @media (max-width: 768px) {
+      .docs-container { padding: 1.5rem 1rem 3rem; }
+      .docs-container > h1 { font-size: 1.6rem; }
+      .endpoint { padding: 1.5rem 1.25rem; }
+      .code { font-size: 0.78rem; padding: 1rem; }
+      table { font-size: 0.8rem; }
+      th, td { padding: 0.6rem 0.75rem; }
     }
   </style>
 </head>

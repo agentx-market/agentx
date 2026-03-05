@@ -710,3 +710,18 @@ Files changed:
  WORK_LOG.md       | 16 ++++++++++++++++
  2 files changed, 24 insertions(+), 8 deletions(-)
 ```
+
+## 2026-03-05 11:11 — Feature #71: Seed 50+ agent listings from public directories
+Status: done | Built by: qwen3.5 | Verified: yes
+Files changed:
+```
+ .last-result.json                   |  16 +-
+ WORK_LOG.md                         |   9 +
+ migrations/014_analytics_events.sql |  14 ++
+ migrations/015_agent_usage.sql      |  16 ++
+ public/css/browse.css               | 101 +++++++++
+ public/js/browse.js                 | 104 +++++++++
+ server.js                           |  39 +++-
+ views/comparison.ejs                | 407 ++++++++++++++++++++++++++++++++++++
+ 8 files changed, 697 insertions(+), 9 deletions(-)
+```

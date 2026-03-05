@@ -122,14 +122,38 @@ cmd_pick() {
 }
 
 cmd_next() {
-  # Auto-reset stale in_progress items (>2h old, no commit/branch = never completed)
-  local stale=$(sqlite3 "$DB" "SELECT COUNT(*) FROM features WHERE status='in_progress' AND branch IS NULL AND commit_hash IS NULL AND started_at < datetime('now', '-2 hours');")
-  if [ "$stale" -gt 0 ] 2>/dev/null; then
-    sqlite3 "$DB" "UPDATE features SET status='ready', started_at=NULL WHERE status='in_progress' AND branch IS NULL AND commit_hash IS NULL AND started_at < datetime('now', '-2 hours');"
-    echo "Auto-reset $stale stale in_progress items back to ready."
+  # Ensure attempts column exists (safe to re-run)
+  sqlite3 "$DB" "ALTER TABLE features ADD COLUMN attempts INTEGER DEFAULT 0;" 2>/dev/null
+
+  # Auto-reset stale in_progress items (>2h old, no commit = never completed)
+  # Increment attempt counter so we can skip features that keep failing
+  local stale_ids=$(sqlite3 "$DB" "SELECT id FROM features WHERE status='in_progress' AND commit_hash IS NULL AND started_at < datetime('now', '-2 hours');")
+  if [ -n "$stale_ids" ]; then
+    local stale_count=0
+    for sid in $stale_ids; do
+      local att=$(sqlite3 "$DB" "SELECT COALESCE(attempts,0) FROM features WHERE id=$sid;")
+      att=$((att + 1))
+      if [ "$att" -ge 3 ]; then
+        # 3+ failed attempts — move to blocked, stop wasting cycles
+        sqlite3 "$DB" "UPDATE features SET status='blocked', attempts=$att, notes=COALESCE(notes,'') || ' [auto-blocked: $att failed attempts]' WHERE id=$sid;"
+        echo "Auto-blocked feature #$sid after $att failed attempts."
+      else
+        sqlite3 "$DB" "UPDATE features SET status='ready', started_at=NULL, attempts=$att WHERE id=$sid;"
+        stale_count=$((stale_count + 1))
+      fi
+    done
+    [ "$stale_count" -gt 0 ] && echo "Auto-reset $stale_count stale in_progress items back to ready."
   fi
 
-  local id=$(sqlite3 "$DB" "SELECT id FROM features WHERE status='ready' AND (requires_approval=0 OR approval_status='approved') ORDER BY CASE priority WHEN 'critical' THEN 0 WHEN 'high' THEN 1 WHEN 'medium' THEN 2 WHEN 'low' THEN 3 END, CASE effort WHEN 'tiny' THEN 0 WHEN 'small' THEN 1 WHEN 'medium' THEN 2 WHEN 'large' THEN 3 END LIMIT 1;")
+  # Also handle features with commits that are stuck in_progress — send to review, not back to ready
+  local committed_stale=$(sqlite3 "$DB" "SELECT COUNT(*) FROM features WHERE status='in_progress' AND commit_hash IS NOT NULL AND started_at < datetime('now', '-2 hours');")
+  if [ "$committed_stale" -gt 0 ] 2>/dev/null; then
+    sqlite3 "$DB" "UPDATE features SET status='review' WHERE status='in_progress' AND commit_hash IS NOT NULL AND started_at < datetime('now', '-2 hours');"
+    echo "Moved $committed_stale features with commits to review (not back to ready)."
+  fi
+
+  # Pick next: prefer features with 0 attempts, then by priority/effort
+  local id=$(sqlite3 "$DB" "SELECT id FROM features WHERE status='ready' AND (requires_approval=0 OR approval_status='approved') ORDER BY COALESCE(attempts,0) ASC, CASE priority WHEN 'critical' THEN 0 WHEN 'high' THEN 1 WHEN 'medium' THEN 2 WHEN 'low' THEN 3 END, CASE effort WHEN 'tiny' THEN 0 WHEN 'small' THEN 1 WHEN 'medium' THEN 2 WHEN 'large' THEN 3 END LIMIT 1;")
   if [ -z "$id" ]; then echo "No ready features to pick."; exit 0; fi
   cmd_start "$id"
 }
