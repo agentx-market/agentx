@@ -134,7 +134,10 @@ async function loadAgents() {
         <div class="agent-meta">
           <span class="meta-item"><strong class="${uptimeClass}">${uptime}%</strong> uptime</span>
         </div>
-        <a href="/agents/${slug}" class="view-btn">View Details</a>
+        <div class="agent-actions">
+          <a href="/agents/${slug}" class="btn btn-secondary btn-small">View Details</a>
+          ${!agent.operator_id ? `<a href="/contact?agent=${encodeURIComponent(agent.name)}" class="btn btn-primary btn-small">Claim this listing</a>` : ''}
+        </div>
       `;
       agentGrid.appendChild(card);
     });
