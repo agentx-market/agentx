@@ -1,11 +1,12 @@
 -- Migration 003: Add health monitoring columns to agents table
 
 -- Add health monitoring columns to agents table
-ALTER TABLE agents ADD COLUMN health_endpoint_url TEXT;
-ALTER TABLE agents ADD COLUMN health_status TEXT DEFAULT 'offline';
-ALTER TABLE agents ADD COLUMN last_health_check TEXT;
-ALTER TABLE agents ADD COLUMN response_time_ms INTEGER;
-ALTER TABLE agents ADD COLUMN uptime_percent REAL DEFAULT 0;
+-- Columns already exist from db.js schema, skip if present
+-- ALTER TABLE agents ADD COLUMN health_endpoint_url TEXT;
+-- ALTER TABLE agents ADD COLUMN health_status TEXT DEFAULT 'offline';
+-- ALTER TABLE agents ADD COLUMN last_health_check TEXT;
+-- ALTER TABLE agents ADD COLUMN response_time_ms INTEGER;
+-- ALTER TABLE agents ADD COLUMN uptime_percent REAL DEFAULT 0;
 
 -- Create agents_health_history table for uptime tracking
 CREATE TABLE IF NOT EXISTS agents_health_history (

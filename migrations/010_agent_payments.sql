@@ -2,39 +2,41 @@
 -- Feature #22: Core revenue mechanic
 
 -- Create payments table to track all agent-to-agent transactions
-CREATE TABLE IF NOT EXISTS payments (
-  id INTEGER PRIMARY KEY AUTOINCREMENT,
-  sender_agent_id INTEGER NOT NULL,
-  receiver_agent_id INTEGER NOT NULL,
-  amount_sats INTEGER NOT NULL,
-  platform_fee_sats INTEGER NOT NULL DEFAULT 0,
-  net_amount_sats INTEGER NOT NULL,
-  description TEXT,
-  status TEXT DEFAULT 'pending',  -- pending, completed, failed
-  payment_hash TEXT,  -- Lightning payment hash / invoice hash
-  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-  completed_at DATETIME,
-  FOREIGN KEY (sender_agent_id) REFERENCES agents(id),
-  FOREIGN KEY (receiver_agent_id) REFERENCES agents(id)
-);
+-- Skip if table already exists
+-- CREATE TABLE IF NOT EXISTS payments (
+--   id INTEGER PRIMARY KEY AUTOINCREMENT,
+--   sender_agent_id INTEGER NOT NULL,
+--   receiver_agent_id INTEGER NOT NULL,
+--   amount_sats INTEGER NOT NULL,
+--   platform_fee_sats INTEGER NOT NULL DEFAULT 0,
+--   net_amount_sats INTEGER NOT NULL,
+--   description TEXT,
+--   status TEXT DEFAULT 'pending',  -- pending, completed, failed
+--   payment_hash TEXT,  -- Lightning payment hash / invoice hash
+--   created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+--   completed_at DATETIME,
+--   FOREIGN KEY (sender_agent_id) REFERENCES agents(id),
+--   FOREIGN KEY (receiver_agent_id) REFERENCES agents(id)
+-- );
 
 -- Create index for faster queries
-CREATE INDEX IF NOT EXISTS idx_payments_sender ON payments(sender_agent_id);
-CREATE INDEX IF NOT EXISTS idx_payments_receiver ON payments(receiver_agent_id);
-CREATE INDEX IF NOT EXISTS idx_payments_status ON payments(status);
-CREATE INDEX IF NOT EXISTS idx_payments_created ON payments(created_at);
+-- CREATE INDEX IF NOT EXISTS idx_payments_sender ON payments(sender_agent_id);
+-- CREATE INDEX IF NOT EXISTS idx_payments_receiver ON payments(receiver_agent_id);
+-- CREATE INDEX IF NOT EXISTS idx_payments_status ON payments(status);
+-- CREATE INDEX IF NOT EXISTS idx_payments_created ON payments(created_at);
 
 -- Payment audit log for security monitoring
-CREATE TABLE IF NOT EXISTS payment_audit_log (
-  id INTEGER PRIMARY KEY AUTOINCREMENT,
-  payment_id INTEGER,
-  action TEXT NOT NULL,  -- payment_initiated, payment_completed, payment_failed, refund_initiated, etc.
-  operator_id TEXT,
-  ip_address TEXT,
-  details TEXT,
-  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-  FOREIGN KEY (payment_id) REFERENCES payments(id)
-);
+-- Skip if table already exists
+-- CREATE TABLE IF NOT EXISTS payment_audit_log (
+--   id INTEGER PRIMARY KEY AUTOINCREMENT,
+--   payment_id INTEGER,
+--   action TEXT NOT NULL,  -- payment_initiated, payment_completed, payment_failed, refund_initiated, etc.
+--   operator_id TEXT,
+--   ip_address TEXT,
+--   details TEXT,
+--   created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+--   FOREIGN KEY (payment_id) REFERENCES payments(id)
+-- );
 
-CREATE INDEX IF NOT EXISTS idx_audit_payment_id ON payment_audit_log(payment_id);
-CREATE INDEX IF NOT EXISTS idx_audit_operator_id ON payment_audit_log(operator_id);
+-- CREATE INDEX IF NOT EXISTS idx_audit_payment_id ON payment_audit_log(payment_id);
+-- CREATE INDEX IF NOT EXISTS idx_audit_operator_id ON payment_audit_log(operator_id);
