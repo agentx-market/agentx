@@ -151,6 +151,26 @@ try {
   console.log('[db] Reviews table may already exist:', err.message);
 }
 
+// Create agent_usage table for usage tracking (billing/analytics)
+try {
+  db.exec(`
+    CREATE TABLE IF NOT EXISTS agent_usage (
+      id INTEGER PRIMARY KEY,
+      agent_id TEXT NOT NULL,
+      api_key_hash TEXT,
+      tasks_completed INTEGER DEFAULT 0,
+      tokens_used INTEGER DEFAULT 0,
+      response_time_ms INTEGER DEFAULT 0,
+      errors INTEGER DEFAULT 0,
+      created_at INTEGER,
+      FOREIGN KEY (agent_id) REFERENCES agents(id) ON DELETE CASCADE
+    )
+  `);
+  console.log('[db] Agent usage tracking table created');
+} catch (err) {
+  console.log('[db] Agent usage table may already exist:', err.message);
+}
+
 // ============ Migration Runner ============
 function runMigrations() {
   const migrationsDir = path.join(__dirname, 'migrations');

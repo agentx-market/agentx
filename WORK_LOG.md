@@ -725,3 +725,27 @@ Files changed:
  views/comparison.ejs                | 407 ++++++++++++++++++++++++++++++++++++
  8 files changed, 697 insertions(+), 9 deletions(-)
 ```
+
+## 2026-03-05 11:21 — Feature #1: Agent registry API
+Status: done | Built by: qwen3.5 | Verified: yes
+Files changed:
+```
+ .last-result.json                |  12 +-
+ WORK_LOG.md                      |  15 +
+ backlog.sh                       |  36 +-
+ public/css/style.css             |  18 +-
+ public/index.html                |  15 +-
+ scripts/seed-community-agents.js | 786 ++++++++++++++++-----------------------
+ views/docs.ejs                   | 151 ++++++--
+ views/login.ejs                  |  38 +-
+ 8 files changed, 539 insertions(+), 532 deletions(-)
+```
+
+## 2026-03-05 11:26 — Feature #1: Agent registry API
+Status: done | Built by: qwen3.5 | Verified: yes
+Files changed:
+```
+ M WORK_LOG.md
+ M views/docs.ejs
+ M views/status.ejs
+```

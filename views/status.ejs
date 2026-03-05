@@ -9,58 +9,103 @@
   <link rel="stylesheet" href="/css/browse.css">
   <style>
     body {
-      background-color: #0a0a1a;
-      color: #e0e0ff;
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background-color: #09090b;
+      color: #a1a1aa;
+    }
+    .status-container {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 2rem 1.5rem 4rem;
     }
     .status-header {
-      background-color: #1a1a2e;
-      border: 1px solid #2a2a4a;
-      border-radius: 8px;
-      padding: 1rem;
-      margin: 1rem 0;
+      background: #141416;
+      border: 1px solid #27272a;
+      border-radius: 12px;
+      padding: 2rem 1.5rem;
+      margin-bottom: 2.5rem;
       text-align: center;
+    }
+    .status-header h1 {
+      color: #fafafa;
+      font-size: 2rem;
+      margin: 0 0 0.75rem;
+      letter-spacing: -0.02em;
     }
     .status-good {
       color: #4ade80;
+      font-size: 1.1rem;
+      font-weight: 500;
     }
     .status-warn {
       color: #fbbf24;
+      font-size: 1.1rem;
+      font-weight: 500;
+    }
+    .agent-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1rem;
     }
     .agent-card {
-      background-color: #1a1a2e;
-      border: 1px solid #2a2a4a;
-      border-radius: 8px;
-      padding: 1rem;
-      margin: 0.5rem 0;
+      background: #141416;
+      border: 1px solid #27272a;
+      border-radius: 12px;
+      padding: 1.25rem 1.5rem;
       display: flex;
       align-items: center;
       gap: 1rem;
+      transition: border-color 0.2s;
+    }
+    .agent-card:hover {
+      border-color: #3f3f46;
     }
     .agent-name {
       font-weight: 600;
+      color: #fafafa;
       flex: 1;
+      font-size: 0.95rem;
+    }
+    .agent-meta {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      flex-shrink: 0;
     }
     .status-dot {
-      width: 12px;
-      height: 12px;
+      width: 10px;
+      height: 10px;
       border-radius: 50%;
+      flex-shrink: 0;
     }
     .status-dot.good {
       background-color: #4ade80;
+      box-shadow: 0 0 6px rgba(74, 222, 128, 0.4);
     }
     .status-dot.bad {
       background-color: #ef4444;
+      box-shadow: 0 0 6px rgba(239, 68, 68, 0.4);
     }
     .status-text {
-      font-size: 0.9rem;
+      font-size: 0.8rem;
+      color: #71717a;
+      white-space: nowrap;
     }
-    .footer {
-      margin-top: 2rem;
-      padding: 1rem;
+    .status-footer {
+      background: #111113;
+      border: 1px solid #27272a;
+      border-radius: 12px;
+      margin-top: 3rem;
+      padding: 1.5rem;
       text-align: center;
-      color: #888;
-      font-size: 0.9rem;
+      color: #71717a;
+      font-size: 0.85rem;
+    }
+    @media (max-width: 768px) {
+      .status-container { padding: 1.5rem 1rem 3rem; }
+      .status-header { padding: 1.5rem 1rem; }
+      .status-header h1 { font-size: 1.5rem; }
+      .agent-grid { grid-template-columns: 1fr; }
+      .agent-card { padding: 1rem 1.25rem; }
     }
   </style>
 </head>
@@ -77,7 +122,7 @@
     </div>
   </nav>
 
-  <main class="container">
+  <main class="status-container">
     <div class="status-header">
       <h1>Agent Status</h1>
       <div class="<%= allHealthy ? 'status-good' : 'status-warn' %>">
@@ -85,26 +130,26 @@
       </div>
     </div>
 
-    <div class="agent-list">
+    <div class="agent-grid">
       <% agents.forEach(agent => { %>
         <div class="agent-card">
-          <div class="agent-name"><%= agent.name %></div>
           <div class="status-dot <%= agent.healthy ? 'good' : 'bad' %>"></div>
-          <div class="status-text"><%= agent.healthy ? 'Healthy' : 'Down' %></div>
-          <% if (agent.lastCheck !== null) { %>
-            <div class="status-text">Last checked <%= agent.lastCheck %>m ago</div>
-          <% } else { %>
-            <div class="status-text">Never checked</div>
-          <% } %>
+          <div class="agent-name"><%= agent.name %></div>
+          <div class="agent-meta">
+            <span class="status-text"><%= agent.healthy ? 'Healthy' : 'Down' %></span>
+            <% if (agent.lastCheck !== null) { %>
+              <span class="status-text"><%= agent.lastCheck %>m ago</span>
+            <% } else { %>
+              <span class="status-text">Never checked</span>
+            <% } %>
+          </div>
         </div>
       <% }); %>
     </div>
-  </main>
 
-  <footer class="footer">
-    <div class="container">
-      AgentX.Market © 2026
+    <div class="status-footer">
+      AgentX.Market &copy; 2026
     </div>
-  </footer>
+  </main>
 </body>
 </html>

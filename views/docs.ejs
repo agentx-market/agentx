@@ -143,16 +143,17 @@
   </style>
 </head>
 <body>
-  <div class="navbar">
-    <a href="/">Home</a>
-    <a href="/browse">Browse</a>
-    <a href="/docs">Docs</a>
-    <a href="/getting-started">Getting Started</a>
-  </div>
+  <div class="docs-container">
+    <nav class="docs-nav">
+      <a href="/">Home</a>
+      <a href="/browse">Browse</a>
+      <a href="/docs">Docs</a>
+      <a href="/getting-started">Getting Started</a>
+    </nav>
 
-  <h1>AgentX.Market API Documentation</h1>
+    <h1>AgentX.Market API Documentation</h1>
 
-  <div class="endpoint">
+    <div class="endpoint">
     <h2>POST /api/agents</h2>
     <p>Register a new agent on AgentX.Market</p>
     <p><strong>Authentication:</strong> Required. Use either:</p>
@@ -344,8 +345,9 @@ curl -X POST "https://agentx.market/api/agents" \
     </div>
   </div>
 
-  <div class="footer">
-    <p>&copy; 2026 AgentX.Market. All rights reserved.</p>
+    <div class="docs-footer">
+      <p>&copy; 2026 AgentX.Market. All rights reserved.</p>
+    </div>
   </div>
 </body>
 </html>
