@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= title %></title>
+  <meta name="description" content="Compare <%= agentA.name %> vs <%= agentB.name %> - Side-by-side feature, pricing, rating, and uptime comparison of AI agents.">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="/img/favicon.svg">
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/browse.css">
+
+  <!-- OG Meta Tags -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="<%= agentA.name %> vs <%= agentB.name %> — AgentX Comparison">
+  <meta property="og:description" content="Compare features, pricing, ratings, and uptime of <%= agentA.name %> and <%= agentB.name %>.">
+  <meta property="og:url" content="https://agentx.market/compare/<%= agentA.slug %>-vs-<%= agentB.slug %>">
+  <meta property="og:site_name" content="AgentX">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="<%= agentA.name %> vs <%= agentB.name %>">
+  <meta name="twitter:description" content="Side-by-side comparison of AI agents on AgentX marketplace.">
+
+  <!-- Structured Data (JSON-LD) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "<%= agentA.name %>",
+    "description": "<%= agentA.description %>",
+    "applicationCategory": "AIAgent",
+    "operatingSystem": "Cloud",
+    "offers": {
+      "@type": "Offer",
+      "price": "<%= agentA.pricing || 'Contact for pricing' %>",
+      "priceCurrency": "USD"
+    },
+    "aggregateRating": {
+      "@type": "AggregateRating",
+      "ratingValue": <%= reviewsA.avg_rating || 0 %>,
+      "ratingCount": <%= reviewsA.review_count || 0 %>
+    }
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "<%= agentB.name %>",
+    "description": "<%= agentB.description %>",
+    "applicationCategory": "AIAgent",
+    "operatingSystem": "Cloud",
+    "offers": {
+      "@type": "Offer",
+      "price": "<%= agentB.pricing || 'Contact for pricing' %>",
+      "priceCurrency": "USD"
+    },
+    "aggregateRating": {
+      "@type": "AggregateRating",
+      "ratingValue": <%= reviewsB.avg_rating || 0 %>,
+      "ratingCount": <%= reviewsB.review_count || 0 %>
+    }
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "ComparisonTable",
+    "name": "<%= agentA.name %> vs <%= agentB.name %>",
+    "description": "Feature comparison between <%= agentA.name %> and <%= agentB.name %>",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Name",
+        "description": "<%= agentA.name %> vs <%= agentB.name %>"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "Description",
+        "description": "<%= agentA.description %> vs <%= agentB.description %>"
+      },
+      {
+        "@type": "ListItem",
+        "position": 3,
+        "name": "Pricing",
+        "description": "<%= agentA.pricing || 'N/A' %> vs <%= agentB.pricing || 'N/A' %>"
+      },
+      {
+        "@type": "ListItem",
+        "position": 4,
+        "name": "Rating",
+        "description": "<%= reviewsA.avg_rating ? reviewsA.avg_rating.toFixed(1) : 'N/A' %> vs <%= reviewsB.avg_rating ? reviewsB.avg_rating.toFixed(1) : 'N/A' %>"
+      }
+    ]
+  }
+  </script>
+</head>
+<body class="noise-overlay">
+  <!-- Navbar -->
+  <nav class="navbar">
+    <div class="container">
+      <a href="/" class="nav-logo">
+        <div class="logo-icon">X</div>
+        AgentX
+      </a>
+      <ul class="nav-links">
+        <li><a href="/features">Features</a></li>
+        <li><a href="/pricing">Pricing</a></li>
+        <li><a href="/browse">Browse</a></li>
+        <li><a href="/about">About</a></li>
+        <li><a href="/contact">Contact</a></li>
+        <li><a href="/login">Login</a></li>
+        <li class="nav-cta">
+          <a href="/pricing" class="btn btn-primary">Get Started</a>
+        </li>
+      </ul>
+      <button class="nav-toggle" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- Comparison Hero -->
+  <section class="comparison-hero">
+    <div class="bg-grid"></div>
+    <div class="container">
+      <div class="section-header fade-in">
+        <div class="badge badge-shimmer"><span class="dot"></span> Live Comparison</div>
+        <h1><%= agentA.name %> <span class="text-gradient">vs</span> <%= agentB.name %></h1>
+        <p class="hero-desc">Side-by-side comparison of features, pricing, ratings, and uptime.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Comparison Table -->
+  <section class="comparison-main">
+    <div class="container">
+      <div class="comparison-table fade-in">
+        <!-- Header Row -->
+        <div class="comparison-row comparison-header">
+          <div class="comparison-label">
+            <h3>Feature</h3>
+          </div>
+          <div class="comparison-agent">
+            <div class="agent-avatar large"><%= (agentA.name || '?')[0].toUpperCase() %></div>
+            <h3><%= agentA.name %></h3>
+            <p class="agent-description"><%= agentA.description %></p>
+            <% if (agentA.categories && agentA.categories.length > 0) { %>
+              <div class="comparison-categories">
+                <% agentA.categories.forEach(cat => { %>
+                  <span class="category-badge"><%= cat %></span>
+                <% }); %>
+              </div>
+            <% } %>
+          </div>
+          <div class="comparison-agent">
+            <div class="agent-avatar large"><%= (agentB.name || '?')[0].toUpperCase() %></div>
+            <h3><%= agentB.name %></h3>
+            <p class="agent-description"><%= agentB.description %></p>
+            <% if (agentB.categories && agentB.categories.length > 0) { %>
+              <div class="comparison-categories">
+                <% agentB.categories.forEach(cat => { %>
+                  <span class="category-badge"><%= cat %></span>
+                <% }); %>
+              </div>
+            <% } %>
+          </div>
+        </div>
+
+        <!-- Pricing Row -->
+        <div class="comparison-row">
+          <div class="comparison-label">
+            <h4>Pricing</h4>
+          </div>
+          <div class="comparison-value">
+            <span class="<%= agentA.pricing && agentA.pricing.toLowerCase().includes('free') ? 'text-success' : '' %>">
+              <%= agentA.pricing || 'Contact for pricing' %>
+            </span>
+          </div>
+          <div class="comparison-value">
+            <span class="<%= agentB.pricing && agentB.pricing.toLowerCase().includes('free') ? 'text-success' : '' %>">
+              <%= agentB.pricing || 'Contact for pricing' %>
+            </span>
+          </div>
+        </div>
+
+        <!-- Rating Row -->
+        <div class="comparison-row">
+          <div class="comparison-label">
+            <h4>Rating</h4>
+          </div>
+          <div class="comparison-value">
+            <% if (reviewsA.avg_rating) { %>
+              <div class="star-rating-large">
+                <% for (let i = 1; i <= 5; i++) { %>
+                  <span class="<%= i <= Math.round(reviewsA.avg_rating) ? 'star-filled' : 'star-empty' %>">★</span>
+                <% }; %>
+              </div>
+              <span class="rating-value"><%= reviewsA.avg_rating.toFixed(1) %></span>
+              <span class="rating-count">(<%= reviewsA.review_count %> reviews)</span>
+            <% } else { %>
+              <span class="text-muted">No reviews yet</span>
+            <% } %>
+          </div>
+          <div class="comparison-value">
+            <% if (reviewsB.avg_rating) { %>
+              <div class="star-rating-large">
+                <% for (let i = 1; i <= 5; i++) { %>
+                  <span class="<%= i <= Math.round(reviewsB.avg_rating) ? 'star-filled' : 'star-empty' %>">★</span>
+                <% }; %>
+              </div>
+              <span class="rating-value"><%= reviewsB.avg_rating.toFixed(1) %></span>
+              <span class="rating-count">(<%= reviewsB.review_count %> reviews)</span>
+            <% } else { %>
+              <span class="text-muted">No reviews yet</span>
+            <% } %>
+          </div>
+        </div>
+
+        <!-- Uptime Row -->
+        <div class="comparison-row">
+          <div class="comparison-label">
+            <h4>Uptime</h4>
+          </div>
+          <div class="comparison-value">
+            <span class="uptime-good"><%= agentA.uptime_percent ? agentA.uptime_percent.toFixed(1) + '%' : 'N/A' %></span>
+          </div>
+          <div class="comparison-value">
+            <span class="uptime-good"><%= agentB.uptime_percent ? agentB.uptime_percent.toFixed(1) + '%' : 'N/A' %></span>
+          </div>
+        </div>
+
+        <!-- Features Row -->
+        <div class="comparison-row">
+          <div class="comparison-label">
+            <h4>Capabilities</h4>
+          </div>
+          <div class="comparison-value">
+            <% if (agentA.capabilities && Array.isArray(agentA.capabilities)) { %>
+              <ul class="feature-list">
+                <% agentA.capabilities.forEach(cap => { %>
+                  <li>✓ <%= cap %></li>
+                <% }); %>
+              </ul>
+            <% } else { %>
+              <span class="text-muted">No capabilities listed</span>
+            <% } %>
+          </div>
+          <div class="comparison-value">
+            <% if (agentB.capabilities && Array.isArray(agentB.capabilities)) { %>
+              <ul class="feature-list">
+                <% agentB.capabilities.forEach(cap => { %>
+                  <li>✓ <%= cap %></li>
+                <% }); %>
+              </ul>
+            <% } else { %>
+              <span class="text-muted">No capabilities listed</span>
+            <% } %>
+          </div>
+        </div>
+
+        <!-- Endpoint Row -->
+        <div class="comparison-row">
+          <div class="comparison-label">
+            <h4>Endpoint</h4>
+          </div>
+          <div class="comparison-value">
+            <code class="endpoint-url"><%= agentA.endpoint_url || 'N/A' %></code>
+          </div>
+          <div class="comparison-value">
+            <code class="endpoint-url"><%= agentB.endpoint_url || 'N/A' %></code>
+          </div>
+        </div>
+
+        <!-- Health Check Row -->
+        <div class="comparison-row">
+          <div class="comparison-label">
+            <h4>Health Check</h4>
+          </div>
+          <div class="comparison-value">
+            <% if (agentA.health_endpoint_url) { %>
+              <a href="<%= agentA.health_endpoint_url %>" target="_blank" rel="noopener">
+                <svg width="14" height="14" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M8 0C3.6 0 0 3.6 0 8s3.6 8 8 8 8-3.6 8-8-3.6-8-8-8zm-1.5 11.5L3.5 8.5 5.25 6.75 6.5 8 10.75 12.25 13.5 9.5 12.25 8.25 6.5 14.25 6.5 14.25 6.5 14.25 6.5 14.25z" fill="#3B82F6"/>
+                  <path d="M12.25 8.25L6.5 14.25L5.25 13L6.5 11.75L8.75 14L12.25 10.5L11 9.25L12.25 8.25Z" fill="white"/>
+                </svg>
+                Health Check Active
+              </a>
+            <% } else { %>
+              <span class="text-muted">No health check configured</span>
+            <% } %>
+          </div>
+          <div class="comparison-value">
+            <% if (agentB.health_endpoint_url) { %>
+              <a href="<%= agentB.health_endpoint_url %>" target="_blank" rel="noopener">
+                <svg width="14" height="14" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M8 0C3.6 0 0 3.6 0 8s3.6 8 8 8 8-3.6 8-8-3.6-8-8-8zm-1.5 11.5L3.5 8.5 5.25 6.75 6.5 8 10.75 12.25 13.5 9.5 12.25 8.25 6.5 14.25 6.5 14.25 6.5 14.25 6.5 14.25z" fill="#3B82F6"/>
+                  <path d="M12.25 8.25L6.5 14.25L5.25 13L6.5 11.75L8.75 14L12.25 10.5L11 9.25L12.25 8.25Z" fill="white"/>
+                </svg>
+                Health Check Active
+              </a>
+            <% } else { %>
+              <span class="text-muted">No health check configured</span>
+            <% } %>
+          </div>
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="comparison-actions">
+        <a href="/agents/<%= agentA.slug %>" class="btn btn-secondary btn-large">View <%= agentA.name %></a>
+        <a href="/agents/<%= agentB.slug %>" class="btn btn-secondary btn-large">View <%= agentB.name %></a>
+        <a href="/contact?agent=<%= agentA.name %>&compare=<%= agentB.name %>" class="btn btn-primary btn-large">Get Started</a>
+      </div>
+
+      <!-- Related Comparisons -->
+      <% if (commonCategories.length > 0) { %>
+        <div class="related-comparisons fade-in">
+          <h3>Compare with similar agents in <%= commonCategories[0] %></h3>
+          <div class="comparison-grid">
+            <% 
+            const allAgents = db.prepare('SELECT a.*, LOWER(REPLACE(a.name, " ", "-")) as slug FROM agents a JOIN agent_categories ac ON a.id = ac.agent_id WHERE ac.category_id IN (SELECT id FROM categories WHERE name = ?) AND a.id != ? AND a.id != ?').all(commonCategories[0], agentA.id, agentB.id);
+            allAgents.slice(0, 3).forEach(agent => {
+              const otherSlug = agent.id === agentA.id ? agentB.slug : agentA.slug;
+            %>
+              <div class="comparison-card">
+                <a href="/compare/<%= agent.slug %>-vs-<%= otherSlug %>">
+                  <div class="card-header">
+                    <div class="agent-avatar"><%= (agent.name || '?')[0].toUpperCase() %></div>
+                    <h4><%= agent.name %></h4>
+                  </div>
+                  <p class="comparison-desc"><%= agent.description %></p>
+                  <div class="comparison-link">
+                    Compare with <%= agent.id === agentA.id ? agentB.name : agentA.name %> →
+                  </div>
+                </a>
+              </div>
+            <% }); %>
+          </div>
+        </div>
+      <% } %>
+    </div>
+  </section>
+
+  <!-- CTA Section -->
+  <section class="cta-section">
+    <div class="container">
+      <div class="cta-box fade-in">
+        <h2>Ready to deploy?<br><span class="text-gradient">List your agent on AgentX</span></h2>
+        <p>Get discovered by teams looking to deploy autonomous AI agents. Built-in health monitoring, analytics, and billing.</p>
+        <div style="display:flex; gap:var(--space-md); justify-content:center; flex-wrap:wrap; position:relative;">
+          <a href="/contact" class="btn btn-primary btn-large">Apply to List</a>
+          <a href="/browse" class="btn btn-secondary btn-large">Browse All Agents</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a href="/" class="nav-logo" style="margin-bottom: 0.5rem;">
+            <div class="logo-icon">X</div>
+            AgentX
+          </a>
+          <p>The AI agent marketplace. Discover, deploy, and manage autonomous agents that handle real business tasks.</p>
+        </div>
+        <div class="footer-col">
+          <h4>Product</h4>
+          <ul>
+            <li><a href="/features">Features</a></li>
+            <li><a href="/pricing">Pricing</a></li>
+            <li><a href="/browse">Browse Agents</a></li>
+            <li><a href="/dashboard">Analytics Dashboard</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Company</h4>
+          <ul>
+            <li><a href="/about">About</a></li>
+            <li><a href="/blog">Blog</a></li>
+            <li><a href="/contact">Contact</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>&copy; 2026 AgentX Market. All rights reserved.</span>
+        <div class="footer-social"></div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="/js/main.js"></script>
+</body>
+</html>

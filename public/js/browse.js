@@ -180,6 +180,7 @@ async function loadAgents() {
         </div>
         <div class="agent-actions">
           <a href="/agents/${slug}" class="btn btn-secondary btn-small">View Details</a>
+          <button class="btn btn-primary btn-small compare-btn" data-slug="${slug}" data-name="${agent.name}" data-id="${agent.id}">Compare</button>
           ${agent.community_listing && !agent.operator_id ? `<a href="/contact?agent=${encodeURIComponent(agent.name)}" class="btn btn-primary btn-small">Claim this listing</a>` : ''}
         </div>
       `;
@@ -229,5 +230,108 @@ function debounce(fn, ms) {
     timeout = setTimeout(() => fn(...args), ms);
   };
 }
+
+// Compare modal functionality
+let compareSelection = [];
+const MAX_COMPARE = 2;
+
+function initCompareButtons() {
+  document.querySelectorAll('.compare-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => handleCompareClick(e));
+  });
+}
+
+function handleCompareClick(e) {
+  const btn = e.target;
+  const agent = {
+    slug: btn.dataset.slug,
+    name: btn.dataset.name,
+    id: btn.dataset.id
+  };
+  
+  const existingIndex = compareSelection.findIndex(a => a.id === agent.id);
+  
+  if (existingIndex >= 0) {
+    // Deselect
+    compareSelection.splice(existingIndex, 1);
+    btn.classList.remove('active');
+    btn.textContent = 'Compare';
+  } else {
+    if (compareSelection.length >= MAX_COMPARE) {
+      // Remove first selection
+      compareSelection.shift();
+      document.querySelectorAll('.compare-btn').forEach(b => {
+        if (b.dataset.id === compareSelection[0]?.id) {
+          b.classList.remove('active');
+          b.textContent = 'Compare';
+        }
+      });
+    }
+    compareSelection.push(agent);
+    btn.classList.add('active');
+    btn.textContent = 'Selected';
+  }
+  
+  updateCompareBar();
+  
+  if (compareSelection.length === MAX_COMPARE) {
+    setTimeout(() => {
+      const [a, b] = compareSelection;
+      window.location.href = `/compare/${a.slug}-vs-${b.slug}`;
+    }, 300);
+  }
+}
+
+function updateCompareBar() {
+  let existingBar = document.getElementById('compareBar');
+  if (!existingBar && compareSelection.length > 0) {
+    existingBar = document.createElement('div');
+    existingBar.id = 'compareBar';
+    existingBar.className = 'compare-bar';
+    document.body.appendChild(existingBar);
+  }
+  
+  if (compareSelection.length === 0 && existingBar) {
+    existingBar.remove();
+    return;
+  }
+  
+  if (compareSelection.length > 0) {
+    existingBar.innerHTML = `
+      <div class="container">
+        <div class="compare-bar-content">
+          <span class="compare-count">${compareSelection.length}/2 selected</span>
+          ${compareSelection.map(a => `
+            <div class="compare-agent">
+              <div class="compare-agent-avatar">${(a.name || '?')[0].toUpperCase()}</div>
+              <span>${a.name}</span>
+            </div>
+          `).join('')}
+          ${compareSelection.length === 2 ? `
+            <a href="/compare/${compareSelection[0].slug}-vs-${compareSelection[1].slug}" class="btn btn-primary btn-small">Compare Now</a>
+          ` : ''}
+          <button class="compare-clear" onclick="clearCompare()">×</button>
+        </div>
+      </div>
+    `;
+  }
+}
+
+function clearCompare() {
+  compareSelection = [];
+  document.querySelectorAll('.compare-btn').forEach(btn => {
+    btn.classList.remove('active');
+    btn.textContent = 'Compare';
+  });
+  const bar = document.getElementById('compareBar');
+  if (bar) bar.remove();
+}
+
+// Initialize compare buttons after agents load
+const originalLoadAgents = loadAgents;
+loadAgents = function() {
+  originalLoadAgents();
+  setTimeout(initCompareButtons, 100);
+};
 
 loadAgents();
