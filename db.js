@@ -67,7 +67,7 @@ try {
   db.exec(`ALTER TABLE operators ADD COLUMN IF NOT EXISTS welcome_bonus_claimed_at INTEGER`);
   console.log('[db] Added abuse prevention columns to operators table');
 } catch (err) {
-  console.log('[db] Operators abuse columns may already exist:', err.message);
+  console.log('[db] Agents abuse columns may already exist:', err.message);
 }
 
 // Add verification columns to operators table
@@ -138,6 +138,35 @@ try {
   console.log('[db] Added all missing columns to agents table');
 } catch (err) {
   console.log('[db] Agents table columns may already exist:', err.message);
+}
+
+// Create agent_health_history table for daily health snapshots
+try {
+  db.exec(`
+    CREATE TABLE IF NOT EXISTS agent_health_history (
+      id INTEGER PRIMARY KEY,
+      agent_id INTEGER NOT NULL,
+      snapshot_date TEXT NOT NULL,
+      health_check_pass_rate REAL DEFAULT 0,
+      avg_response_time_ms INTEGER,
+      uptime_percent REAL DEFAULT 0,
+      reliability_score INTEGER DEFAULT 0,
+      created_at INTEGER,
+      FOREIGN KEY (agent_id) REFERENCES agents(id) ON DELETE CASCADE,
+      UNIQUE(agent_id, snapshot_date)
+    )
+  `);
+  console.log('[db] Agent health history table created');
+} catch (err) {
+  console.log('[db] Agent health history table may already exist:', err.message);
+}
+
+// Add reliability_score column to agents table if needed
+try {
+  db.exec(`ALTER TABLE agents ADD COLUMN IF NOT EXISTS reliability_score INTEGER DEFAULT 0`);
+  console.log('[db] Added reliability_score column to agents table');
+} catch (err) {
+  console.log('[db] Reliability score column may already exist:', err.message);
 }
 
 // Create reviews table for user ratings and reviews
