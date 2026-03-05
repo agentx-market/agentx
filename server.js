@@ -1207,11 +1207,32 @@ app.get('/agents/:slug', (req, res) => {
   // Get reviews for this agent (sorted newest first)
   const reviews = db.prepare('SELECT r.*, o.name as user_name FROM reviews r LEFT JOIN operators o ON r.user_id = o.id WHERE r.agent_id = ? ORDER BY r.created_at DESC').all(agent.id);
   
+  // Get similar agents: same category, exclude current agent, sorted by rating DESC, then uptime
+  const similarAgents = [];
+  const categories = db.prepare('SELECT c.id, c.name FROM agent_categories ac JOIN categories c ON ac.category_id = c.id WHERE ac.agent_id = ?').all(agent.id);
+  if (categories.length > 0) {
+    const categoryIds = categories.map(c => c.id);
+    const placeholders = categoryIds.map(() => '?').join(',');
+    const query = `
+      SELECT a.id, a.name, a.description, a.pricing, a.uptime_percent, a.rating,
+             LOWER(REPLACE(a.name, ' ', '-')) as slug
+      FROM agents a
+      JOIN agent_categories ac ON a.id = ac.agent_id
+      WHERE ac.category_id IN (${placeholders})
+      AND a.id != ?
+      ORDER BY a.rating DESC, a.uptime_percent DESC
+      LIMIT 5
+    `;
+    const params = [...categoryIds, agent.id];
+    similarAgents.push(...db.all(query, params));
+  }
+  
   res.render('agent-detail', {
     agent,
     uptimeTrend,
     uptime7d: agent.uptime_percent ? Math.round(agent.uptime_percent * 100) / 100 : 'N/A',
     reviews,
+    similarAgents,
     isLoggedIn: !!req.operatorId
   });
 });
