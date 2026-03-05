@@ -21,6 +21,36 @@
   }
   </script>
   
+  <!-- JSON-LD SoftwareApplication Schema for each alternative -->
+  <script type="application/ld+json">
+  [
+    <% alternatives.forEach((alt, idx) => { %>
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "name": "<%= alt.name %>",
+      "description": "<%= alt.description || '' %>",
+      "applicationCategory": "AIApplication",
+      "operatingSystem": "Cloud",
+      "offers": {
+        "@type": "Offer",
+        "price": "<%= alt.pricing || '0' %>",
+        "priceCurrency": "USD"
+      },
+      "author": {
+        "@type": "Organization",
+        "name": "AgentX"
+      }<% if (alt.rating && alt.rating > 0) { %>,
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": <%= alt.rating.toFixed(1) %>,
+        "ratingCount": 1
+      }<% } %>
+    }<%= idx < alternatives.length - 1 ? ',' : '' %>
+    <% }); %>
+  ]
+  </script>
+  
   <link rel="stylesheet" href="/css/style.css">
   <link rel="stylesheet" href="/css/browse.css">
   <style>

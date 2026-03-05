@@ -6,6 +6,33 @@
   <title><%= agent.name %> — AgentX Registry</title>
   <link rel="stylesheet" href="/css/style.css">
   <link rel="stylesheet" href="/css/browse.css">
+  
+  <!-- JSON-LD SoftwareApplication Schema -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "<%= agent.name %>",
+    "description": "<%= agent.description || '' %>",
+    "applicationCategory": "AIApplication",
+    "operatingSystem": "Cloud",
+    "offers": {
+      "@type": "Offer",
+      "price": "<%= agent.pricing || '0' %>",
+      "priceCurrency": "USD"
+    },
+    "author": {
+      "@type": "Organization",
+      "name": "AgentX"
+    }<% if (agent.rating && agent.rating > 0) { %>,
+    "aggregateRating": {
+      "@type": "AggregateRating",
+      "ratingValue": <%= agent.rating.toFixed(1) %>,
+      "ratingCount": 1
+    }<% } %>
+  }
+  </script>
+  
   <style>
     body { background: #0a0a1a; color: #e0e0ff; }
     .agent-detail { max-width: 900px; margin: 2rem auto; padding: 0 1rem; }
