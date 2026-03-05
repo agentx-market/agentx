@@ -601,3 +601,14 @@ Files changed:
 ```
  M WORK_LOG.md
 ```
+
+## 2026-03-04 21:06 — Feature #47: Add Open Graph images and social meta tags
+Status: done | Built by: devstral | Verified: yes
+Files changed:
+```
+ M public/about.html
+ M public/contact.html
+ M public/features.html
+ M public/index.html
+ M public/pricing.html
+```
