@@ -391,9 +391,11 @@ async function seedAgents() {
           description = ?,
           endpoint_url = ?,
           status = 'pending',
+          community_listing = 1,
+          claim_url = ?,
           updated_at = ?
         WHERE id = ?
-      `).run(agent.description, agent.external_url, Date.now(), existing.id);
+      `).run(agent.description, agent.external_url, `/claim/${slug}`, Date.now(), existing.id);
       
       // Update category
       if (categoryId) {
@@ -408,9 +410,9 @@ async function seedAgents() {
     } else {
       // Insert new agent
       const result = db.prepare(`
-        INSERT INTO agents (name, description, endpoint_url, status, created_at, updated_at)
-        VALUES (?, ?, ?, 'pending', ?, ?)
-      `).run(agent.name, agent.description, agent.external_url, Date.now(), Date.now());
+        INSERT INTO agents (name, description, endpoint_url, status, created_at, updated_at, community_listing, claim_url)
+        VALUES (?, ?, ?, 'pending', ?, ?, 1, ?)
+      `).run(agent.name, agent.description, agent.external_url, Date.now(), Date.now(), `/claim/${slug}`);
       
       // Assign to Community category
       if (categoryId) {

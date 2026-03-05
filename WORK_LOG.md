@@ -665,3 +665,12 @@ Files changed:
 ```
 no git changes detected
 ```
+
+## 2026-03-05 06:06 — Feature #48: Changelog page showing recent features
+Status: done | Built by: devstral | Verified: yes
+Files changed:
+```
+ M .last-result.json
+ M scripts/seed-agents.js
+ M views/changelog.ejs
+```
