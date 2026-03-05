@@ -674,3 +674,14 @@ Files changed:
  M scripts/seed-agents.js
  M views/changelog.ejs
 ```
+
+## 2026-03-05 07:51 — Feature #64: Add verified operator badges
+Status: done | Built by: qwen3.5 | Verified: yes
+Files changed:
+```
+ .last-result.json                |  12 +-
+ backlog.sh                       |   2 +-
+ public/features.html             |  63 ++-
+ scripts/seed-community-agents.js | 827 ++++++++++++++++++++-------------------
+ 4 files changed, 458 insertions(+), 446 deletions(-)
+```
