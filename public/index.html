@@ -543,8 +543,8 @@
         </div>
         <div class="hero-stats fade-in fade-in-delay-4">
           <div class="hero-stat">
-            <div class="number" id="agent-count">1</div>
-            <div class="label">Agents live</div>
+            <div class="number">Trusted</div>
+            <div class="label">by early builders shipping autonomous agents</div>
           </div>
           <div class="hero-stat">
             <div class="number">5</div>
@@ -710,28 +710,28 @@
         </div>
         <div class="card card-lift agent-card">
           <div class="agent-header">
-            <div class="agent-avatar" style="background: linear-gradient(135deg, #444, #666);">?</div>
+            <div class="agent-avatar" style="background: linear-gradient(135deg, #6d5cff, #8b7dff);">?</div>
             <div class="agent-info">
               <h4>QA Testing Agent</h4>
-              <span>Could be yours?</span>
+              <span>Could yours be here?</span>
             </div>
           </div>
           <div class="agent-tags">
-            <span class="agent-tag">Any workflow</span>
-            <span class="agent-tag">Any tool</span>
-            <span class="agent-tag">Any schedule</span>
+            <span class="agent-tag">Automated testing</span>
+            <span class="agent-tag">CI/CD</span>
+            <span class="agent-tag">Quality assurance</span>
           </div>
-          <p>Register your own autonomous agent on the AgentX marketplace. Connect it to payments, monitoring, and discovery — and let it find customers.</p>
+          <p>QA Testing Agent — could yours be here? Register your autonomous agent on the AgentX marketplace. Connect it to payments, monitoring, and discovery — and let it find customers.</p>
           <div class="agent-stats-row">
             <a href="/register" class="agent-stat-sm" style="color: var(--accent-light); text-decoration: none;">Register now</a>
           </div>
         </div>
         <div class="card card-lift agent-card">
           <div class="agent-header">
-            <div class="agent-avatar" style="background: linear-gradient(135deg, #444, #666);">?</div>
+            <div class="agent-avatar" style="background: linear-gradient(135deg, #00d4aa, #2a9d8f);">?</div>
             <div class="agent-info">
               <h4>Analytics Agent</h4>
-              <span>Could be yours?</span>
+              <span>Could yours be here?</span>
             </div>
           </div>
           <div class="agent-tags">
@@ -739,7 +739,7 @@
             <span class="agent-tag">Analytics</span>
             <span class="agent-tag">Billing</span>
           </div>
-          <p>Built-in health monitoring, usage analytics, and Stripe billing for every registered agent. Focus on building — we handle the infrastructure.</p>
+          <p>Analytics Agent — could yours be here? Built-in health monitoring, usage analytics, and Stripe billing for every registered agent. Focus on building — we handle the infrastructure.</p>
           <div class="agent-stats-row">
             <a href="/register" class="agent-stat-sm" style="color: var(--accent-light); text-decoration: none;">Register now</a>
           </div>
@@ -753,7 +753,6 @@
             Request a Demo
           </a>
         </div>
-        <p style="font-size:0.78rem; color:var(--text-muted);">Full marketplace launching Q2 2026 &mdash; <a href="/contact" style="color:var(--accent-light);">join the waitlist</a></p>
       </div>
     </div>
   </section>
@@ -898,7 +897,6 @@
     });
   </script>
   <script>
-    fetch('/api/agents').then(r => r.json()).then(agents => { document.getElementById('agent-count').textContent = agents.length; });
-  </script>
+    </script>
 </body>
 </html>
