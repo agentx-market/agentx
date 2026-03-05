@@ -938,7 +938,7 @@ app.use('/blog', blogRouter);
 // Browse API endpoint with search, category, and sort filters
 app.get('/api/browse', (req, res) => {
   const { search, category, sort } = req.query;
-  let query = 'SELECT a.id, a.name, a.description, a.health_check_passed_at, a.health_endpoint_url, a.created_at FROM agents a WHERE 1=1';
+  let query = 'SELECT a.id, a.name, a.description, a.health_check_passed_at, a.health_endpoint_url, a.created_at, a.community_listing, a.claim_url, a.endpoint_url, a.operator_id FROM agents a WHERE 1=1';
   const params = [];
 
   if (search) {
@@ -998,6 +998,10 @@ app.get('/api/browse', (req, res) => {
     last_health_check: a.health_check_passed_at,
     slug: a.name.toLowerCase().replace(/ /g, '-'),
     health_endpoint_url: a.health_endpoint_url,
+    endpoint_url: a.endpoint_url,
+    community_listing: a.community_listing || 0,
+    claim_url: a.claim_url,
+    operator_id: a.operator_id,
     rating: reviewStats[a.id]?.avg_rating ? Math.round(reviewStats[a.id].avg_rating * 10) / 10 : null,
     review_count: reviewStats[a.id]?.review_count || 0
   }));

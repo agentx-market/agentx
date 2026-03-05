@@ -152,7 +152,7 @@ async function loadAgents() {
         </div>
         <div class="agent-actions">
           <a href="/agents/${slug}" class="btn btn-secondary btn-small">View Details</a>
-          ${!agent.operator_id ? `<a href="/contact?agent=${encodeURIComponent(agent.name)}" class="btn btn-primary btn-small">Claim this listing</a>` : ''}
+          ${agent.community_listing && !agent.operator_id ? `<a href="/contact?agent=${encodeURIComponent(agent.name)}" class="btn btn-primary btn-small">Claim this listing</a>` : ''}
         </div>
       `;
       agentGrid.appendChild(card);
