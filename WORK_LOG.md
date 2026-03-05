@@ -572,3 +572,18 @@ Files changed:
  M server.js
  M views/dashboard.ejs
 ```
+
+## 2026-03-04 18:42 — Feature #67: Add JSON-LD SoftwareApplication schema to all agent pages
+Status: done | Built by: devstral | Verified: no
+Files changed:
+```
+no git changes detected
+```
+
+## 2026-03-04 19:00 — Feature #68: Build What You Get section on login page
+Status: done | Built by: devstral | Verified: no
+Files changed:
+```
+ M .last-result.json
+ M WORK_LOG.md
+```
