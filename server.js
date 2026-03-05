@@ -372,6 +372,7 @@ app.get('/api/agents', (req, res) => {
     const agents = db.prepare('SELECT * FROM agents ORDER BY featured DESC, featured_until DESC, created_at DESC').all();
     const formatted = agents.map(a => {
       const uptime = calculateUptime(a.id);
+      const operator = db.get('SELECT verified, verification_method, verified_at FROM operators WHERE id = ?', [a.operator_id]);
       return {
         ...a,
         capabilities: a.capabilities ? JSON.parse(a.capabilities) : [],
@@ -380,7 +381,10 @@ app.get('/api/agents', (req, res) => {
         responseTimeMs: a.response_time_ms,
         uptimePercent: uptime.uptimePercent,
         featured: a.featured || 0,
-        featured_until: a.featured_until
+        featured_until: a.featured_until,
+        verified: operator?.verified || 0,
+        verification_method: operator?.verification_method || null,
+        verified_at: operator?.verified_at || null
       };
     });
     res.json(formatted);
@@ -425,11 +429,15 @@ app.get('/api/agents/:id', (req, res) => {
     const agent = db.prepare('SELECT * FROM agents WHERE id = ?').get(req.params.id);
     if (!agent) return res.status(404).json({ error: 'Agent not found' });
     const uptime = calculateUptime(agent.id);
+    const operator = db.get('SELECT verified, verification_method, verified_at FROM operators WHERE id = ?', [agent.operator_id]);
     agent.capabilities = agent.capabilities ? JSON.parse(agent.capabilities) : [];
     agent.healthStatus = agent.health_status || 'offline';
     agent.lastHealthCheck = agent.last_health_check;
     agent.responseTimeMs = agent.response_time_ms;
     agent.uptimePercent = uptime.uptimePercent;
+    agent.verified = operator?.verified || 0;
+    agent.verification_method = operator?.verification_method || null;
+    agent.verified_at = operator?.verified_at || null;
     res.json(agent);
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -991,13 +999,18 @@ app.get('/api/browse', (req, res) => {
   }
   
   // Format agents with calculated fields
-  const formatted = agents.map(a => ({
-    id: a.id,
-    name: a.name,
-    description: a.description,
-    categories: agentCategories[a.id] || [],
-    uptime_percent: 99.9,  // Default uptime for seeded agents
-    last_health_check: a.health_check_passed_at,
+  const formatted = agents.map(a => {
+    const operator = db.get('SELECT verified, verification_method, verified_at FROM operators WHERE id = ?', [a.operator_id]);
+    return {
+      id: a.id,
+      name: a.name,
+      description: a.description,
+      categories: agentCategories[a.id] || [],
+      uptime_percent: 99.9,  // Default uptime for seeded agents
+      last_health_check: a.health_check_passed_at,
+      verified: operator?.verified || 0,
+      verification_method: operator?.verification_method || null,
+      verified_at: operator?.verified_at || null,
     slug: a.name.toLowerCase().replace(/ /g, '-'),
     health_endpoint_url: a.health_endpoint_url,
     endpoint_url: a.endpoint_url,
@@ -1008,7 +1021,8 @@ app.get('/api/browse', (req, res) => {
     review_count: reviewStats[a.id]?.review_count || 0,
     featured: a.featured || 0,
     featured_until: a.featured_until
-  }));
+    };
+  });
   
   res.json({ agents: formatted, total: formatted.length });
 });

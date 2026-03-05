@@ -49,7 +49,10 @@ try {
       github_username TEXT,
       github_account_created_at INTEGER,
       welcome_bonus_claimed_at INTEGER,
-      created_at INTEGER
+      created_at INTEGER,
+      verified INTEGER DEFAULT 0,
+      verification_method TEXT,
+      verified_at INTEGER
     )
   `);
   console.log('[db] Operators table created');
@@ -64,6 +67,16 @@ try {
   console.log('[db] Added abuse prevention columns to operators table');
 } catch (err) {
   console.log('[db] Operators abuse columns may already exist:', err.message);
+}
+
+// Add verification columns to operators table
+try {
+  db.exec(`ALTER TABLE operators ADD COLUMN IF NOT EXISTS verified INTEGER DEFAULT 0`);
+  db.exec(`ALTER TABLE operators ADD COLUMN IF NOT EXISTS verification_method TEXT`);
+  db.exec(`ALTER TABLE operators ADD COLUMN IF NOT EXISTS verified_at INTEGER`);
+  console.log('[db] Added verification columns to operators table');
+} catch (err) {
+  console.log('[db] Verification columns may already exist:', err.message);
 }
 
 // Create agents table with health check fields (if it doesn't exist)
