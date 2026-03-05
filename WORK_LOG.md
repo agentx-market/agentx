@@ -658,3 +658,10 @@ Files changed:
 ```
  M public/css/style.css
 ```
+
+## 2026-03-05 05:26 — Feature #1: Agent registry API
+Status: done | Built by: devstral | Verified: no
+Files changed:
+```
+no git changes detected
+```
