@@ -879,3 +879,14 @@ Files changed:
  lib/oauth-handler.js | 15 ++++++++++++++-
  5 files changed, 59 insertions(+), 20 deletions(-)
 ```
+
+## 2026-03-05 14:37 — Feature #75: Add webhook signature verification for agent invocations
+Status: done | Built by: qwen3.5 | Verified: yes
+Files changed:
+```
+ .last-result.json          |  20 ++++----
+ WORK_LOG.md                |  12 +++++
+ docs/webhook-signatures.md | 120 +++++++++++++++++++++++++++++++++++++++++++++
+ server.js                  |  15 ++++--
+ 4 files changed, 153 insertions(+), 14 deletions(-)
+```

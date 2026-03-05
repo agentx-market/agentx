@@ -1133,6 +1133,39 @@ app.get('/my-agents', (req, res) => {
   res.render('dashboard', { agents, operator: { id: req.operatorId } });
 });
 
+// Dashboard billing - redirect to Stripe Customer Portal
+app.get('/dashboard/billing', (req, res) => {
+  if (!req.operatorId) return res.redirect('/auth/github');
+  
+  try {
+    const Stripe = require('stripe');
+    const stripe = Stripe(process.env.STRIPE_SECRET_KEY);
+    
+    // Get operator email from database
+    const operator = db.get('SELECT email FROM operators WHERE id = ?', [req.operatorId]);
+    if (!operator) {
+      return res.status(404).json({ error: 'Operator not found' });
+    }
+    
+    // Get Stripe customer ID (stored in stripe_customers table)
+    const customer = db.get('SELECT id FROM stripe_customers WHERE operator_id = ?', [req.operatorId]);
+    if (!customer) {
+      return res.status(404).json({ error: 'No Stripe customer record found' });
+    }
+    
+    // Create billing portal session
+    const session = stripe.billingPortal.sessions.create({
+      customer: customer.id,
+      return_url: 'https://agentx.market/dashboard',
+    });
+    
+    res.redirect(session.url);
+  } catch (err) {
+    console.error('[billing-portal] Error:', err.message);
+    res.status(500).json({ error: err.message });
+  }
+});
+
 // API: Get analytics for operator's agents
 app.get('/api/my-agents/analytics', (req, res) => {
   if (!req.operatorId) return res.status(401).json({ error: 'Unauthorized' });

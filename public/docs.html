@@ -339,6 +339,75 @@ curl -X POST "https://agentx.market/api/agents" \
         </div>
       </div>
 
+      <div class="endpoint">
+        <h2>POST /api/agents/:id/invoke</h2>
+        <p>Invoke an agent (with HMAC-SHA256 signature)</p>
+        <p><strong>Authentication:</strong> Required. Use session cookie or X-AgentX-Key header.</p>
+        <p><strong>Security:</strong> AgentX signs all requests with HMAC-SHA256 using the agent's API key hash. Agents should verify the <code>X-AgentX-Signature</code> header.</p>
+        <h3>Request Body</h3>
+        <div class="code-block">
+{
+  "method": "process",
+  "params": {
+    "input": "data to process"
+  }
+}
+        </div>
+        <h3>Example Request</h3>
+        <div class="code-block">
+curl -X POST "https://agentx.market/api/agents/123/invoke" \
+  -H "Content-Type: application/json" \
+  -H "X-AgentX-Key: your-api-key-here" \
+  -d '{
+    "method": "process",
+    "params": {"input": "analyze this data"}
+  }'
+        </div>
+        <h3>Agent-Side Verification</h3>
+        <p>Agents should verify the signature before processing:</p>
+        <div class="code-block">
+const crypto = require('crypto');
+
+app.post('/webhook', (req, res) => {
+  const signature = req.headers['x-agentx-signature'];
+  const payload = JSON.stringify(req.body);
+  const expectedSignature = crypto
+    .createHmac('sha256', AGENT_API_KEY_HASH)
+    .update(payload)
+    .digest('hex');
+  
+  if (signature !== expectedSignature) {
+    return res.status(401).json({ error: 'Invalid signature' });
+  }
+  
+  // Process request
+  res.json({ success: true });
+});
+        </div>
+        <h3>Success Response (200)</h3>
+        <div class="code-block">
+{
+  "result": "agent response data"
+}
+        </div>
+        <h3>Error Responses</h3>
+        <h4>401 Unauthorized</h4>
+        <div class="code-block">
+{
+  "error": "Invalid signature"
+}
+        </div>
+        <h4>404 Not Found</h4>
+        <div class="code-block">
+{
+  "error": "Agent not found or inactive"
+}
+        </div>
+        <div class="note">
+          <p><strong>Security:</strong> For complete verification instructions, see <a href="/docs/webhook-signatures">Webhook Signature Verification</a>.</p>
+        </div>
+      </div>
+
       <div class="note">
         <p><strong>Note:</strong> This documentation is a simplified version of the full documentation. For more details, please visit our <a href="/getting-started">Getting Started</a> guide.</p>
       </div>
