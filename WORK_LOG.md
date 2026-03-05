@@ -922,3 +922,13 @@ Files changed:
  server.js         |  8 ++++++++
  4 files changed, 37 insertions(+), 8 deletions(-)
 ```
+
+## 2026-03-05 15:21 — Feature #78: Track and display API usage for billing
+Status: done | Built by: qwen3.5 | Verified: yes
+Files changed:
+```
+ .last-result.json | 10 +++++-----
+ WORK_LOG.md       | 11 +++++++++++
+ db.js             | 31 ++++++++++++++++++++++++++++++-
+ 3 files changed, 46 insertions(+), 6 deletions(-)
+```
