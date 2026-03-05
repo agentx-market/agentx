@@ -612,3 +612,10 @@ Files changed:
  M public/index.html
  M public/pricing.html
 ```
+
+## 2026-03-04 21:25 — Feature #1: Agent registry API
+Status: done | Built by: devstral | Verified: no
+Files changed:
+```
+ M .last-result.json
+```
