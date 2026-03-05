@@ -978,6 +978,16 @@ app.get('/api/browse', (req, res) => {
     });
   }
   
+  // Get review stats for each agent
+  const reviewStats = {};
+  if (agentIds.length > 0) {
+    const reviewQuery = 'SELECT agent_id, AVG(rating) as avg_rating, COUNT(*) as review_count FROM reviews WHERE agent_id IN (' + agentIds.map(() => '?').join(',') + ') GROUP BY agent_id';
+    const reviews = db.all(reviewQuery, agentIds);
+    reviews.forEach(row => {
+      reviewStats[row.agent_id] = { avg_rating: row.avg_rating, review_count: row.review_count };
+    });
+  }
+  
   // Format agents with calculated fields
   const formatted = agents.map(a => ({
     id: a.id,
@@ -987,7 +997,9 @@ app.get('/api/browse', (req, res) => {
     uptime_percent: 99.9,  // Default uptime for seeded agents
     last_health_check: a.health_check_passed_at,
     slug: a.name.toLowerCase().replace(/ /g, '-'),
-    health_endpoint_url: a.health_endpoint_url
+    health_endpoint_url: a.health_endpoint_url,
+    rating: reviewStats[a.id]?.avg_rating ? Math.round(reviewStats[a.id].avg_rating * 10) / 10 : null,
+    review_count: reviewStats[a.id]?.review_count || 0
   }));
   
   res.json({ agents: formatted, total: formatted.length });
@@ -1188,10 +1200,15 @@ app.get('/agents/:slug', (req, res) => {
   
   const uptimeTrend = agentQueries.getAgentUptimeTrend(agent.id);
   
+  // Get reviews for this agent (sorted newest first)
+  const reviews = db.prepare('SELECT r.*, o.name as user_name FROM reviews r LEFT JOIN operators o ON r.user_id = o.id WHERE r.agent_id = ? ORDER BY r.created_at DESC').all(agent.id);
+  
   res.render('agent-detail', {
     agent,
     uptimeTrend,
-    uptime7d: agent.uptime_percent ? Math.round(agent.uptime_percent * 100) / 100 : 'N/A'
+    uptime7d: agent.uptime_percent ? Math.round(agent.uptime_percent * 100) / 100 : 'N/A',
+    reviews,
+    isLoggedIn: !!req.operatorId
   });
 });
 
@@ -1287,6 +1304,79 @@ app.post('/api/usage', authMiddleware, authenticatedLimiter, (req, res) => {
   } catch (err) {
     console.error(`[usage] Error: ${err.message}`);
     res.status(400).json({ error: err.message });
+  }
+});
+
+// POST /api/reviews — create a review for an agent (requires auth)
+app.post('/api/reviews', authMiddleware, authenticatedLimiter, (req, res) => {
+  try {
+    const { agent_id, rating, review_text } = req.body;
+    const user_id = req.operatorId;
+    
+    if (!agent_id || !rating) {
+      return res.status(400).json({ error: 'Missing required fields: agent_id, rating' });
+    }
+    
+    // Validate rating
+    if (rating < 1 || rating > 5) {
+      return res.status(400).json({ error: 'Rating must be between 1 and 5' });
+    }
+    
+    // Check if agent exists
+    const agent = db.prepare('SELECT id FROM agents WHERE id = ?').get(agent_id);
+    if (!agent) {
+      return res.status(404).json({ error: 'Agent not found' });
+    }
+    
+    // Check if user already reviewed this agent
+    const existing = db.prepare('SELECT id FROM reviews WHERE agent_id = ? AND user_id = ?').get(agent_id, user_id);
+    if (existing) {
+      return res.status(409).json({ error: 'You have already reviewed this agent' });
+    }
+    
+    // Insert review
+    const now = Date.now();
+    const result = db.prepare('INSERT INTO reviews (agent_id, user_id, rating, review_text, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?)').run(
+      agent_id,
+      user_id,
+      rating,
+      review_text || null,
+      now,
+      now
+    );
+    
+    // Update agent's review count and average rating
+    const stats = db.prepare('SELECT AVG(rating) as avg_rating, COUNT(*) as review_count FROM reviews WHERE agent_id = ?').get(agent_id);
+    db.prepare('UPDATE agents SET rating = ?, review_count = ? WHERE id = ?').run(
+      stats.avg_rating ? Math.round(stats.avg_rating * 10) / 10 : null,
+      stats.review_count,
+      agent_id
+    );
+    
+    res.json({ success: true, review_id: result.lastInsertRowid });
+  } catch (err) {
+    console.error(`[reviews] Error: ${err.message}`);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+// GET /api/reviews/:agent_id — get reviews for an agent
+app.get('/api/reviews/:agent_id', (req, res) => {
+  try {
+    const agent_id = parseInt(req.params.agent_id, 10);
+    
+    // Check if agent exists
+    const agent = db.prepare('SELECT id FROM agents WHERE id = ?').get(agent_id);
+    if (!agent) {
+      return res.status(404).json({ error: 'Agent not found' });
+    }
+    
+    const reviews = db.prepare('SELECT r.*, o.name as user_name FROM reviews r LEFT JOIN operators o ON r.user_id = o.id WHERE r.agent_id = ? ORDER BY r.created_at DESC').all(agent_id);
+    
+    res.json({ reviews });
+  } catch (err) {
+    console.error(`[reviews] Error: ${err.message}`);
+    res.status(500).json({ error: 'Internal server error' });
   }
 });
 

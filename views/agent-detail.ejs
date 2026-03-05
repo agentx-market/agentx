@@ -54,6 +54,30 @@
     .uptime-bar.high { background: #4ade80; }
     .uptime-bar.medium { background: #6c5ce7; }
     .uptime-bar.low { background: #ef4444; }
+    /* Reviews */
+    .reviews-section { margin-top: 3rem; }
+    .reviews-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
+    .rating-summary { display: flex; align-items: center; gap: 1rem; }
+    .big-rating { font-size: 3rem; font-weight: bold; color: #6c5ce7; }
+    .rating-count { color: #a0a0c0; font-size: 1rem; }
+    .star-rating { display: flex; gap: 0.2rem; }
+    .star { color: #4a4a6a; font-size: 1.2rem; }
+    .star.filled { color: #fbbf24; }
+    .review-card { background: #1a1a2e; border: 1px solid #2a2a4a; border-radius: 8px; padding: 1.5rem; margin-bottom: 1rem; }
+    .review-header { display: flex; justify-content: space-between; margin-bottom: 0.5rem; }
+    .reviewer-name { font-weight: bold; color: #e0e0ff; }
+    .review-date { color: #a0a0c0; font-size: 0.85rem; }
+    .review-text { color: #c0c0d0; line-height: 1.6; }
+    .review-form { background: #1a1a2e; border: 1px solid #2a2a4a; border-radius: 8px; padding: 1.5rem; margin-top: 2rem; }
+    .form-group { margin-bottom: 1rem; }
+    .form-label { display: block; margin-bottom: 0.5rem; color: #e0e0ff; font-weight: 500; }
+    .form-input, .form-textarea { width: 100%; padding: 0.75rem; border: 1px solid #2a2a4a; border-radius: 6px; background: #0a0a1a; color: #e0e0ff; font-size: 1rem; }
+    .form-textarea { min-height: 120px; resize: vertical; }
+    .star-input { display: flex; gap: 0.5rem; }
+    .star-btn { background: none; border: none; font-size: 2rem; cursor: pointer; color: #4a4a6a; transition: color 0.2s; }
+    .star-btn:hover, .star-btn.active { color: #fbbf24; }
+    .error-msg { color: #ef4444; margin-top: 0.5rem; font-size: 0.9rem; }
+    .success-msg { color: #4ade80; margin-top: 0.5rem; font-size: 0.9rem; }
   </style>
 </head>
 <body>
@@ -118,6 +142,130 @@
         <button class="btn btn-secondary" style="margin-top: 1rem;">Explore Alternatives</button>
       </a>
     </div>
+
+    <% if (agent.rating || agent.review_count > 0) { %>
+    <div class="section reviews-section">
+      <div class="reviews-header">
+        <h2>Reviews</h2>
+        <div class="rating-summary">
+          <div class="big-rating"><%= (agent.rating || 0).toFixed(1) %></div>
+          <div>
+            <div class="star-rating">
+              <% for (let i = 1; i <= 5; i++) { %>
+                <span class="star <%= i <= Math.round(agent.rating || 0) ? 'filled' : '' %>">★</span>
+              <% } %>
+            </div>
+            <div class="rating-count"><%= agent.review_count %> <%= agent.review_count === 1 ? 'review' : 'reviews' %></div>
+          </div>
+        </div>
+      </div>
+      
+      <% reviews.forEach(review => { %>
+        <div class="review-card">
+          <div class="review-header">
+            <span class="reviewer-name"><%= review.user_name || 'Anonymous' %></span>
+            <span class="review-date"><%= new Date(review.created_at).toLocaleDateString() %></span>
+          </div>
+          <div class="star-rating" style="margin-bottom: 0.5rem;">
+            <% for (let i = 1; i <= 5; i++) { %>
+              <span class="star <%= i <= review.rating ? 'filled' : '' %>">★</span>
+            <% } %>
+          </div>
+          <% if (review.review_text) { %>
+            <p class="review-text"><%= review.review_text %></p>
+          <% } %>
+        </div>
+      <% }); %>
+    </div>
+    <% } %>
+
+    <% if (isLoggedIn) { %>
+    <div class="section reviews-section">
+      <h2>Leave a Review</h2>
+      <div class="review-form">
+        <form id="review-form">
+          <div class="form-group">
+            <label class="form-label">Rating</label>
+            <div class="star-input" id="star-input">
+              <% for (let i = 1; i <= 5; i++) { %>
+                <button type="button" class="star-btn" data-rating="<%= i %>">★</button>
+              <% } %>
+            </div>
+            <input type="hidden" id="rating" name="rating" value="">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Review (optional)</label>
+            <textarea class="form-textarea" id="review_text" name="review_text" placeholder="Share your experience with this agent..."></textarea>
+          </div>
+          <button type="submit" class="btn btn-primary">Submit Review</button>
+          <div id="form-message"></div>
+        </form>
+      </div>
+    </div>
+    <% } else { %>
+    <div class="section reviews-section">
+      <p style="color: #a0a0c0; text-align: center;">
+        <a href="/login" style="color: #6c5ce7;">Log in</a> to leave a review
+      </p>
+    </div>
+    <% } %>
   </div>
+
+  <script>
+    // Star rating input
+    const starBtns = document.querySelectorAll('#star-input .star-btn');
+    const ratingInput = document.getElementById('rating');
+    let selectedRating = 0;
+    
+    starBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        selectedRating = parseInt(btn.dataset.rating);
+        ratingInput.value = selectedRating;
+        starBtns.forEach((b, i) => {
+          b.classList.toggle('active', i < selectedRating);
+        });
+      });
+    });
+    
+    // Form submission
+    document.getElementById('review-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const messageDiv = document.getElementById('form-message');
+      
+      if (!selectedRating) {
+        messageDiv.innerHTML = '<div class="error-msg">Please select a rating</div>';
+        return;
+      }
+      
+      const formData = {
+        agent_id: <%= agent.id %>,
+        rating: selectedRating,
+        review_text: document.getElementById('review_text').value
+      };
+      
+      try {
+        const res = await fetch('/api/reviews', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(formData)
+        });
+        
+        const data = await res.json();
+        
+        if (res.ok) {
+          messageDiv.innerHTML = '<div class="success-msg">Review submitted successfully!</div>';
+          document.getElementById('review-form').reset();
+          selectedRating = 0;
+          starBtns.forEach(b => b.classList.remove('active'));
+          // Reload page to show new review
+          setTimeout(() => window.location.reload(), 1500);
+        } else {
+          messageDiv.innerHTML = `<div class="error-msg">${data.error || 'Failed to submit review'}</div>`;
+        }
+      } catch (err) {
+        messageDiv.innerHTML = '<div class="error-msg">Failed to submit review. Please try again.</div>';
+      }
+    });
+  </script>
 </body>
 </html>
