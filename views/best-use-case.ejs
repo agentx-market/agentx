@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Best <%= categoryName %> AI Agents in 2024 | AgentX.Market</title>
+  <meta name="description" content="Discover the top <%= categoryName.toLowerCase() %> AI agents on AgentX.Market. Compare features, pricing, ratings, and integrations to find the perfect AI solution for your <%= useCase %> needs.">
+  
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://agentx.market/best/<%= useCase %>">
+  <meta property="og:title" content="Best <%= categoryName %> AI Agents in 2024">
+  <meta property="og:description" content="Compare the top <%= categoryName.toLowerCase() %> AI agents. Find the perfect AI solution with our curated list featuring ratings, pricing, and features.">
+  <meta property="og:image" content="https://agentx.market/images/og-best-<%= useCase %>.jpg">
+  
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:url" content="https://agentx.market/best/<%= useCase %>">
+  <meta name="twitter:title" content="Best <%= categoryName %> AI Agents in 2024">
+  <meta name="twitter:description" content="Compare the top <%= categoryName.toLowerCase() %> AI agents. Find the perfect AI solution with our curated list.">
+  <meta name="twitter:image" content="https://agentx.market/images/twitter-best-<%= useCase %>.jpg">
+  
+  <!-- Canonical -->
+  <link rel="canonical" href="https://agentx.market/best/<%= useCase %>">
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  
+  <!-- Styles -->
+  <link rel="stylesheet" href="/css/style.css">
+  
+  <!-- JSON-LD Schema -->
+  <script type="application/ld+json"><%= schema %></script>
+</head>
+<body>
+  <%- include("partials/navbar") %>
+  
+  <main class="container">
+    <!-- Hero Section -->
+    <section class="hero-section">
+      <h1 class="hero-title">Best <%= categoryName %> AI Agents in 2024</h1>
+      <p class="hero-subtitle">Discover the top-rated AI agents for <%= useCase %>. Compare features, pricing, and ratings to find the perfect solution for your needs.</p>
+      <div class="hero-stats">
+        <div class="stat-card">
+          <span class="stat-number"><%= agents.length %></span>
+          <span class="stat-label">Top Agents</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-number"><%= topAgents.length %></span>
+          <span class="stat-label">Featured</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-number">4.5+</span>
+          <span class="stat-label">Avg Rating</span>
+        </div>
+      </div>
+    </section>
+    
+    <!-- Introduction -->
+    <section class="content-section">
+      <h2>Why Choose an AI Agent for <%= categoryName %>? </h2>
+      <p>AI agents are transforming how businesses handle <%= useCase %>. These intelligent assistants automate repetitive tasks, provide 24/7 support, and deliver insights that drive results. Whether you need customer service automation, content generation, or data analysis, the right AI agent can save time, reduce costs, and improve outcomes.</p>
+      <p>Our curated list features the best <%= categoryName %> AI agents based on user ratings, reliability, features, and real-world performance. Each agent has been vetted for quality and effectiveness.</p>
+    </section>
+    
+    <!-- Comparison Table -->
+    <section class="comparison-section">
+      <h2>Top <%= categoryName %> AI Agents Compared</h2>
+      <div class="comparison-table-wrapper">
+        <table class="comparison-table">
+          <thead>
+            <tr>
+              <th>Agent</th>
+              <th>Rating</th>
+              <th>Uptime</th>
+              <th>Pricing</th>
+              <th>Key Features</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% topAgents.forEach((agent, index) => { %>
+            <tr class="<%= index === 0 ? 'featured' : '' %>">
+              <td>
+                <div class="agent-name">
+                  <a href="/agents/<%= agent.slug %>"><%= agent.name %></a>
+                  <% if (index === 0) { %>
+                    <span class="badge badge-primary">#1 Pick</span>
+                  <% } %>
+                </div>
+                <p class="agent-desc"><%= agent.description.substring(0, 100) %><%= agent.description.length > 100 ? '...' : '' %></p>
+              </td>
+              <td>
+                <div class="rating">
+                  <span class="rating-stars">★</span>
+                  <span class="rating-value"><%= agent.rating || 'N/A' %></span>
+                  <span class="rating-count">(<%= agent.review_count || 0 %> reviews)</span>
+                </div>
+              </td>
+              <td><%= agent.uptime_percent ? (agent.uptime_percent * 100).toFixed(1) + '%' : 'N/A' %></td>
+              <td><%= agent.pricing || 'Contact for pricing' %></td>
+              <td>
+                <ul class="feature-list">
+                  <% if (agent.capabilities) { 
+                    const caps = JSON.parse(agent.capabilities);
+                    caps.slice(0, 3).forEach(cap => { %>
+                      <li><%= cap %></li>
+                    <% }); 
+                  } %>
+                </ul>
+              </td>
+              <td>
+                <a href="/agents/<%= agent.slug %>" class="btn btn-primary">View Details</a>
+              </td>
+            </tr>
+            <% }); %>
+          </tbody>
+        </table>
+      </div>
+      <p class="comparison-note">See all <%= agents.length %> <%= categoryName %> AI agents below for more options.</p>
+    </section>
+    
+    <!-- Full Agent List -->
+    <section class="agents-list-section">
+      <h2>All <%= categoryName %> AI Agents</h2>
+      <div class="agents-grid">
+        <% agents.forEach(agent => { %>
+        <div class="agent-card">
+          <div class="agent-card-header">
+            <h3 class="agent-card-title">
+              <a href="/agents/<%= agent.slug %>"><%= agent.name %></a>
+            </h3>
+            <div class="agent-card-rating">
+              <span class="rating-stars">★</span>
+              <span class="rating-value"><%= agent.rating || 'N/A' %></span>
+            </div>
+          </div>
+          <p class="agent-card-desc"><%= agent.description %></p>
+          <div class="agent-card-meta">
+            <span class="meta-item">
+              <span class="meta-label">Uptime:</span>
+              <span class="meta-value"><%= agent.uptime_percent ? (agent.uptime_percent * 100).toFixed(1) + '%' : 'N/A' %></span>
+            </span>
+            <span class="meta-item">
+              <span class="meta-label">Pricing:</span>
+              <span class="meta-value"><%= agent.pricing || 'Contact' %></span>
+            </span>
+          </div>
+          <% if (agent.capabilities) { 
+            const caps = JSON.parse(agent.capabilities);
+            if (caps.length > 0) { %>
+            <div class="agent-card-tags">
+              <% caps.slice(0, 4).forEach(cap => { %>
+                <span class="tag"><%= cap %></span>
+              <% }); %>
+            </div>
+            <% } 
+          } %>
+          <a href="/agents/<%= agent.slug %>" class="btn btn-secondary">Learn More</a>
+        </div>
+        <% }); %>
+      </div>
+    </section>
+    
+    <!-- FAQ Section -->
+    <section class="faq-section">
+      <h2>Frequently Asked Questions</h2>
+      <div class="faq-list">
+        <% faqs.forEach(faq => { %>
+        <div class="faq-item">
+          <h3 class="faq-question"><%= faq.q %></h3>
+          <div class="faq-answer"><%= faq.a %></div>
+        </div>
+        <% }); %>
+      </div>
+    </section>
+    
+    <!-- CTA Section -->
+    <section class="cta-section">
+      <h2>Ready to Find Your Perfect AI Agent?</h2>
+      <p>Browse all <%= agents.length %> <%= categoryName %> AI agents on AgentX.Market and start automating your workflow today.</p>
+      <a href="/browse" class="btn btn-primary btn-lg">Browse All Agents</a>
+    </section>
+  </main>
+  
+  <%- include("partials/footer") %>
+  
+  <style>
+    .hero-section {
+      text-align: center;
+      padding: 60px 20px;
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+      border-radius: 12px;
+      margin-bottom: 40px;
+    }
+    
+    .hero-title {
+      font-size: 2.5rem;
+      font-weight: 700;
+      margin-bottom: 16px;
+      color: #e0e0ff;
+    }
+    
+    .hero-subtitle {
+      font-size: 1.1rem;
+      color: #a0a0c0;
+      max-width: 700px;
+      margin: 0 auto 32px;
+      line-height: 1.6;
+    }
+    
+    .hero-stats {
+      display: flex;
+      justify-content: center;
+      gap: 32px;
+      flex-wrap: wrap;
+    }
+    
+    .stat-card {
+      text-align: center;
+      padding: 20px 32px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 8px;
+      min-width: 140px;
+    }
+    
+    .stat-number {
+      display: block;
+      font-size: 2rem;
+      font-weight: 700;
+      color: #4fc3f7;
+      margin-bottom: 8px;
+    }
+    
+    .stat-label {
+      font-size: 0.9rem;
+      color: #a0a0c0;
+    }
+    
+    .content-section {
+      max-width: 800px;
+      margin: 0 auto 60px;
+      padding: 0 20px;
+    }
+    
+    .content-section h2 {
+      font-size: 1.8rem;
+      margin-bottom: 20px;
+      color: #e0e0ff;
+    }
+    
+    .content-section p {
+      font-size: 1rem;
+      line-height: 1.8;
+      color: #b0b0d0;
+      margin-bottom: 16px;
+    }
+    
+    .comparison-section {
+      margin-bottom: 60px;
+    }
+    
+    .comparison-section h2 {
+      font-size: 1.8rem;
+      margin-bottom: 24px;
+      color: #e0e0ff;
+      text-align: center;
+    }
+    
+    .comparison-table-wrapper {
+      overflow-x: auto;
+      background: #1a1a2e;
+      border: 1px solid #2a2a4a;
+      border-radius: 12px;
+      padding: 20px;
+    }
+    
+    .comparison-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    
+    .comparison-table th {
+      background: #2a2a4a;
+      color: #e0e0ff;
+      font-weight: 600;
+      padding: 16px;
+      text-align: left;
+      border-bottom: 2px solid #3a3a5a;
+    }
+    
+    .comparison-table td {
+      padding: 20px 16px;
+      border-bottom: 1px solid #2a2a4a;
+      color: #b0b0d0;
+      vertical-align: top;
+    }
+    
+    .comparison-table tr.featured {
+      background: rgba(79, 195, 247, 0.1);
+      border-left: 3px solid #4fc3f7;
+    }
+    
+    .agent-name a {
+      color: #4fc3f7;
+      font-weight: 600;
+      text-decoration: none;
+    }
+    
+    .agent-name a:hover {
+      text-decoration: underline;
+    }
+    
+    .agent-desc {
+      font-size: 0.9rem;
+      color: #8080a0;
+      margin-top: 8px;
+      line-height: 1.5;
+    }
+    
+    .rating {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    .rating-stars {
+      color: #ffc107;
+      font-size: 1.2rem;
+    }
+    
+    .rating-value {
+      font-weight: 600;
+      color: #e0e0ff;
+    }
+    
+    .rating-count {
+      font-size: 0.85rem;
+      color: #8080a0;
+    }
+    
+    .feature-list {
+      margin: 0;
+      padding-left: 20px;
+    }
+    
+    .feature-list li {
+      margin-bottom: 4px;
+      font-size: 0.9rem;
+    }
+    
+    .badge {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 12px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      margin-left: 8px;
+    }
+    
+    .badge-primary {
+      background: #4fc3f7;
+      color: #0a0a1a;
+    }
+    
+    .comparison-note {
+      text-align: center;
+      margin-top: 24px;
+      color: #8080a0;
+      font-size: 0.9rem;
+    }
+    
+    .agents-list-section {
+      margin-bottom: 60px;
+    }
+    
+    .agents-list-section h2 {
+      font-size: 1.8rem;
+      margin-bottom: 32px;
+      color: #e0e0ff;
+      text-align: center;
+    }
+    
+    .agents-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 24px;
+    }
+    
+    .agent-card {
+      background: #1a1a2e;
+      border: 1px solid #2a2a4a;
+      border-radius: 12px;
+      padding: 24px;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    
+    .agent-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+      border-color: #4fc3f7;
+    }
+    
+    .agent-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 12px;
+    }
+    
+    .agent-card-title a {
+      color: #e0e0ff;
+      font-size: 1.2rem;
+      font-weight: 600;
+      text-decoration: none;
+    }
+    
+    .agent-card-title a:hover {
+      color: #4fc3f7;
+    }
+    
+    .agent-card-rating {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    
+    .agent-card-desc {
+      color: #b0b0d0;
+      font-size: 0.95rem;
+      line-height: 1.6;
+      margin-bottom: 16px;
+    }
+    
+    .agent-card-meta {
+      display: flex;
+      gap: 16px;
+      margin-bottom: 16px;
+      font-size: 0.9rem;
+    }
+    
+    .meta-item {
+      color: #8080a0;
+    }
+    
+    .meta-label {
+      font-weight: 500;
+    }
+    
+    .meta-value {
+      color: #b0b0d0;
+    }
+    
+    .agent-card-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+    
+    .tag {
+      background: rgba(79, 195, 247, 0.1);
+      color: #4fc3f7;
+      padding: 4px 12px;
+      border-radius: 12px;
+      font-size: 0.8rem;
+    }
+    
+    .faq-section {
+      margin-bottom: 60px;
+      max-width: 800px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    
+    .faq-section h2 {
+      font-size: 1.8rem;
+      margin-bottom: 32px;
+      color: #e0e0ff;
+      text-align: center;
+    }
+    
+    .faq-item {
+      background: #1a1a2e;
+      border: 1px solid #2a2a4a;
+      border-radius: 12px;
+      padding: 24px;
+      margin-bottom: 16px;
+    }
+    
+    .faq-question {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: #e0e0ff;
+      margin-bottom: 12px;
+    }
+    
+    .faq-answer {
+      color: #b0b0d0;
+      line-height: 1.8;
+    }
+    
+    .cta-section {
+      text-align: center;
+      padding: 60px 20px;
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+      border-radius: 12px;
+      margin-bottom: 40px;
+    }
+    
+    .cta-section h2 {
+      font-size: 2rem;
+      margin-bottom: 16px;
+      color: #e0e0ff;
+    }
+    
+    .cta-section p {
+      font-size: 1.1rem;
+      color: #a0a0c0;
+      margin-bottom: 24px;
+    }
+    
+    @media (max-width: 768px) {
+      .hero-title {
+        font-size: 2rem;
+      }
+      
+      .hero-stats {
+        gap: 16px;
+      }
+      
+      .stat-card {
+        min-width: 100px;
+        padding: 16px 20px;
+      }
+      
+      .stat-number {
+        font-size: 1.5rem;
+      }
+      
+      .agents-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .comparison-table-wrapper {
+        padding: 12px;
+      }
+      
+      .comparison-table th,
+      .comparison-table td {
+        padding: 12px 8px;
+        font-size: 0.9rem;
+      }
+    }
+  </style>
+</body>
+</html>

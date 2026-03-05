@@ -1250,6 +1250,133 @@ app.get('/agents/:slug/docs', (req, res) => {
   res.render('agent-docs', { agent });
 });
 
+// Programmatic category landing pages: /best/:use-case
+app.get('/best/:useCase', (req, res) => {
+  const { useCase } = req.params;
+  const agentQueries = require('./lib/agent-queries');
+  
+  // Map use-case slugs to category names
+  const useCaseToCategory = {
+    'customer-support': 'Customer Support',
+    'code-review': 'Code Review',
+    'marketing': 'Marketing',
+    'data-analysis': 'Data Analysis',
+    'content-creation': 'Content Creation',
+    'project-management': 'Project Management',
+    'sales': 'Sales',
+    'hr': 'HR & Recruiting',
+    'finance': 'Finance',
+    'healthcare': 'Healthcare',
+    'education': 'Education',
+    'design': 'Design',
+    'devops': 'DevOps',
+    'security': 'Security',
+    'research': 'Research',
+    'writing': 'Writing',
+    'translation': 'Translation',
+    'productivity': 'Productivity',
+    'social-media': 'Social Media',
+    'ecommerce': 'E-commerce'
+  };
+  
+  const categoryName = useCaseToCategory[useCase];
+  
+  if (!categoryName) {
+    return res.status(404).render('404', { message: 'Use case not found' });
+  }
+  
+  // Get agents in this category
+  const category = db.prepare('SELECT * FROM categories WHERE slug = ? OR name = ?').get(useCase, categoryName);
+  
+  if (!category) {
+    return res.status(404).render('404', { message: 'Use case not found' });
+  }
+  
+  const agents = db.prepare(`
+    SELECT a.*, 
+           LOWER(REPLACE(a.name, ' ', '-')) as slug,
+           c.name as category_name
+    FROM agents a
+    JOIN agent_categories ac ON a.id = ac.agent_id
+    JOIN categories c ON ac.category_id = c.id
+    WHERE c.slug = ? OR c.name = ?
+    AND a.status = 'active'
+    ORDER BY a.rating DESC, a.uptime_percent DESC
+  `).all(useCase, categoryName);
+  
+  if (agents.length === 0) {
+    return res.status(404).render('404', { message: 'No agents found for this use case' });
+  }
+  
+  // Get top 3 for comparison table
+  const topAgents = agents.slice(0, 3);
+  
+  // Generate FAQ based on use case
+  const faqs = generateUseCaseFAQ(useCase, categoryName);
+  
+  // Generate JSON-LD schema
+  const schema = {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "name": `Best ${categoryName} AI Agents in 2024`,
+    "description": `Discover the top ${categoryName.toLowerCase()} AI agents on AgentX.Market. Compare features, pricing, and ratings to find the perfect AI solution for your needs.`,
+    "mainEntity": {
+      "@type": "ItemList",
+      "itemListElement": topAgents.map((agent, index) => ({
+        "@type": "ListItem",
+        "position": index + 1,
+        "item": {
+          "@type": "SoftwareApplication",
+          "name": agent.name,
+          "applicationCategory": categoryName,
+          "aggregateRating": {
+            "@type": "AggregateRating",
+            "ratingValue": agent.rating || "0",
+            "ratingCount": agent.review_count || "0"
+          },
+          "description": agent.description,
+          "url": `https://agentx.market/best/${useCase}`
+        }
+      }))
+    }
+  };
+  
+  res.render('best-use-case', {
+    categoryName,
+    useCase,
+    agents,
+    topAgents,
+    faqs,
+    schema: JSON.stringify(schema)
+  });
+});
+
+function generateUseCaseFAQ(useCase, categoryName) {
+  const faqMap = {
+    'customer-support': [
+      { q: "What is the best AI agent for customer support?", a: "The best customer support AI agent depends on your specific needs. Top options include Intercom's Fin, Zendesk's AI, and custom solutions on AgentX.Market that offer 24/7 support, multi-language capabilities, and seamless integration with your existing tools." },
+      { q: "How much do customer support AI agents cost?", a: "Customer support AI agents range from free tiers to $500+/month for enterprise solutions. Most agents on AgentX.Market offer flexible pricing based on conversation volume, features, and customization needs." },
+      { q: "Can AI agents handle complex customer queries?", a: "Modern AI agents can handle 80-90% of common queries autonomously. For complex issues, they seamlessly escalate to human agents with full context, improving resolution times and customer satisfaction." }
+    ],
+    'code-review': [
+      { q: "What is the best AI code review tool?", a: "Top AI code review tools include GitHub Copilot, CodeRabbit, and custom agents on AgentX.Market that provide real-time feedback, security vulnerability detection, and style guide enforcement." },
+      { q: "How do AI code reviewers improve code quality?", a: "AI code reviewers catch bugs, security issues, and style violations before merge. They provide consistent feedback, reduce review time by 40-60%, and help teams maintain coding standards at scale." },
+      { q: "Do AI code reviewers support all programming languages?", a: "Most AI code reviewers support popular languages like JavaScript, Python, Java, and TypeScript. Custom agents on AgentX.Market can be trained on specific frameworks and language versions." }
+    ],
+    'marketing': [
+      { q: "What AI agents help with marketing?", a: "Marketing AI agents handle content creation, social media posting, email campaigns, ad optimization, and analytics. Top agents integrate with major platforms and provide ROI tracking." },
+      { q: "How much time can AI save on marketing tasks?", a: "Marketing teams report 50-70% time savings with AI agents. They automate content creation, scheduling, A/B testing, and performance analysis, freeing marketers for strategy." },
+      { q: "Can AI agents create marketing content?", a: "Yes, AI agents can generate blog posts, social media content, email copy, ad creatives, and landing pages. They maintain brand voice and can be trained on your style guidelines." }
+    ]
+  };
+  
+  return faqMap[useCase] || [
+    { q: `What is the best AI agent for ${categoryName.toLowerCase()}?`, a: `The best ${categoryName.toLowerCase()} AI agent depends on your specific requirements. Top options on AgentX.Market offer features like automation, analytics, integrations, and customizable workflows.` },
+    { q: `How much do ${categoryName.toLowerCase()} AI agents cost?`, a: `${categoryName.toLowerCase()} AI agents range from free tiers to enterprise pricing. Most offer flexible plans based on usage, features, and team size.` },
+    { q: `Can AI agents integrate with my existing tools?`, a: `Most ${categoryName.toLowerCase()} AI agents on AgentX.Market integrate with popular tools via APIs, webhooks, or native connectors. Check individual agent documentation for specific integrations.` }
+  ];
+}
+
 // Alternatives page route
 app.get('/alternatives/:slug', (req, res) => {
   const { slug } = req.params;
