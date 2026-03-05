@@ -37,6 +37,26 @@ db.exec(`
   )
 `);
 
+// Create operators table if it doesn't exist
+try {
+  db.exec(`
+    CREATE TABLE IF NOT EXISTS operators (
+      id TEXT PRIMARY KEY,
+      github_id TEXT,
+      google_id TEXT,
+      email TEXT,
+      name TEXT,
+      github_username TEXT,
+      github_account_created_at INTEGER,
+      welcome_bonus_claimed_at INTEGER,
+      created_at INTEGER
+    )
+  `);
+  console.log('[db] Operators table created');
+} catch (err) {
+  console.log('[db] Operators table may already exist:', err.message);
+}
+
 // Add columns to operators table for abuse prevention
 try {
   db.exec(`ALTER TABLE operators ADD COLUMN IF NOT EXISTS github_account_created_at INTEGER`);
