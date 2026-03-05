@@ -948,12 +948,31 @@ app.use('/blog', blogRouter);
 // Browse API endpoint with search, category, and sort filters
 app.get('/api/browse', (req, res) => {
   const { search, category, sort } = req.query;
+  const nlpSearch = require('./scripts/nlp-search');
+  
   let query = 'SELECT a.id, a.name, a.description, a.health_check_passed_at, a.health_endpoint_url, a.created_at, a.community_listing, a.claim_url, a.endpoint_url, a.operator_id, a.featured, a.featured_until FROM agents a WHERE 1=1';
   const params = [];
 
   if (search) {
-    query += ' AND (LOWER(a.name) LIKE ? OR LOWER(a.description) LIKE ?)';
-    params.push(`%${search.toLowerCase()}%`, `%${search.toLowerCase()}%`);
+    // Use natural language search with keyword extraction and fuzzy matching
+    const keywords = nlpSearch.extractKeywords(search);
+    
+    if (keywords.length > 0) {
+      // Build OR conditions for each keyword across name, description, and categories
+      const keywordConditions = [];
+      keywords.forEach(keyword => {
+        const lowerKeyword = keyword.toLowerCase();
+        keywordConditions.push(`(LOWER(a.name) LIKE ? OR LOWER(a.description) LIKE ?)`);
+        params.push(`%${lowerKeyword}%`, `%${lowerKeyword}%`);
+      });
+      
+      // Combine with OR for fuzzy matching, then we'll rank by relevance in JS
+      query += ' AND (' + keywordConditions.join(' OR ') + ')';
+    } else {
+      // Fallback to simple LIKE if no keywords extracted
+      query += ' AND (LOWER(a.name) LIKE ? OR LOWER(a.description) LIKE ?)';
+      params.push(`%${search.toLowerCase()}%`, `%${search.toLowerCase()}%`);
+    }
   }
 
   if (category) {
@@ -999,7 +1018,7 @@ app.get('/api/browse', (req, res) => {
   }
   
   // Format agents with calculated fields
-  const formatted = agents.map(a => {
+  let formatted = agents.map(a => {
     const operator = db.get('SELECT verified, verification_method, verified_at FROM operators WHERE id = ?', [a.operator_id]);
     return {
       id: a.id,
@@ -1023,6 +1042,23 @@ app.get('/api/browse', (req, res) => {
     featured_until: a.featured_until
     };
   });
+  
+  // Apply natural language ranking if search query exists
+  if (search) {
+    const keywords = nlpSearch.extractKeywords(search);
+    if (keywords.length > 0) {
+      formatted = nlpSearch.rankAgentsByRelevance(formatted, keywords);
+      // Sort by relevance score first, then by featured/created
+      formatted.sort((a, b) => {
+        if (b.relevanceScore !== a.relevanceScore) {
+          return b.relevanceScore - a.relevanceScore;
+        }
+        // Fallback to original sort if relevance scores are equal
+        if (b.featured !== a.featured) return b.featured - a.featured;
+        return (b.created_at || 0) - (a.created_at || 0);
+      });
+    }
+  }
   
   res.json({ agents: formatted, total: formatted.length });
 });

@@ -89,6 +89,9 @@ async function loadAgents() {
   if (search) params.append('search', search);
   if (category) params.append('category', category);
   params.append('sort', sort);
+  
+  // Track if we're doing a natural language search
+  window.currentSearch = search;
 
   try {
     const res = await fetch(`/api/browse?${params}`);
@@ -114,8 +117,13 @@ async function loadAgents() {
       const initial = (agent.name || '?')[0].toUpperCase();
       const uptime = (agent.uptime_percent || 0).toFixed(1);
       const uptimeClass = uptime >= 99 ? 'uptime-good' : uptime >= 95 ? 'uptime-warn' : 'uptime-bad';
-      const description = agent.description || 'No description provided.';
+      let description = agent.description || 'No description provided.';
       const slug = agent.slug || agent.id;
+      
+      // Highlight search matches in description if relevance search was used
+      if (agent.matches && searchInput.value) {
+        description = highlightMatches(description, agent.matches);
+      }
       
       // Build category badges
       const categoryBadges = agent.categories.map(cat => 
@@ -137,6 +145,14 @@ async function loadAgents() {
         ratingHtml = `<div class="agent-rating"><span class="rating-text">No reviews yet</span></div>`;
       }
 
+      // Show relevance score for natural language search
+      const relevanceHtml = agent.relevanceScore ? `
+        <div class="relevance-badge">
+          <span class="relevance-score">${(agent.relevanceScore * 100).toFixed(0)}%</span>
+          <span class="relevance-label">match</span>
+        </div>
+      ` : '';
+
       card.innerHTML = `
         <div class="card-header">
           <div class="agent-avatar">${initial}</div>
@@ -144,6 +160,7 @@ async function loadAgents() {
             <h3>${agent.name}</h3>
             <div class="agent-categories">${categoryBadges}</div>
           </div>
+          ${relevanceHtml}
         </div>
         <p class="description">${description}</p>
         <div class="agent-meta">
@@ -178,6 +195,20 @@ function generateStars(rating) {
   }
   
   return stars;
+}
+
+function highlightMatches(text, matches) {
+  if (!matches || matches.length === 0) return text;
+  
+  let highlighted = text;
+  
+  matches.forEach(match => {
+    const keyword = match.keyword.toLowerCase();
+    const regex = new RegExp(`(${keyword.split('').join('\\w*')})`, 'gi');
+    highlighted = highlighted.replace(regex, '<mark>$1</mark>');
+  });
+  
+  return highlighted;
 }
 
 function debounce(fn, ms) {

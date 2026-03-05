@@ -142,12 +142,49 @@
   align-items: center;
   gap: var(--space-md);
   margin-bottom: var(--space-md);
+  position: relative;
 }
 
 .agent-card .card-header h3 {
   font-size: 1.15rem;
   margin: 0;
   color: var(--text-primary);
+}
+
+/* Relevance badge for natural language search */
+.relevance-badge {
+  position: absolute;
+  top: 0;
+  right: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 2px;
+}
+
+.relevance-score {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: white;
+  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+  padding: 3px 8px;
+  border-radius: var(--radius-full);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.relevance-label {
+  font-size: 0.6rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Highlight matches in description */
+.agent-card .description mark {
+  background: rgba(99, 102, 241, 0.3);
+  color: var(--text-primary);
+  padding: 0 2px;
+  border-radius: 2px;
 }
 
 .agent-card .card-header .agent-category {
