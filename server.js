@@ -537,7 +537,7 @@ app.get('/api/agents/:id/embed', async (req, res) => {
   }
 });
 
-// Agent invoke endpoint - forwards method+params to agent's endpoint
+// Agent invoke endpoint - forwards method+params to agent's endpoint with HMAC-SHA256 signature
 app.post('/api/agents/:id/invoke', authMiddleware, authenticatedLimiter, async (req, res) => {
   try {
     const id = parseInt(req.params.id);
@@ -547,13 +547,20 @@ app.post('/api/agents/:id/invoke', authMiddleware, authenticatedLimiter, async (
       return res.status(400).json({ error: 'method is required' });
     }
     
-    const agent = db.get('SELECT endpoint_url FROM agents WHERE id=? AND status="active"', [id]);
+    const agent = db.get('SELECT endpoint_url, api_keys.key_hash FROM agents JOIN api_keys ON agents.id = api_keys.agent_id WHERE agents.id=? AND agents.status="active"', [id]);
     if (!agent) return res.status(404).json({ error: 'Agent not found or inactive' });
+    
+    const payload = JSON.stringify({ method, params });
+    const crypto = require('crypto');
+    const signature = crypto.createHmac('sha256', agent.key_hash).update(payload).digest('hex');
     
     const resp = await fetch(agent.endpoint_url, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ method, params })
+      headers: { 
+        'Content-Type': 'application/json',
+        'X-AgentX-Signature': signature
+      },
+      body: payload
     });
     
     const result = await resp.json();

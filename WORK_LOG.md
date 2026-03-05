@@ -867,3 +867,15 @@ Files changed:
  webhooks/stripe.js | 17 +++++++++++++++++
  4 files changed, 52 insertions(+), 12 deletions(-)
 ```
+
+## 2026-03-05 14:18 — Feature #74: Automated welcome email after OAuth signup
+Status: done | Built by: qwen3.5 | Verified: yes
+Files changed:
+```
+ .last-result.json    | 25 ++++++++++++++-----------
+ WORK_LOG.md          | 11 +++++++++++
+ db.js                | 11 ++++++++++-
+ email.js             | 17 ++++++++++-------
+ lib/oauth-handler.js | 15 ++++++++++++++-
+ 5 files changed, 59 insertions(+), 20 deletions(-)
+```
