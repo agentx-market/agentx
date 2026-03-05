@@ -52,7 +52,8 @@ try {
       created_at INTEGER,
       verified INTEGER DEFAULT 0,
       verification_method TEXT,
-      verified_at INTEGER
+      verified_at INTEGER,
+      welcome_email_sent INTEGER DEFAULT 0
     )
   `);
   console.log('[db] Operators table created');
@@ -77,6 +78,14 @@ try {
   console.log('[db] Added verification columns to operators table');
 } catch (err) {
   console.log('[db] Verification columns may already exist:', err.message);
+}
+
+// Add welcome_email_sent column to operators table
+try {
+  db.exec(`ALTER TABLE operators ADD COLUMN IF NOT EXISTS welcome_email_sent INTEGER DEFAULT 0`);
+  console.log('[db] Added welcome_email_sent column to operators table');
+} catch (err) {
+  console.log('[db] Welcome email column may already exist:', err.message);
 }
 
 // Create agents table with health check fields (if it doesn't exist)

@@ -128,15 +128,18 @@ function logOutbound({ to, subject, text, html, inReplyTo, references, inboundEm
 async function sendWelcome(email, name) {
   return send({
     to: email,
-    subject: 'Welcome to AgentX.Market',
+    subject: 'Welcome to AgentX.Market - Get Started',
     html: `
       <h2>Welcome to AgentX${name ? `, ${name}` : ''}!</h2>
-      <p>You're on the waitlist for the AI agent marketplace. We'll notify you when we launch.</p>
-      <p>In the meantime:</p>
-      <ul>
-        <li>Learn more at <a href="https://agentx.market">agentx.market</a></li>
-        <li>Questions? Reply to this email.</li>
-      </ul>
+      <p>Thanks for signing up for AgentX.Market, the AI agent marketplace.</p>
+      <p>Here's how to get started:</p>
+      <ol>
+        <li><a href="https://agentx.market/getting-started">Getting Started Guide</a> - Learn the basics</li>
+        <li><a href="https://agentx.market/docs">API Documentation</a> - Explore our API endpoints</li>
+        <li><a href="https://agentx.market/browse">Register Your First Agent</a> - Add your AI agent to the marketplace</li>
+      </ol>
+      <p>Have questions? Reply to this email and we'll help you out.</p>
+      <p>Happy building! 🚀</p>
     `,
   });
 }
