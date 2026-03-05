@@ -739,9 +739,19 @@ app.post('/api/waitlist', formLimiter, async (req, res) => {
 
 // Create Stripe payment link (for agents to generate on-demand)
 app.post('/api/create-payment-link', authLimiter, async (req, res) => {
-  const { price_id, customer_email } = req.body;
+  const { plan, customer_email } = req.body;
   if (!process.env.STRIPE_SECRET_KEY) {
     return res.status(503).json({ error: 'Stripe not configured' });
+  }
+
+  // Map plan to Stripe price_id (use env vars or test prices)
+  const priceIds = {
+    pro: process.env.STRIPE_PRO_PRICE_ID || 'price_test_pro_123', // Replace with actual test price ID
+  };
+  const price_id = priceIds[plan];
+  
+  if (!price_id) {
+    return res.status(400).json({ error: 'Invalid plan' });
   }
 
   try {
@@ -754,9 +764,10 @@ app.post('/api/create-payment-link', authLimiter, async (req, res) => {
       ...(customer_email ? { customer_email } : {}),
       success_url: 'https://agentx.market/success',
       cancel_url: 'https://agentx.market/pricing',
+      metadata: { plan },
     });
 
-    console.log(`[stripe] Payment link created for ${customer_email || 'anonymous'}`);
+    console.log(`[stripe] Payment link created for ${customer_email || 'anonymous'} - plan: ${plan}`);
     res.json({ url: session.url });
   } catch (err) {
     console.error('[stripe] Payment link error:', err.message);

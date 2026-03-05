@@ -17,12 +17,29 @@ function handle(payload, headers) {
     case 'checkout.session.completed': {
       const customerId = data.customer;
       const email = data.customer_email || data.customer_details?.email;
+      const subscriptionId = data.subscription;
+      
       if (customerId && email) {
         db.run(
           `INSERT OR IGNORE INTO stripe_customers (stripe_customer_id, email) VALUES (?, ?)`,
           [customerId, email]
         );
         console.log(`[stripe] Customer created: ${customerId} (${email})`);
+      }
+      
+      // Set is_pro flag on operator if subscription is active
+      if (subscriptionId && data.status === 'active') {
+        const customer = db.get(
+          'SELECT operator_id FROM stripe_customers WHERE stripe_customer_id = ?',
+          [customerId]
+        );
+        if (customer && customer.operator_id) {
+          db.run(
+            'UPDATE operators SET is_pro = 1, updated_at = ? WHERE id = ?',
+            [Date.now(), customer.operator_id]
+          );
+          console.log(`[stripe] Set is_pro=1 for operator ${customer.operator_id}`);
+        }
       }
       break;
     }
