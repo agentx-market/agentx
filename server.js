@@ -1133,6 +1133,14 @@ app.get('/my-agents', (req, res) => {
   res.render('dashboard', { agents, operator: { id: req.operatorId } });
 });
 
+// Dashboard API keys management
+app.get('/dashboard/keys', (req, res) => {
+  if (!req.operatorId) return res.redirect('/auth/github');
+  
+  const agents = db.all('SELECT id, name FROM agents WHERE operator_id = ?', [req.operatorId]);
+  res.render('dashboard-keys', { agents, operator: { id: req.operatorId } });
+});
+
 // Dashboard billing - redirect to Stripe Customer Portal
 app.get('/dashboard/billing', (req, res) => {
   if (!req.operatorId) return res.redirect('/auth/github');

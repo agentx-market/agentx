@@ -188,6 +188,7 @@ try {
       agent_id TEXT NOT NULL,
       key_hash TEXT UNIQUE NOT NULL,
       key_prefix TEXT NOT NULL,
+      label TEXT,
       last_used_at INTEGER,
       created_at INTEGER,
       FOREIGN KEY (agent_id) REFERENCES agents(id) ON DELETE CASCADE
@@ -196,6 +197,17 @@ try {
   console.log('[db] API keys table created');
 } catch (err) {
   console.log('[db] API keys table may already exist:', err.message);
+}
+
+// Add label column if it doesn't exist (migration)
+try {
+  db.exec(`
+    ALTER TABLE api_keys ADD COLUMN label TEXT
+  `);
+  console.log('[db] Added label column to api_keys');
+} catch (err) {
+  // Column may already exist
+  console.log('[db] Label column may already exist:', err.message);
 }
 
 // ============ Migration Runner ============
