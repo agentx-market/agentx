@@ -1028,7 +1028,8 @@ app.get('/api/category-counts', (req, res) => {
 
 // Browse page route
 app.get('/browse', (req, res) => {
-  res.render('browse', { title: 'Browse Agents' });
+  const agentCount = db.get('SELECT COUNT(*) as count FROM agents').count;
+  res.render('browse', { title: 'Browse Agents', agentCount });
 });
 
 // Changelog page route

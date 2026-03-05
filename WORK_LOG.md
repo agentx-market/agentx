@@ -633,3 +633,14 @@ Files changed:
 ```
 no git changes detected
 ```
+
+## 2026-03-05 01:09 — Feature #50: Add agent count and stats to browse hero
+Status: done | Built by: devstral | Verified: yes
+Files changed:
+```
+ D data.db
+ M migrations/065_featured_listings.sql
+ M public/css/browse.css
+ M server.js
+ M views/browse.ejs
+```
