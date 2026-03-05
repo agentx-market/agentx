@@ -86,6 +86,7 @@ try {
       health_endpoint_url TEXT,
       apiKeyHash TEXT,
       rating REAL,
+      review_count INTEGER DEFAULT 0,
       health_status TEXT DEFAULT 'offline',
       last_health_check TEXT,
       response_time_ms INTEGER,
@@ -103,6 +104,7 @@ try {
   db.exec(`ALTER TABLE agents ADD COLUMN IF NOT EXISTS health_check_passed_at INTEGER`);
   db.exec(`ALTER TABLE agents ADD COLUMN IF NOT EXISTS health_check_required_by INTEGER`);
   db.exec(`ALTER TABLE agents ADD COLUMN IF NOT EXISTS rating REAL`);
+  db.exec(`ALTER TABLE agents ADD COLUMN IF NOT EXISTS review_count INTEGER DEFAULT 0`);
   db.exec(`ALTER TABLE agents ADD COLUMN IF NOT EXISTS health_status TEXT DEFAULT 'offline'`);
   db.exec(`ALTER TABLE agents ADD COLUMN IF NOT EXISTS last_health_check TEXT`);
   db.exec(`ALTER TABLE agents ADD COLUMN IF NOT EXISTS response_time_ms INTEGER`);
@@ -110,6 +112,26 @@ try {
   console.log('[db] Added all missing columns to agents table');
 } catch (err) {
   console.log('[db] Agents table columns may already exist:', err.message);
+}
+
+// Create reviews table for user ratings and reviews
+try {
+  db.exec(`
+    CREATE TABLE IF NOT EXISTS reviews (
+      id INTEGER PRIMARY KEY,
+      agent_id INTEGER NOT NULL,
+      user_id TEXT NOT NULL,
+      rating INTEGER NOT NULL CHECK (rating >= 1 AND rating <= 5),
+      review_text TEXT,
+      created_at INTEGER,
+      updated_at INTEGER,
+      FOREIGN KEY (agent_id) REFERENCES agents(id) ON DELETE CASCADE,
+      UNIQUE(agent_id, user_id)
+    )
+  `);
+  console.log('[db] Reviews table created');
+} catch (err) {
+  console.log('[db] Reviews table may already exist:', err.message);
 }
 
 // ============ Migration Runner ============
