@@ -462,7 +462,7 @@ app.get('/api/agents/:id/schema', authMiddleware, authenticatedLimiter, (req, re
 });
 
 // Agent stats endpoint - returns usage statistics for analytics dashboard
-app.get('/api/agents/:id/stats', authMiddleware, authenticatedLimiter, async (req, res) => {
+app.get('/api/agents/:id/stats', authenticatedLimiter, async (req, res) => {
   try {
     const id = parseInt(req.params.id);
     const agent = db.get('SELECT id FROM agents WHERE id=?', [id]);
