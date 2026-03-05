@@ -644,3 +644,10 @@ Files changed:
  M server.js
  M views/browse.ejs
 ```
+
+## 2026-03-05 01:16 — Feature #1: Agent registry API
+Status: done | Built by: devstral | Verified: no
+Files changed:
+```
+no git changes detected
+```
