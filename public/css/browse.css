@@ -481,3 +481,117 @@
     font-size: 0.7rem;
   }
 }
+
+/* --- CTA Section --- */
+.cta-section {
+  padding: var(--space-3xl) 0;
+  background: linear-gradient(180deg, transparent 0%, rgba(99, 102, 241, 0.05) 100%);
+}
+
+.cta-card {
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(139, 92, 246, 0.1));
+  border: 1px solid rgba(99, 102, 241, 0.3);
+  border-radius: var(--radius-xl);
+  padding: var(--space-3xl) var(--space-xl);
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 20px 60px rgba(99, 102, 241, 0.15);
+}
+
+.cta-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.15), rgba(139, 92, 246, 0.15));
+  z-index: 0;
+  pointer-events: none;
+}
+
+.cta-card > * {
+  position: relative;
+  z-index: 1;
+}
+
+.cta-card h2 {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0 0 var(--space-md);
+  background: linear-gradient(135deg, #fff, #e0e0ff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.cta-card p {
+  font-size: 1.1rem;
+  color: var(--text-secondary);
+  margin: 0 0 var(--space-xl);
+  max-width: 500px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.cta-buttons {
+  display: flex;
+  gap: var(--space-md);
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.cta-buttons .btn {
+  padding: 0.8rem 2rem;
+  font-size: 1rem;
+  font-weight: 600;
+  border-radius: var(--radius-full);
+  text-decoration: none;
+  transition: all var(--transition-base);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.cta-buttons .btn-primary {
+  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+  color: white;
+  border: none;
+  box-shadow: 0 4px 20px rgba(99, 102, 241, 0.4);
+}
+
+.cta-buttons .btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 30px rgba(99, 102, 241, 0.5);
+}
+
+.cta-buttons .btn-secondary {
+  background: transparent;
+  color: var(--text-primary);
+  border: 1px solid var(--border);
+}
+
+.cta-buttons .btn-secondary:hover {
+  border-color: var(--accent);
+  background: rgba(99, 102, 241, 0.1);
+  transform: translateY(-2px);
+}
+
+@media (max-width: 768px) {
+  .cta-card {
+    padding: var(--space-2xl) var(--space-lg);
+  }
+  .cta-card h2 {
+    font-size: 1.5rem;
+  }
+  .cta-buttons {
+    flex-direction: column;
+    align-items: center;
+  }
+  .cta-buttons .btn {
+    width: 100%;
+    max-width: 280px;
+  }
+}

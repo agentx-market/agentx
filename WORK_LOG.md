@@ -969,3 +969,20 @@ Files changed:
  views/agent-detail.ejs | 104 +++++++++++++++++++++++++++++++++++++++++++++++--
  3 files changed, 125 insertions(+), 15 deletions(-)
 ```
+
+## 2026-03-05 16:41 — Feature #48: Changelog page showing recent features
+Status: done | Built by: qwen3.5 | Verified: no
+Files changed:
+```
+ .last-result.json | 25 ++++++++++---------------
+ WORK_LOG.md       | 10 ++++++++++
+ 2 files changed, 20 insertions(+), 15 deletions(-)
+```
+
+## 2026-03-05 16:45 — Feature #48: Changelog page showing recent features
+Status: done | Built by: qwen3.5 | Verified: yes
+Files changed:
+```
+ M WORK_LOG.md
+ M views/changelog.ejs
+```
