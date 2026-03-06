@@ -959,3 +959,13 @@ Files changed:
  WORK_LOG.md       |  9 +++++++++
  2 files changed, 18 insertions(+), 12 deletions(-)
 ```
+
+## 2026-03-05 16:31 — Feature #81: Add referral tracking for agent operators
+Status: done | Built by: qwen3.5 | Verified: yes
+Files changed:
+```
+ .last-result.json      |  27 +++++++------
+ WORK_LOG.md            |   9 +++++
+ views/agent-detail.ejs | 104 +++++++++++++++++++++++++++++++++++++++++++++++--
+ 3 files changed, 125 insertions(+), 15 deletions(-)
+```
