@@ -941,3 +941,12 @@ Files changed:
  WORK_LOG.md       | 10 ++++++++++
  2 files changed, 18 insertions(+), 8 deletions(-)
 ```
+
+## 2026-03-05 16:01 — Feature #82: Add email capture for non-logged-in browse visitors
+Status: done | Built by: qwen3.5 | Verified: no
+Files changed:
+```
+ .last-result.json | 23 +++++++++++++----------
+ WORK_LOG.md       |  9 +++++++++
+ 2 files changed, 22 insertions(+), 10 deletions(-)
+```
