@@ -7,7 +7,8 @@
 
 const client = require('@sendgrid/client');
 
-const API_KEY = process.env.SENDGRID_API_KEY || 'REDACTED';
+const API_KEY = process.env.SENDGRID_API_KEY;
+if (!API_KEY) { console.error('Set SENDGRID_API_KEY env var'); process.exit(1); }
 client.setApiKey(API_KEY);
 
 async function listExisting() {

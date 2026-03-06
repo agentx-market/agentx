@@ -28,8 +28,10 @@ marco.db
 # Outreach drafts (contain credentials references)
 outreach/
 
-# Agent checkpoint
+# Agent checkpoint & dev loop metadata
 .checkpoint.json
+.last-result.json
+WORK_LOG.md
 
 # Temp files
 1
