@@ -1296,6 +1296,43 @@ app.get('/register', (req, res) => {
   res.render('register', { title: 'Register Your Agent' });
 });
 
+// Comparison page route (MUST be before /agents/:slug to avoid route conflict)
+app.get('/compare/:slug-a-vs-:slug-b', (req, res) => {
+  const { 'slug-a': slugA, 'slug-b': slugB } = req.params;
+  const agentQueries = require('./lib/agent-queries');
+  
+  const agentA = agentQueries.getAgentBySlug(slugA);
+  const agentB = agentQueries.getAgentBySlug(slugB);
+  
+  if (!agentA || !agentB) {
+    return res.status(404).render('agent-not-found', { 
+      message: 'One or both agents not found' 
+    });
+  }
+  
+  // Get categories for both agents
+  const categoriesA = db.prepare('SELECT c.name FROM agent_categories ac JOIN categories c ON ac.category_id = c.id WHERE ac.agent_id = ?').all(agentA.id);
+  const categoriesB = db.prepare('SELECT c.name FROM agent_categories ac JOIN categories c ON ac.category_id = c.id WHERE ac.agent_id = ?').all(agentB.id);
+  
+  // Get review stats
+  const reviewsA = db.prepare('SELECT AVG(rating) as avg_rating, COUNT(*) as review_count FROM reviews WHERE agent_id = ?').get(agentA.id);
+  const reviewsB = db.prepare('SELECT AVG(rating) as avg_rating, COUNT(*) as review_count FROM reviews WHERE agent_id = ?').get(agentB.id);
+  
+  // Calculate common categories
+  const commonCategories = categoriesA.filter(catA => 
+    categoriesB.some(catB => catA.name === catB.name)
+  ).map(c => c.name);
+  
+  res.render('comparison', {
+    title: `${agentA.name} vs ${agentB.name} — Comparison`,
+    agentA,
+    agentB,
+    commonCategories,
+    reviewsA: reviewsA || { avg_rating: null, review_count: 0 },
+    reviewsB: reviewsB || { avg_rating: null, review_count: 0 }
+  });
+});
+
 // Agent detail page route
 app.get('/agents/:slug', (req, res) => {
   const { slug } = req.params;
