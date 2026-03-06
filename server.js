@@ -1328,6 +1328,86 @@ app.get('/my-agents', (req, res) => {
   res.render('dashboard', { agents, operator: { id: req.operatorId } });
 });
 
+// Agent health dashboard - shows real-time uptime/latency for all registered agents
+app.get('/dashboard/health', (req, res) => {
+  if (!req.operatorId) return res.redirect('/auth/github');
+  
+  const now = Date.now();
+  const twentyFourHoursAgo = now - (24 * 60 * 60 * 1000);
+  
+  // Get all agents with their latest health status
+  const agents = db.all(`
+    SELECT 
+      a.id,
+      a.name,
+      a.description,
+      a.health_status,
+      a.last_health_check,
+      a.response_time_ms,
+      a.health_endpoint_url,
+      (SELECT COUNT(*) FROM agents_health_history WHERE agent_id = a.id AND status = 'online') as online_checks,
+      (SELECT COUNT(*) FROM agents_health_history WHERE agent_id = a.id) as total_checks,
+      (SELECT response_ms FROM agents_health_history WHERE agent_id = a.id ORDER BY check_timestamp DESC LIMIT 1) as latest_response_ms
+    FROM agents a
+    ORDER BY a.name
+  `);
+  
+  // Get health history for sparklines (last 24h)
+  const healthHistory = db.all(`
+    SELECT 
+      agent_id,
+      check_timestamp,
+      status,
+      response_ms,
+      ROW_NUMBER() OVER (PARTITION BY agent_id ORDER BY check_timestamp) as rn,
+      COUNT(*) OVER (PARTITION BY agent_id) as total
+    FROM agents_health_history
+    WHERE check_timestamp >= datetime(${twentyFourHoursAgo / 1000}, 'unixepoch')
+    ORDER BY agent_id, check_timestamp
+  `);
+  
+  // Process history into sparkline data per agent
+  const sparklineData = {};
+  healthHistory.forEach(row => {
+    if (!sparklineData[row.agent_id]) {
+      sparklineData[row.agent_id] = {
+        timestamps: [],
+        statuses: [],
+        responseTimes: []
+      };
+    }
+    sparklineData[row.agent_id].timestamps.push(row.check_timestamp);
+    sparklineData[row.agent_id].statuses.push(row.status);
+    sparklineData[row.agent_id].responseTimes.push(row.response_ms || 0);
+  });
+  
+  // Calculate uptime percentages
+  const agentsWithUptime = agents.map(agent => {
+    const total = agent.total_checks || 0;
+    const online = agent.online_checks || 0;
+    const uptimePercent = total > 0 ? ((online / total) * 100).toFixed(1) : '0.0';
+    
+    // Get sparkline data for this agent
+    const history = sparklineData[agent.id] || { timestamps: [], statuses: [], responseTimes: [] };
+    
+    return {
+      ...agent,
+      uptimePercent,
+      sparkline: {
+        timestamps: history.timestamps,
+        statuses: history.statuses,
+        responseTimes: history.responseTimes
+      }
+    };
+  });
+  
+  res.render('dashboard-health', { 
+    title: 'Agent Health Dashboard',
+    agents: agentsWithUptime,
+    operator: { id: req.operatorId }
+  });
+});
+
 // Dashboard API keys management
 app.get('/dashboard/keys', (req, res) => {
   if (!req.operatorId) return res.redirect('/auth/github');

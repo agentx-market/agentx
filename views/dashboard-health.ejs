@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Agent Health Dashboard - AgentX</title>
+  <link rel="stylesheet" href="/css/style.css">
+  
+  <style>
+    .health-dashboard-main { padding: 2rem 0; }
+    .health-stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem; margin-bottom: 2rem; }
+    .health-stat-card { background: #1a1a2e; border: 1px solid #2a2a4a; border-radius: 12px; padding: 1.5rem; }
+    .health-stat-label { color: #a0a0c0; font-size: 0.875rem; margin-bottom: 0.5rem; }
+    .health-stat-value { color: #e0e0ff; font-size: 2rem; font-weight: 700; }
+    .health-stat-value.green { color: #00d26a; }
+    .health-stat-value.red { color: #ff4757; }
+    .health-stat-value.yellow { color: #ffa502; }
+    .health-agents-table { width: 100%; border-collapse: collapse; background: #1a1a2e; border-radius: 12px; overflow: hidden; border: 1px solid #2a2a4a; }
+    .health-agents-table th { background: #2a2a4a; color: #e0e0ff; padding: 1rem; text-align: left; font-weight: 600; }
+    .health-agents-table td { padding: 1rem; border-top: 1px solid #2a2a4a; color: #a0a0c0; }
+    .health-agents-table tr:hover td { background: #1f1f3a; }
+    .health-agent-name { color: #e0e0ff; font-weight: 600; }
+    .health-status-badge { display: inline-block; padding: 0.25rem 0.75rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; }
+    .health-status-badge.online { background: rgba(0, 210, 106, 0.2); color: #00d26a; }
+    .health-status-badge.offline { background: rgba(255, 71, 87, 0.2); color: #ff4757; }
+    .health-status-badge.degraded { background: rgba(255, 165, 2, 0.2); color: #ffa502; }
+    .health-uptime { font-weight: 600; color: #e0e0ff; }
+    .health-uptime.good { color: #00d26a; }
+    .health-uptime.medium { color: #ffa502; }
+    .health-uptime.bad { color: #ff4757; }
+    .sparkline-container { width: 120px; height: 40px; }
+    .sparkline-canvas { width: 100%; height: 100%; }
+    .health-response-time { font-family: 'JetBrains Mono', monospace; font-size: 0.875rem; }
+    .health-response-time.fast { color: #00d26a; }
+    .health-response-time.slow { color: #ff4757; }
+    .health-last-check { font-size: 0.875rem; }
+    .health-empty-state { text-align: center; padding: 4rem 2rem; background: #1a1a2e; border-radius: 12px; border: 1px solid #2a2a4a; }
+    .health-empty-icon { font-size: 3rem; margin-bottom: 1rem; }
+  </style>
+</head>
+<body class="dashboard-page">
+  <nav class="navbar">
+    <div class="container">
+      <a href="/" class="nav-logo">
+        <div class="logo-icon">X</div>
+        AgentX
+      </a>
+      <ul class="nav-links">
+        <li><a href="/features">Features</a></li>
+        <li><a href="/pricing">Pricing</a></li>
+        <li><a href="/browse">Browse</a></li>
+        <li><a href="/about">About</a></li>
+        <li><a href="/contact">Contact</a></li>
+        <li class="nav-cta">
+          <a href="/dashboard/billing" class="btn btn-primary">Billing</a>
+        </li>
+      </ul>
+      <button class="nav-toggle" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <section class="dashboard-hero">
+    <div class="bg-grid"></div>
+    <div class="container">
+      <div class="section-header fade-in">
+        <div class="badge badge-shimmer"><span class="dot"></span> Health Dashboard</div>
+        <h1>Agent <span class="text-gradient">Health</span></h1>
+        <p>Real-time uptime and latency monitoring for all registered agents.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="health-dashboard-main">
+    <div class="container">
+      <% if (agents.length === 0) { %>
+        <div class="health-empty-state">
+          <div class="health-empty-icon">📊</div>
+          <h3>No agents to monitor</h3>
+          <p>Register agents to see their health metrics here.</p>
+        </div>
+      <% } else { %>
+        <!-- Summary Stats -->
+        <div class="health-stats-grid">
+          <% 
+            const totalAgents = agents.length;
+            const onlineAgents = agents.filter(a => a.health_status === 'online').length;
+            const avgUptime = agents.length > 0 ? (agents.reduce((sum, a) => sum + parseFloat(a.uptimePercent), 0) / agents.length).toFixed(1) : '0';
+            const avgResponse = agents.length > 0 ? Math.round(agents.reduce((sum, a) => sum + (a.latest_response_ms || 0), 0) / agents.length) : 0;
+          %>
+          <div class="health-stat-card">
+            <div class="health-stat-label">Total Agents</div>
+            <div class="health-stat-value"><%= totalAgents %></div>
+          </div>
+          <div class="health-stat-card">
+            <div class="health-stat-label">Online</div>
+            <div class="health-stat-value green"><%= onlineAgents %></div>
+          </div>
+          <div class="health-stat-card">
+            <div class="health-stat-label">Avg Uptime (24h)</div>
+            <div class="health-stat-value green"><%= avgUptime %>%</div>
+          </div>
+          <div class="health-stat-card">
+            <div class="health-stat-label">Avg Response Time</div>
+            <div class="health-stat-value"><%= avgResponse %>ms</div>
+          </div>
+        </div>
+
+        <!-- Health Table -->
+        <table class="health-agents-table">
+          <thead>
+            <tr>
+              <th>Agent</th>
+              <th>Status</th>
+              <th>Uptime (24h)</th>
+              <th>Response Time</th>
+              <th>Last Check</th>
+              <th>24h Health</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% agents.forEach(agent => { %>
+              <tr>
+                <td>
+                  <div class="health-agent-name"><%= agent.name %></div>
+                  <% if (agent.description) { %>
+                    <div style="font-size: 0.875rem; color: #606080;"><%= agent.description.substring(0, 60) %><%= agent.description.length > 60 ? '...' : '' %></div>
+                  <% } %>
+                </td>
+                <td>
+                  <span class="health-status-badge <%= agent.health_status %>">
+                    <%= agent.health_status.toUpperCase() %>
+                  </span>
+                </td>
+                <td>
+                  <span class="health-uptime <%= agent.uptimePercent >= 95 ? 'good' : agent.uptimePercent >= 80 ? 'medium' : 'bad' %>">
+                    <%= agent.uptimePercent %>%
+                  </span>
+                </td>
+                <td>
+                  <span class="health-response-time <%= agent.latest_response_ms && agent.latest_response_ms < 200 ? 'fast' : agent.latest_response_ms && agent.latest_response_ms < 500 ? 'yellow' : 'slow' %>">
+                    <%= agent.latest_response_ms ? agent.latest_response_ms + 'ms' : 'N/A' %>
+                  </span>
+                </td>
+                <td>
+                  <div class="health-last-check">
+                    <% if (agent.last_health_check) { %>
+                      <%= new Date(agent.last_health_check).toLocaleString() %>
+                    <% } else { %>
+                      Never
+                    <% } %>
+                  </div>
+                </td>
+                <td>
+                  <div class="sparkline-container">
+                    <canvas id="sparkline-<%= agent.id %>" class="sparkline-canvas"></canvas>
+                  </div>
+                </td>
+              </tr>
+            <% }); %>
+          </tbody>
+        </table>
+      <% } %>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a href="/" class="nav-logo" style="margin-bottom: 0.5rem;">
+            <div class="logo-icon">X</div>
+            AgentX
+          </a>
+          <p>The AI agent marketplace. Discover, deploy, and manage autonomous agents that handle real business tasks.</p>
+        </div>
+        <div class="footer-col">
+          <h4>Product</h4>
+          <ul>
+            <li><a href="/features">Features</a></li>
+            <li><a href="/pricing">Pricing</a></li>
+            <li><a href="/browse">Browse Agents</a></li>
+            <li><a href="/dashboard">Analytics Dashboard</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Company</h4>
+          <ul>
+            <li><a href="/about">About</a></li>
+            <li><a href="/contact">Contact</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Legal</h4>
+          <ul>
+            <li><a href="/privacy">Privacy Policy</a></li>
+            <li><a href="/terms">Terms of Service</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2024 AgentX. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Sparkline chart renderer
+    function renderSparkline(canvasId, data) {
+      const canvas = document.getElementById(canvasId);
+      if (!canvas || !data || data.timestamps.length === 0) return;
+      
+      const ctx = canvas.getContext('2d');
+      const width = canvas.offsetWidth;
+      const height = canvas.offsetHeight;
+      
+      // Clear canvas
+      ctx.clearRect(0, 0, width, height);
+      
+      if (data.timestamps.length === 0) return;
+      
+      // Map timestamps to x-coordinates
+      const timestamps = data.timestamps;
+      const statuses = data.statuses;
+      const responseTimes = data.responseTimes;
+      
+      // Create color mapping: online=green, degraded=yellow, offline=red
+      const statusColors = {
+        'online': '#00d26a',
+        'degraded': '#ffa502',
+        'offline': '#ff4757'
+      };
+      
+      // Draw points for each check
+      const stepX = timestamps.length > 1 ? width / (timestamps.length - 1) : width;
+      
+      timestamps.forEach((ts, i) => {
+        const x = i * stepX;
+        const status = statuses[i] || 'offline';
+        const color = statusColors[status] || '#ff4757';
+        
+        // Map response time to y-position (higher = slower = lower on canvas)
+        const responseMs = responseTimes[i] || 0;
+        const maxResponse = Math.max(...responseTimes.filter(r => r > 0), 500);
+        const normalizedResponse = Math.min(responseMs / maxResponse, 1);
+        const y = height - (normalizedResponse * height * 0.8) - (height * 0.1);
+        
+        // Draw point
+        ctx.beginPath();
+        ctx.arc(x, y, 3, 0, Math.PI * 2);
+        ctx.fillStyle = color;
+        ctx.fill();
+        
+        // Draw line to previous point (if exists)
+        if (i > 0) {
+          const prevX = (i - 1) * stepX;
+          const prevResponse = responseTimes[i - 1] || 0;
+          const prevNormalized = Math.min(prevResponse / maxResponse, 1);
+          const prevY = height - (prevNormalized * height * 0.8) - (height * 0.1);
+          
+          ctx.beginPath();
+          ctx.moveTo(prevX, prevY);
+          ctx.lineTo(x, y);
+          ctx.strokeStyle = color;
+          ctx.lineWidth = 1;
+          ctx.stroke();
+        }
+      });
+    }
+    
+    // Render all sparklines after page load
+    window.addEventListener('load', () => {
+      <% agents.forEach(agent => { %>
+        renderSparkline('sparkline-<%= agent.id %>', {
+          timestamps: <%= JSON.stringify(agent.sparkline.timestamps) %>,
+          statuses: <%= JSON.stringify(agent.sparkline.statuses) %>,
+          responseTimes: <%= JSON.stringify(agent.sparkline.responseTimes) %>
+        });
+      <% }); %>
+    });
+  </script>
+</body>
+</html>
