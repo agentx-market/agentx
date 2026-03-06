@@ -744,6 +744,196 @@ app.post('/api/waitlist', formLimiter, async (req, res) => {
   }
 });
 
+// Submit agent endpoint
+app.post('/api/submit-agent', formLimiter, async (req, res) => {
+  const { agentName, agentUrl, healthUrl, description, category, pricing, logoUrl, contactEmail } = req.body;
+  
+  // Required field validation
+  if (!agentName || !agentUrl || !description || !category || !pricing || !contactEmail) {
+    return res.status(400).json({ error: 'All required fields must be provided' });
+  }
+  
+  // Input validation
+  if (typeof agentName !== 'string' || agentName.length > 100) {
+    return res.status(400).json({ error: 'Agent name must be under 100 characters' });
+  }
+  if (typeof agentUrl !== 'string' || !/^https?:\/\//.test(agentUrl)) {
+    return res.status(400).json({ error: 'Valid agent URL (starting with http:// or https://) is required' });
+  }
+  if (typeof description !== 'string' || description.length > 2000) {
+    return res.status(400).json({ error: 'Description must be under 2000 characters' });
+  }
+  if (!['free', 'paid', 'freemium'].includes(pricing)) {
+    return res.status(400).json({ error: 'Invalid pricing model' });
+  }
+  if (typeof contactEmail !== 'string' || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(contactEmail)) {
+    return res.status(400).json({ error: 'Invalid email address' });
+  }
+  if (healthUrl && (!/^https?:\/\//.test(healthUrl) || healthUrl.length > 500)) {
+    return res.status(400).json({ error: 'Invalid health check URL' });
+  }
+  if (logoUrl && (!/^https?:\/\//.test(logoUrl) || logoUrl.length > 500)) {
+    return res.status(400).json({ error: 'Invalid logo URL' });
+  }
+  
+  const now = Date.now();
+  const slug = agentName.toLowerCase().replace(/ /g, '-').replace(/[^a-z0-9-]/g, '');
+  
+  // Check if agent already exists
+  const existing = db.get('SELECT id FROM agents WHERE LOWER(REPLACE(name, " ", "-")) = ?', [slug]);
+  if (existing) {
+    return res.status(400).json({ error: 'An agent with this name already exists' });
+  }
+  
+  // Determine approval status based on health check
+  let status = 'pending';
+  let healthCheckPassedAt = null;
+  
+  if (healthUrl) {
+    try {
+      const response = await fetch(healthUrl, { timeout: 5000 });
+      if (response.ok) {
+        status = 'approved';
+        healthCheckPassedAt = now;
+        console.log(`[submit-agent] Auto-approved ${agentName} - health check passed`);
+      } else {
+        console.log(`[submit-agent] ${agentName} health check failed (${response.status}), pending review`);
+      }
+    } catch (err) {
+      console.log(`[submit-agent] ${agentName} health check error: ${err.message}, pending review`);
+    }
+  }
+  
+  // Insert into agents table
+  try {
+    db.run(
+      `INSERT INTO agents (operator_id, name, description, endpoint_url, pricing, status, health_check_passed_at, health_endpoint_url, created_at, updated_at, wallet_id)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+      [
+        null, // operator_id is null for public submissions
+        agentName,
+        description,
+        agentUrl,
+        pricing,
+        status,
+        healthCheckPassedAt,
+        healthUrl || null,
+        now,
+        now,
+        crypto.randomUUID()
+      ]
+    );
+    
+    // Get the inserted agent ID
+    const agentId = db.get('SELECT last_insert_rowid() as id')?.id;
+    
+    // Add category if provided
+    if (category) {
+      const categoryRow = db.get('SELECT id FROM categories WHERE slug = ?', [category]);
+      if (categoryRow) {
+        db.run('INSERT OR IGNORE INTO agent_categories (agent_id, category_id) VALUES (?, ?)', [agentId, categoryRow.id]);
+      }
+    }
+    
+    // Send confirmation email
+    try {
+      const emailHtml = `
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <meta charset="UTF-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          <title>Agent Submission Confirmation</title>
+        </head>
+        <body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;">
+          <div style="background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%); padding: 30px; text-align: center; border-radius: 10px 10px 0 0;">
+            <h1 style="color: white; margin: 0; font-size: 24px;">🎉 Agent Submission Received!</h1>
+          </div>
+          <div style="background: #f9fafb; padding: 30px; border-radius: 0 0 10px 10px;">
+            <p style="font-size: 16px; margin-bottom: 20px;">Hi there,</p>
+            <p style="font-size: 16px; margin-bottom: 20px;">Thank you for submitting <strong>${agentName}</strong> to <strong>AgentX.Market</strong>!</p>
+            
+            <div style="background: white; padding: 20px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #6366f1;">
+              <h3 style="color: #6366f1; margin-top: 0;">Submission Details:</h3>
+              <p><strong>Agent Name:</strong> ${agentName}</p>
+              <p><strong>Category:</strong> ${category}</p>
+              <p><strong>Pricing:</strong> ${pricing}</p>
+              <p><strong>Status:</strong> <span style="background: ${status === 'approved' ? '#22c55e' : '#f59e0b'}; color: white; padding: 4px 12px; border-radius: 4px; font-size: 14px;">${status.toUpperCase()}</span></p>
+            </div>
+            
+            ${status === 'approved' 
+              ? `<p style="font-size: 16px; margin-bottom: 20px; color: #22c55e;"><strong>✅ Auto-approved!</strong> Your agent has been automatically approved and will be live on AgentX.Market shortly.</p>`
+              : `<p style="font-size: 16px; margin-bottom: 20px; color: #f59e0b;"><strong>⏳ Pending Review:</strong> Our team will review your submission within 24 hours and notify you once it's approved.</p>`
+            }
+            
+            <p style="font-size: 16px; margin-bottom: 20px;">You can track your submission at: <a href="https://agentx.market/browse" style="color: #6366f1; text-decoration: none;">agentx.market/browse</a></p>
+            
+            <div style="background: #e0e7ff; padding: 15px; border-radius: 8px; margin: 20px 0; font-size: 14px;">
+              <strong>💡 Pro Tip:</strong> Once approved, you can claim your agent and access advanced features like analytics, custom domains, and more!
+            </div>
+            
+            <p style="font-size: 16px; margin-bottom: 20px;">Thanks for being part of the AgentX community!</p>
+            
+            <p style="font-size: 14px; color: #6b7280; margin-top: 30px;">
+              Best regards,<br>
+              <strong>The AgentX.Market Team</strong><br>
+              <a href="https://agentx.market" style="color: #6366f1; text-decoration: none;">agentx.market</a>
+            </p>
+          </div>
+        </body>
+        </html>
+      `;
+      
+      await email.sendEmail({
+        to: contactEmail,
+        subject: '🎉 AgentX.Market - Your Agent Submission Was Received!',
+        html: emailHtml
+      });
+      
+      console.log(`[submit-agent] Confirmation email sent to ${contactEmail}`);
+    } catch (emailErr) {
+      console.error(`[submit-agent] Email failed:`, emailErr.message);
+    }
+    
+    // Notify Paul via Telegram
+    const statusEmoji = status === 'approved' ? '✅' : '⏳';
+    const text = `${statusEmoji} *New Agent Submission*\n\n` +
+      `*Name:* ${agentName}\n` +
+      `*URL:* ${agentUrl}\n` +
+      `*Category:* ${category}\n` +
+      `*Pricing:* ${pricing}\n` +
+      `*Status:* ${status.toUpperCase()}\n` +
+      `*Contact:* ${contactEmail}`;
+    
+    const payload = JSON.stringify({
+      chat_id: TELEGRAM_CHAT_ID,
+      text,
+      parse_mode: 'Markdown'
+    });
+    
+    const tgReq = https.request({
+      hostname: 'api.telegram.org',
+      path: `/bot${TELEGRAM_BOT_TOKEN}/sendMessage`,
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' }
+    }, () => {});
+    
+    tgReq.on('error', (err) => console.error('[submit-agent] Telegram notify failed:', err.message));
+    tgReq.write(payload);
+    tgReq.end();
+    
+    res.json({ 
+      status: 'ok', 
+      message: 'Agent submitted successfully',
+      agentId: agentId,
+      status: status
+    });
+  } catch (err) {
+    console.error('[submit-agent] Database error:', err.message);
+    res.status(500).json({ error: 'Internal error' });
+  }
+});
+
 // Create Stripe payment link (for agents to generate on-demand)
 app.post('/api/create-payment-link', authLimiter, async (req, res) => {
   const { plan, customer_email } = req.body;
@@ -1101,6 +1291,11 @@ app.get('/api/category-counts', (req, res) => {
 app.get('/browse', (req, res) => {
   const agentCount = db.get('SELECT COUNT(*) as count FROM agents').count;
   res.render('browse', { title: 'Browse Agents', agentCount });
+});
+
+// Submit agent page
+app.get('/submit', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'submit.html'));
 });
 
 // Changelog page route

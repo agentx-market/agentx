@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Submit Your Agent - AgentX.Market</title>
+  <meta name="description" content="List your AI agent on AgentX.Market for free. Submit your agent today and reach thousands of users.">
+  
+  <!-- OG Tags -->
+  <meta property="og:title" content="Submit Your Agent - AgentX.Market">
+  <meta property="og:description" content="List your AI agent on AgentX.Market for free. Submit your agent today and reach thousands of users.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://agentx.market/submit">
+  <meta property="og:image" content="https://agentx.market/images/og-submit.jpg">
+  
+  <!-- Twitter Cards -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Submit Your Agent - AgentX.Market">
+  <meta name="twitter:description" content="List your AI agent on AgentX.Market for free. Submit your agent today and reach thousands of users.">
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(135deg, #0a0a1a 0%, #1a1a2e 100%);
+      color: #e0e0ff;
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+    
+    .navbar {
+      background: rgba(10, 10, 26, 0.95);
+      border-bottom: 1px solid #2a2a4a;
+      padding: 1rem 0;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      backdrop-filter: blur(10px);
+    }
+    
+    .navbar .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      text-decoration: none;
+      color: #e0e0ff;
+      font-weight: 700;
+      font-size: 1.25rem;
+    }
+    
+    .logo-icon {
+      width: 32px;
+      height: 32px;
+      background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 700;
+    }
+    
+    .nav-links {
+      display: flex;
+      list-style: none;
+      gap: 2rem;
+      align-items: center;
+    }
+    
+    .nav-links a {
+      color: #a0a0c0;
+      text-decoration: none;
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+    
+    .nav-links a:hover {
+      color: #e0e0ff;
+    }
+    
+    .nav-cta .btn-primary {
+      background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+      color: white;
+      padding: 0.5rem 1.5rem;
+      border-radius: 8px;
+      font-weight: 600;
+    }
+    
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 4rem 2rem;
+    }
+    
+    .page-header {
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+    
+    .page-header h1 {
+      font-size: 2.5rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    
+    .page-header p {
+      color: #a0a0c0;
+      font-size: 1.125rem;
+    }
+    
+    .submit-form {
+      background: #1a1a2e;
+      border: 1px solid #2a2a4a;
+      border-radius: 16px;
+      padding: 2.5rem;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    }
+    
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+    
+    .form-group label {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      color: #d0d0e0;
+    }
+    
+    .form-group label .required {
+      color: #ef4444;
+    }
+    
+    .form-group input,
+    .form-group textarea,
+    .form-group select {
+      width: 100%;
+      padding: 0.75rem 1rem;
+      background: #0a0a1a;
+      border: 1px solid #2a2a4a;
+      border-radius: 8px;
+      color: #e0e0ff;
+      font-family: 'Inter', sans-serif;
+      font-size: 1rem;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    
+    .form-group input:focus,
+    .form-group textarea:focus,
+    .form-group select:focus {
+      outline: none;
+      border-color: #6366f1;
+      box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+    }
+    
+    .form-group textarea {
+      min-height: 120px;
+      resize: vertical;
+    }
+    
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+    
+    .btn {
+      display: inline-block;
+      padding: 0.875rem 2rem;
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      text-decoration: none;
+      text-align: center;
+    }
+    
+    .btn-primary {
+      background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+      color: white;
+      width: 100%;
+    }
+    
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(99, 102, 241, 0.4);
+    }
+    
+    .btn-primary:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+    }
+    
+    .info-box {
+      background: rgba(99, 102, 241, 0.1);
+      border: 1px solid #6366f1;
+      border-radius: 8px;
+      padding: 1rem 1.25rem;
+      margin-bottom: 1.5rem;
+      color: #a5b4fc;
+      font-size: 0.875rem;
+    }
+    
+    .info-box strong {
+      color: #c7d2fe;
+    }
+    
+    .success-message {
+      display: none;
+      background: rgba(34, 197, 94, 0.1);
+      border: 1px solid #22c55e;
+      border-radius: 8px;
+      padding: 1.5rem;
+      text-align: center;
+      margin-top: 1.5rem;
+    }
+    
+    .success-message h3 {
+      color: #22c55e;
+      margin-bottom: 0.5rem;
+    }
+    
+    .success-message p {
+      color: #86efac;
+    }
+    
+    .loading {
+      display: none;
+      text-align: center;
+      margin-top: 1rem;
+    }
+    
+    .spinner {
+      width: 40px;
+      height: 40px;
+      border: 3px solid #2a2a4a;
+      border-top-color: #6366f1;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 1rem;
+    }
+    
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    
+    @media (max-width: 768px) {
+      .form-row {
+        grid-template-columns: 1fr;
+      }
+      
+      .page-header h1 {
+        font-size: 2rem;
+      }
+      
+      .submit-form {
+        padding: 1.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar">
+    <div class="container">
+      <a href="/" class="nav-logo">
+        <div class="logo-icon">X</div>
+        AgentX
+      </a>
+      <ul class="nav-links">
+        <li><a href="/features">Features</a></li>
+        <li><a href="/pricing">Pricing</a></li>
+        <li><a href="/browse">Browse</a></li>
+        <li><a href="/about">About</a></li>
+        <li><a href="/contact">Contact</a></li>
+        <li><a href="/login">Login</a></li>
+        <li class="nav-cta"><a href="/pricing" class="btn btn-primary">Get Started</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="container">
+    <div class="page-header">
+      <h1>Submit Your Agent</h1>
+      <p>List your AI agent on AgentX.Market for free. Reach thousands of users today.</p>
+    </div>
+
+    <div class="submit-form">
+      <div class="info-box">
+        <strong>🚀 Auto-approval:</strong> If your health check URL returns 200, your agent will be automatically approved and listed immediately. Otherwise, it will go into our review queue (typically processed within 24 hours).
+      </div>
+
+      <form id="submitForm">
+        <div class="form-group">
+          <label for="agentName">Agent Name <span class="required">*</span></label>
+          <input type="text" id="agentName" name="agentName" required placeholder="e.g., CodeAssistant Pro">
+        </div>
+
+        <div class="form-group">
+          <label for="agentUrl">Agent URL/Endpoint <span class="required">*</span></label>
+          <input type="url" id="agentUrl" name="agentUrl" required placeholder="https://your-agent.com/api">
+        </div>
+
+        <div class="form-group">
+          <label for="healthUrl">Health Check URL (optional)</label>
+          <input type="url" id="healthUrl" name="healthUrl" placeholder="https://your-agent.com/health">
+          <small style="color: #8080a0; display: block; margin-top: 0.5rem;">If provided and returns 200, your agent will be auto-approved.</small>
+        </div>
+
+        <div class="form-group">
+          <label for="description">Description <span class="required">*</span></label>
+          <textarea id="description" name="description" required placeholder="Describe your agent's capabilities, use cases, and what makes it unique..."></textarea>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="category">Category <span class="required">*</span></label>
+            <select id="category" name="category" required>
+              <option value="">Select a category</option>
+              <option value="coding">Coding & Development</option>
+              <option value="writing">Writing & Content</option>
+              <option value="design">Design & Creative</option>
+              <option value="productivity">Productivity</option>
+              <option value="customer-service">Customer Service</option>
+              <option value="data-analysis">Data Analysis</option>
+              <option value="marketing">Marketing & Sales</option>
+              <option value="education">Education & Learning</option>
+              <option value="healthcare">Healthcare</option>
+              <option value="finance">Finance</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="pricing">Pricing Model <span class="required">*</span></label>
+            <select id="pricing" name="pricing" required>
+              <option value="">Select pricing</option>
+              <option value="free">Free</option>
+              <option value="paid">Paid</option>
+              <option value="freemium">Freemium</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="logoUrl">Logo URL</label>
+            <input type="url" id="logoUrl" name="logoUrl" placeholder="https://example.com/logo.png">
+          </div>
+
+          <div class="form-group">
+            <label for="contactEmail">Contact Email <span class="required">*</span></label>
+            <input type="email" id="contactEmail" name="contactEmail" required placeholder="your@email.com">
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary" id="submitBtn">
+          Submit Agent
+        </button>
+
+        <div class="loading" id="loading">
+          <div class="spinner"></div>
+          <p>Submitting your agent...</p>
+        </div>
+
+        <div class="success-message" id="successMessage">
+          <h3>✅ Submission Received!</h3>
+          <p>Thank you for submitting your agent. We'll review it shortly and send you a confirmation email at <strong id="submittedEmail"></strong>.</p>
+          <p style="margin-top: 1rem;">In the meantime, you can <a href="/browse" style="color: #22c55e; text-decoration: underline;">browse existing agents</a> or <a href="/" style="color: #22c55e; text-decoration: underline;">explore AgentX.Market</a>.</p>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    document.getElementById('submitForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const submitBtn = document.getElementById('submitBtn');
+      const loading = document.getElementById('loading');
+      const successMessage = document.getElementById('successMessage');
+      
+      submitBtn.disabled = true;
+      loading.style.display = 'block';
+      
+      const formData = {
+        agentName: document.getElementById('agentName').value,
+        agentUrl: document.getElementById('agentUrl').value,
+        healthUrl: document.getElementById('healthUrl').value || null,
+        description: document.getElementById('description').value,
+        category: document.getElementById('category').value,
+        pricing: document.getElementById('pricing').value,
+        logoUrl: document.getElementById('logoUrl').value || null,
+        contactEmail: document.getElementById('contactEmail').value
+      };
+      
+      try {
+        const response = await fetch('/api/submit-agent', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(formData)
+        });
+        
+        const result = await response.json();
+        
+        if (response.ok) {
+          document.getElementById('submittedEmail').textContent = formData.contactEmail;
+          submitBtn.style.display = 'none';
+          loading.style.display = 'none';
+          successMessage.style.display = 'block';
+          document.getElementById('submitForm').reset();
+        } else {
+          alert('Error: ' + (result.error || 'Submission failed'));
+          submitBtn.disabled = false;
+          loading.style.display = 'none';
+        }
+      } catch (error) {
+        alert('Error submitting agent: ' + error.message);
+        submitBtn.disabled = false;
+        loading.style.display = 'none';
+      }
+    });
+  </script>
+</body>
+</html>
