@@ -986,3 +986,30 @@ Files changed:
  M WORK_LOG.md
  M views/changelog.ejs
 ```
+
+## 2026-03-05 16:53 — Feature #49: Add call-to-action banner to browse page
+Status: done | Built by: qwen3.5 | Verified: yes
+Files changed:
+```
+ .last-result.json     |  19 +++++----
+ WORK_LOG.md           |  17 ++++++++
+ public/css/browse.css | 114 ++++++++++++++++++++++++++++++++++++++++++++++++++
+ views/browse.ejs      |  14 +++++++
+ views/changelog.ejs   |  53 +++++------------------
+ 5 files changed, 166 insertions(+), 51 deletions(-)
+```
+
+## 2026-03-05 16:54 — Feature #49: Add call-to-action banner to browse page
+Status: done | Built by: qwen3.5 | Verified: no
+Files changed:
+```
+ M WORK_LOG.md
+```
+
+## 2026-03-05 17:36 — Feature #1: Agent registry API
+Status: done | Built by: qwen3.5 | Verified: no
+Files changed:
+```
+ M .last-result.json
+ M WORK_LOG.md
+```
