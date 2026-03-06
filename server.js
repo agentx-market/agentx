@@ -1448,22 +1448,11 @@ app.get('/best/:useCase', (req, res) => {
   
   // Map use-case slugs to category names (matches actual categories table)
   const useCaseToCategory = {
-    'ai-chatbots': 'AI Chatbots',
-    'code-assistants': 'Code Assistants',
-    'marketing': 'Marketing',
-    'data-analysis': 'Data Analysis',
-    'content-creation': 'Content Creation',
-    'sales': 'Sales',
-    'social-media': 'Social Media',
+    'qa-testing': 'QA & Testing',
     'security': 'Security',
-    'research': 'Research',
-    'productivity': 'Productivity',
-    'design-tools': 'Design Tools',
-    'ecommerce': 'E-commerce',
-    'email-assistants': 'Email Assistants',
-    'video-tools': 'Video Tools',
-    'voice-assistants': 'Voice Assistants',
-    'web-development': 'Web Development'
+    'content': 'Content',
+    'data': 'Data',
+    'operations': 'Operations'
   };
   
   const categoryName = useCaseToCategory[useCase];
@@ -1495,13 +1484,32 @@ app.get('/best/:useCase', (req, res) => {
     return res.status(404).render('404', { message: 'No agents found for this use case' });
   }
   
-  // Get top 3 for comparison table
-  const topAgents = agents.slice(0, 3);
+  // Get top 5 for comparison table
+  const topAgents = agents.slice(0, 5);
   
   // Generate FAQ based on use case
   const faqs = generateUseCaseFAQ(useCase, categoryName);
   
-  // Generate JSON-LD schema
+  // Generate JSON-LD SoftwareApplication schema for each agent
+  const agentSchemas = agents.map(agent => ({
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": agent.name,
+    "applicationCategory": categoryName,
+    "description": agent.description,
+    "url": `https://agentx.market/agents/${agent.slug}`,
+    "aggregateRating": {
+      "@type": "AggregateRating",
+      "ratingValue": agent.rating || "0",
+      "ratingCount": agent.review_count || "0"
+    },
+    "offers": {
+      "@type": "Offer",
+      "price": agent.pricing || "Contact for pricing",
+      "priceCurrency": "USD"
+    }
+  }));
+  
   const schema = {
     "@context": "https://schema.org",
     "@type": "WebPage",
@@ -1534,36 +1542,37 @@ app.get('/best/:useCase', (req, res) => {
     agents,
     topAgents,
     faqs,
-    schema: JSON.stringify(schema)
+    schema: JSON.stringify(schema),
+    agentSchemas: agentSchemas.map(s => JSON.stringify(s))
   });
 });
 
 function generateUseCaseFAQ(useCase, categoryName) {
   const faqMap = {
-    'ai-chatbots': [
-      { q: "What is the best AI chatbot agent?", a: "The best AI chatbot agent depends on your use case. Top options on AgentX.Market offer natural language understanding, multi-turn conversations, integrations with messaging platforms, and customizable responses." },
-      { q: "How much do AI chatbot agents cost?", a: "AI chatbot agents range from free tiers to $500+/month for enterprise solutions. Most agents on AgentX.Market offer flexible pricing based on conversation volume, features, and customization needs." },
-      { q: "Can AI chatbots integrate with my messaging platforms?", a: "Yes, most AI chatbot agents on AgentX.Market integrate with Slack, Discord, Telegram, WhatsApp, and web chat widgets. Check individual agent documentation for specific integrations." }
+    'qa-testing': [
+      { q: "What AI agents help with QA testing?", a: "QA testing AI agents automate test case generation, execute tests, detect bugs, and provide quality reports. Top agents integrate with CI/CD pipelines and support multiple testing frameworks." },
+      { q: "How do AI agents improve QA workflows?", a: "AI agents reduce testing time by 50-70% by automating repetitive test execution, generating test cases from requirements, and identifying edge cases humans might miss." },
+      { q: "Can AI agents work with existing test frameworks?", a: "Yes, most QA AI agents on AgentX.Market integrate with Selenium, Cypress, Jest, and other popular testing frameworks. They can generate tests in your preferred language and framework." }
     ],
-    'code-assistants': [
-      { q: "What is the best AI code assistant?", a: "Top AI code assistants include GitHub Copilot, CodeRabbit, and custom agents on AgentX.Market that provide real-time code suggestions, bug detection, and style guide enforcement." },
-      { q: "How do AI code assistants improve productivity?", a: "AI code assistants reduce development time by 30-50% by providing intelligent code suggestions, auto-completion, and helping developers learn new languages and frameworks faster." },
-      { q: "Do AI code assistants support all programming languages?", a: "Most AI code assistants support popular languages like JavaScript, Python, Java, TypeScript, Go, and Rust. Custom agents on AgentX.Market can be trained on specific frameworks and language versions." }
+    'security': [
+      { q: "What AI agents help with security?", a: "Security AI agents monitor for threats, analyze vulnerabilities, detect anomalies, and automate incident response. Top agents integrate with SIEM tools and provide real-time threat intelligence." },
+      { q: "How do AI agents improve security posture?", a: "AI agents detect threats 10x faster than manual monitoring, automate patch management, and provide 24/7 security oversight. They reduce false positives and prioritize critical vulnerabilities." },
+      { q: "Can AI agents integrate with existing security tools?", a: "Yes, security AI agents integrate with firewalls, SIEM platforms, vulnerability scanners, and cloud security tools. They provide unified visibility across your security stack." }
     ],
-    'marketing': [
-      { q: "What AI agents help with marketing?", a: "Marketing AI agents handle content creation, social media posting, email campaigns, ad optimization, and analytics. Top agents integrate with major platforms and provide ROI tracking." },
-      { q: "How much time can AI save on marketing tasks?", a: "Marketing teams report 50-70% time savings with AI agents. They automate content creation, scheduling, A/B testing, and performance analysis, freeing marketers for strategy." },
-      { q: "Can AI agents create marketing content?", a: "Yes, AI agents can generate blog posts, social media content, email copy, ad creatives, and landing pages. They maintain brand voice and can be trained on your style guidelines." }
-    ],
-    'data-analysis': [
-      { q: "What AI agents help with data analysis?", a: "Data analysis AI agents process datasets, generate insights, create visualizations, and automate reporting. Top agents support SQL, Python, and integrate with popular data platforms." },
-      { q: "How do AI agents improve data analysis workflows?", a: "AI agents automate data cleaning, pattern detection, and insight generation. They reduce analysis time by 60-80% and help non-technical users extract value from their data." },
-      { q: "Can AI agents handle large datasets?", a: "Most data analysis AI agents on AgentX.Market can process datasets from thousands to millions of rows. Enterprise solutions handle even larger datasets with distributed processing." }
-    ],
-    'content-creation': [
-      { q: "What AI agents help with content creation?", a: "Content creation AI agents generate blog posts, articles, social media posts, videos, and images. Top agents support multiple formats and can maintain brand voice consistency." },
-      { q: "How much time can AI save on content creation?", a: "Content creators report 70-90% time savings with AI agents. They automate drafting, editing, and optimization, allowing creators to focus on strategy and creativity." },
+    'content': [
+      { q: "What AI agents help with content creation?", a: "Content AI agents generate blog posts, articles, social media posts, and marketing copy. Top agents support multiple formats, maintain brand voice, and optimize for SEO." },
+      { q: "How much time can AI save on content creation?", a: "Content teams report 70-90% time savings with AI agents. They automate drafting, editing, and optimization, allowing creators to focus on strategy and creativity." },
       { q: "Can AI agents maintain brand voice?", a: "Yes, AI agents can be trained on your brand guidelines, past content, and style preferences to maintain consistent voice and tone across all generated content." }
+    ],
+    'data': [
+      { q: "What AI agents help with data analysis?", a: "Data AI agents process datasets, generate insights, create visualizations, and automate reporting. Top agents support SQL, Python, and integrate with popular data platforms." },
+      { q: "How do AI agents improve data analysis workflows?", a: "AI agents automate data cleaning, pattern detection, and insight generation. They reduce analysis time by 60-80% and help non-technical users extract value from their data." },
+      { q: "Can AI agents handle large datasets?", a: "Most data AI agents on AgentX.Market can process datasets from thousands to millions of rows. Enterprise solutions handle even larger datasets with distributed processing." }
+    ],
+    'operations': [
+      { q: "What AI agents help with operations?", a: "Operations AI agents automate monitoring, incident response, resource provisioning, and performance optimization. Top agents integrate with DevOps tools and provide real-time system insights." },
+      { q: "How do AI agents improve operational efficiency?", a: "AI agents reduce MTTR by 50% through automated incident detection and response, predict failures before they occur, and optimize resource allocation for cost savings." },
+      { q: "Can AI agents integrate with existing DevOps tools?", a: "Yes, operations AI agents integrate with Kubernetes, Docker, AWS, Azure, monitoring tools, and CI/CD pipelines. They provide unified visibility across your infrastructure." }
     ]
   };
   
@@ -1747,6 +1756,114 @@ app.get('/api/usage/:agent_id', authMiddleware, authenticatedLimiter, (req, res)
   } catch (err) {
     console.error(`[usage] Error: ${err.message}`);
     res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+// POST /api/agents/:id/invoke - Core marketplace transaction endpoint
+// Caller sends task payload, AgentX proxies to agent endpoint_url, logs usage, returns response
+app.post('/api/agents/:id/invoke', requireAuth, authenticatedLimiter, async (req, res) => {
+  const agentId = req.params.id;
+  const callerId = req.operatorId || 'api';
+  
+  try {
+    // Get agent details
+    const agent = db.get(
+      'SELECT id, operator_id, name, endpoint_url, pricing, status FROM agents WHERE id = ?',
+      [agentId]
+    );
+    
+    if (!agent) {
+      return res.status(404).json({ error: 'Agent not found' });
+    }
+    
+    if (agent.status !== 'active') {
+      return res.status(400).json({ error: 'Agent is not active', status: agent.status });
+    }
+    
+    if (!agent.endpoint_url) {
+      return res.status(400).json({ error: 'Agent has no endpoint_url configured' });
+    }
+    
+    // Validate request body has task data
+    const { task, context, metadata } = req.body;
+    if (!task && !context) {
+      return res.status(400).json({ error: 'Request must include "task" or "context" field' });
+    }
+    
+    // Set default timeout (30s)
+    const timeoutMs = req.body.timeout || 30000;
+    
+    // Record invocation start
+    const startTime = Date.now();
+    
+    // Proxy request to agent endpoint
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
+    
+    let agentResponse;
+    try {
+      agentResponse = await fetch(agent.endpoint_url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-AgentX-Invocation': 'true',
+          'X-AgentX-Caller': callerId
+        },
+        body: JSON.stringify({
+          task,
+          context,
+          metadata,
+          invocation_id: crypto.randomUUID(),
+          invoked_at: Date.now()
+        }),
+        signal: controller.signal
+      });
+    } catch (fetchErr) {
+      const elapsed = Date.now() - startTime;
+      
+      // Log error in agent_usage
+      db.prepare(
+        'INSERT INTO agent_usage (agent_id, api_key_hash, tasks_completed, tokens_used, response_time_ms, errors, created_at) VALUES (?, ?, 0, 0, ?, 1, ?)'
+      ).run(agentId, null, elapsed, Date.now());
+      
+      if (fetchErr.name === 'AbortError') {
+        return res.status(504).json({ error: 'Agent endpoint timeout', elapsed_ms: elapsed });
+      }
+      return res.status(502).json({ error: 'Agent endpoint unavailable', message: fetchErr.message });
+    } finally {
+      clearTimeout(timeoutId);
+    }
+    
+    const elapsed = Date.now() - startTime;
+    
+    // Parse agent response
+    let responseData;
+    try {
+      responseData = await agentResponse.json();
+    } catch (parseErr) {
+      const text = await agentResponse.text();
+      return res.status(502).json({ error: 'Invalid JSON from agent', message: parseErr.message, raw: text.substring(0, 200) });
+    }
+    
+    // Log successful invocation
+    const tokensUsed = responseData.tokens_used || 0;
+    db.prepare(
+      'INSERT INTO agent_usage (agent_id, api_key_hash, tasks_completed, tokens_used, response_time_ms, errors, created_at) VALUES (?, ?, 1, ?, ?, 0, ?)'
+    ).run(agentId, null, tokensUsed, elapsed, Date.now());
+    
+    // Return agent response to caller
+    return res.json({
+      success: true,
+      agent_id: agentId,
+      agent_name: agent.name,
+      invocation_id: responseData.invocation_id || crypto.randomUUID(),
+      elapsed_ms: elapsed,
+      data: responseData
+    });
+    
+  } catch (err) {
+    console.error('[invoke] Error:', err);
+    return res.status(500).json({ error: 'Internal server error', message: err.message });
   }
 });
 
