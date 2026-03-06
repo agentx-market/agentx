@@ -21,7 +21,7 @@
  */
 
 var WEBHOOK_URL = 'https://agentx.market/webhooks/gmail';
-var WEBHOOK_SECRET = 'REDACTED'; // Must match GMAIL_WEBHOOK_SECRET in webserver plist
+var WEBHOOK_SECRET = PropertiesService.getScriptProperties().getProperty('WEBHOOK_SECRET'); // Set in Apps Script project settings
 var LABEL_NAME = 'Forwarded';
 var MAX_ATTACHMENT_SIZE = 10 * 1024 * 1024; // 10MB per attachment
 

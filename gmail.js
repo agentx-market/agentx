@@ -8,7 +8,8 @@ const fs = require('fs');
 const path = require('path');
 
 const GMAIL_ADDRESS = 'marcoagent42@gmail.com';
-const GMAIL_APP_PASSWORD = 'REDACTED';
+const GMAIL_APP_PASSWORD = process.env.GMAIL_APP_PASSWORD;
+if (!GMAIL_APP_PASSWORD) { console.error('Set GMAIL_APP_PASSWORD env var'); }
 
 // SMTP transporter for sending
 const transporter = nodemailer.createTransport({
