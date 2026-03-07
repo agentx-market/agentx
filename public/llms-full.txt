@@ -1,0 +1,488 @@
+# AgentX.Market — Full Agent Registry
+
+> AgentX is the AI agent marketplace with 140+ registered agents.
+
+## Platform Overview
+
+AgentX.Market is a registry and marketplace for production-ready AI agents. Key features:
+- Agent discovery with search, filtering, and category browsing
+- Uptime monitoring and reliability scores for every agent
+- Reviews and ratings from users
+- API access for programmatic agent discovery
+- Free registration for agent builders
+
+## API Reference
+
+### List All Agents
+```
+GET https://agentx.market/api/agents
+```
+Returns JSON array of all registered agents with: name, description, pricing, status, uptime, rating.
+
+### Search Agents
+```
+GET https://agentx.market/api/agents?search=keyword&category=category_name
+```
+
+### Agent Detail
+```
+GET https://agentx.market/agents/{slug}
+```
+Individual agent page with full capabilities, endpoint info, uptime history, and reviews.
+
+### Register an Agent
+```
+POST https://agentx.market/api/agents
+Content-Type: application/json
+Authorization: Bearer <api_key>
+
+{
+  "name": "Your Agent Name",
+  "description": "What your agent does",
+  "endpoint_url": "https://your-agent.com/api",
+  "pricing": "Free"
+}
+```
+
+## Registered Agents
+
+### [AI21 Labs](https://agentx.market/agents/ai21-labs)
+Jurassic language models for enterprise applications.
+
+### [Adaptive AI](https://agentx.market/agents/adaptive-ai)
+Machine learning platform for predictive analytics.
+
+### [Airtable AI](https://agentx.market/agents/airtable-ai) (Free)
+AI-powered database. Smart fields and automations.
+
+### [Anthropic](https://agentx.market/agents/anthropic)
+AI safety and alignment research with Claude models.
+
+### [Anthropic Claude](https://agentx.market/agents/anthropic-claude) (Free)
+Safe, helpful AI assistant. Large language model for complex tasks.
+
+### [Anyscale](https://agentx.market/agents/anyscale)
+Managed Ray platform for distributed AI applications.
+
+### [AnythingLLM](https://agentx.market/agents/anythingllm) (Free)
+All-in-one AI workspace. RAG, chat, and document management.
+
+### [Asana Intelligence](https://agentx.market/agents/asana-intelligence) (Free)
+AI project management. Smart task suggestions and insights.
+
+### [AutoGPT](https://agentx.market/agents/autogpt) (Free)
+Autonomous AI agent that can accomplish any goal. Self-guided, internet-connected AI with memory and tool use.
+
+### [AutoGen](https://agentx.market/agents/autogen)
+Multi-agent conversation framework for building AI applications.
+
+### [BabyAGI](https://agentx.market/agents/babyagi) (Free)
+Task-driven autonomous agent that creates and prioritizes tasks. Popular AGI research project.
+
+### [Banana.dev](https://agentx.market/agents/banana.dev)
+Serverless GPU cloud for ML model deployment.
+
+### [Botpress](https://agentx.market/agents/botpress)
+Open-source conversational AI platform.
+
+### [C3 AI](https://agentx.market/agents/c3-ai)
+Enterprise AI application development and deployment.
+
+### [Character.AI](https://agentx.market/agents/character.ai)
+Create and chat with AI characters of any persona.
+
+### [Chatbase](https://agentx.market/agents/chatbase)
+Train AI chatbots on your documents in minutes.
+
+### [Chatbot UI](https://agentx.market/agents/chatbot-ui)
+Open-source ChatGPT UI. Beautiful, feature-rich interface.
+
+### [Claude](https://agentx.market/agents/claude)
+Advanced AI assistant by Anthropic for complex tasks.
+
+### [Codeium](https://agentx.market/agents/codeium) (Free)
+Free AI coding assistant. Code completion and chat.
+
+### [Cognition](https://agentx.market/agents/cognition)
+Building general AI workers for software tasks.
+
+### [Cognitive Cloud](https://agentx.market/agents/cognitive-cloud)
+Enterprise AI platform for custom models and workflows.
+
+### [Cohere](https://agentx.market/agents/cohere)
+Enterprise AI platform for language models.
+
+### [Cohere](https://agentx.market/agents/cohere) (Free)
+Enterprise AI platform. NLP models for business applications.
+
+### [Comet ML](https://agentx.market/agents/comet-ml)
+MLOps platform for experiment tracking and model deployment.
+
+### [Continue](https://agentx.market/agents/continue) (Free)
+Open-source AI code assistant. VS Code and JetBrains extension.
+
+### [Copy.ai](https://agentx.market/agents/copy.ai) (Free)
+AI copywriting tool for marketing content.
+
+### [CrewAI](https://agentx.market/agents/crewai)
+Framework for orchestrating role-playing AI agents.
+
+### [CrewAI](https://agentx.market/agents/crewai)
+Framework for orchestrating role-playing AI agents
+
+### [CrewAI](https://agentx.market/agents/crewai) (Free)
+Framework for orchestrating role-playing autonomous AI agents. Collaborative agent workflows.
+
+### [Cursor](https://agentx.market/agents/cursor) (Free)
+AI-first code editor. Build software faster with AI assistance.
+
+### [DALL-E 3](https://agentx.market/agents/dall-e-3)
+AI image generation by OpenAI. Text to images.
+
+### [DataRobot](https://agentx.market/agents/datarobot)
+Automated machine learning platform for enterprises.
+
+### [Databricks](https://agentx.market/agents/databricks)
+Unified data analytics and AI platform.
+
+### [DeepMind](https://agentx.market/agents/deepmind)
+AI research lab focused on AGI and scientific applications.
+
+### [Descript](https://agentx.market/agents/descript) (Free)
+AI video and audio editing. Edit media like text.
+
+### [Devin](https://agentx.market/agents/devin)
+AI software engineer. Autonomous coding agent.
+
+### [Devin AI](https://agentx.market/agents/devin-ai) (Free)
+First AI software engineer. Autonomous coding agent.
+
+### [Dialogflow](https://agentx.market/agents/dialogflow)
+Google conversational AI platform.
+
+### [Dify](https://agentx.market/agents/dify) (Free)
+LLM app development platform. Build, deploy, and manage AI applications.
+
+### [Domino Data Lab](https://agentx.market/agents/domino-data-lab)
+Data science platform for collaborative AI development.
+
+### [Drift](https://agentx.market/agents/drift)
+Conversational marketing and sales platform.
+
+### [ElevenLabs](https://agentx.market/agents/elevenlabs) (Free)
+AI voice generation and cloning. Realistic text-to-speech.
+
+### [Fireflies.ai](https://agentx.market/agents/fireflies.ai)
+AI meeting notes and transcription. Integrates with Zoom, Teams.
+
+### [Fliki](https://agentx.market/agents/fliki)
+AI text-to-video and text-to-speech platform.
+
+### [Flowise](https://agentx.market/agents/flowise) (Free)
+Build LLM apps visually with drag-and-drop. Low-code LangChain UI.
+
+### [Framer AI](https://agentx.market/agents/framer-ai)
+AI website builder with design automation.
+
+### [Framer AI](https://agentx.market/agents/framer-ai) (Free)
+AI website builder. Create professional websites instantly.
+
+### [Freshdesk AI](https://agentx.market/agents/freshdesk-ai)
+AI-powered customer support automation.
+
+### [Galileo AI](https://agentx.market/agents/galileo-ai) (Free)
+AI design tool. Generate UI designs from text prompts.
+
+### [Gamma](https://agentx.market/agents/gamma)
+AI-powered presentation and document creation.
+
+### [Gamma](https://agentx.market/agents/gamma) (Free)
+AI presentation maker. Create beautiful slides in minutes.
+
+### [GitHub Copilot](https://agentx.market/agents/github-copilot)
+Your AI pair programmer. Code completion and suggestions.
+
+### [Google Duet AI](https://agentx.market/agents/google-duet-ai) (Free)
+AI for Google Workspace. Smart features in Docs, Sheets, Slides.
+
+### [Grain](https://agentx.market/agents/grain)
+AI meeting intelligence. Record, transcribe, and analyze.
+
+### [Grammarly](https://agentx.market/agents/grammarly) (Free)
+AI writing assistant. Grammar, tone, and clarity improvements.
+
+### [Groq](https://agentx.market/agents/groq)
+LPUs for ultra-fast LLM inference.
+
+### [H2O.ai](https://agentx.market/agents/h2o.ai)
+Open-source AI and machine learning platform.
+
+### [Haystack](https://agentx.market/agents/haystack)
+End-to-end LLM toolkits for building search and QA systems.
+
+### [HeyGen](https://agentx.market/agents/heygen)
+AI video generator with avatars and voice cloning.
+
+### [HubSpot AI](https://agentx.market/agents/hubspot-ai) (Free)
+AI for marketing and sales. Smart content and automation.
+
+### [Hugging Face](https://agentx.market/agents/hugging-face) (Free)
+AI model hub and development platform. 500K+ models.
+
+### [HuggingFace Transformers](https://agentx.market/agents/huggingface-transformers)
+State-of-the-art machine learning for PyTorch, TensorFlow, and JAX.
+
+### [IBM Watson Assistant](https://agentx.market/agents/ibm-watson-assistant)
+Enterprise-grade conversational AI with advanced analytics.
+
+### [InVideo AI](https://agentx.market/agents/invideo-ai)
+AI video creation from text prompts.
+
+### [Inflection AI](https://agentx.market/agents/inflection-ai)
+Personal AI assistants for everyday tasks.
+
+### [Intercom](https://agentx.market/agents/intercom)
+AI-powered customer messaging platform.
+
+### [Jasper](https://agentx.market/agents/jasper) (Free)
+AI content creation for marketing and business.
+
+### [Lambda Labs](https://agentx.market/agents/lambda-labs)
+AI cloud infrastructure for deep learning.
+
+### [Landbot](https://agentx.market/agents/landbot)
+No-code chatbot builder for websites.
+
+### [LangChain](https://agentx.market/agents/langchain) (Free)
+Build contextual AI applications with LangChain. Framework for developing LLM-powered apps.
+
+### [LangGraph](https://agentx.market/agents/langgraph)
+Building stateful, multi-actor applications with LLMs.
+
+### [Leonardo AI](https://agentx.market/agents/leonardo-ai)
+AI art generation and image editing platform.
+
+### [LiteLLM](https://agentx.market/agents/litellm)
+Proxy server to call all LLM APIs. Unified API for 100+ LLM providers.
+
+### [LlamaCloud](https://agentx.market/agents/llamacloud)
+Managed RAG infrastructure for LLM applications.
+
+### [LlamaCraft](https://agentx.market/agents/llamacraft)
+Build production-ready LLM applications with LlamaStack.
+
+### [LlamaIndex](https://agentx.market/agents/llamaindex) (Free)
+Data framework for LLM applications. Ingest, structure, and access your data.
+
+### [Lovo.ai](https://agentx.market/agents/lovo.ai)
+AI voice generator with emotional speech.
+
+### [Make AI](https://agentx.market/agents/make-ai) (Free)
+Visual automation platform with AI capabilities.
+
+### [Mem](https://agentx.market/agents/mem)
+AI-powered note-taking app. Auto-organizes thoughts.
+
+### [Microsoft Copilot](https://agentx.market/agents/microsoft-copilot) (Free)
+AI assistant for Microsoft 365. Productivity across Office apps.
+
+### [Midjourney](https://agentx.market/agents/midjourney) (Free)
+AI art generator. Create stunning images from text.
+
+### [Milvus](https://agentx.market/agents/milvus)
+Cloud-native vector database for AI applications.
+
+### [Modal](https://agentx.market/agents/modal)
+Serverless compute for Python. Run ML workloads.
+
+### [Monday.com AI](https://agentx.market/agents/monday.com-ai) (Free)
+Work operating system with AI. Manage projects and teams.
+
+### [Murf](https://agentx.market/agents/murf)
+AI voice generator for professional audio.
+
+### [Murf AI](https://agentx.market/agents/murf-ai)
+AI voice generator for videos and presentations.
+
+### [Murf AI](https://agentx.market/agents/murf-ai) (Free)
+AI voice generator. Convert text to natural-sounding speech.
+
+### [Murf Studio](https://agentx.market/agents/murf-studio) (Free)
+AI voiceover generator. Professional voiceovers for videos.
+
+### [Notion AI](https://agentx.market/agents/notion-ai) (Free)
+AI workspace assistant. Write, summarize, and organize.
+
+### [Ollama](https://agentx.market/agents/ollama) (Free)
+Run LLMs locally. Simple, efficient local LLM serving.
+
+### [OpenAI](https://agentx.market/agents/openai)
+Advanced AI research and GPT model development.
+
+### [OpenHands](https://agentx.market/agents/openhands)
+Open source software developer agent. Can code, debug, and deploy.
+
+### [OpenInterpreter](https://agentx.market/agents/openinterpreter) (Free)
+Run code locally with LLMs. Natural language computer control.
+
+### [OpenWebUI](https://agentx.market/agents/openwebui) (Free)
+Feature-rich LLM UI. Self-hosted ChatGPT alternative.
+
+### [Otter.ai](https://agentx.market/agents/otter.ai)
+AI meeting assistant. Transcribe and summarize meetings.
+
+### [Palantir Foundry](https://agentx.market/agents/palantir-foundry)
+Enterprise data integration and AI platform.
+
+### [Paperspace Gradient](https://agentx.market/agents/paperspace-gradient)
+AI development platform with GPU cloud infrastructure.
+
+### [Perplexity AI](https://agentx.market/agents/perplexity-ai) (Free)
+AI-powered search engine. Get answers with citations.
+
+### [Phind](https://agentx.market/agents/phind) (Free)
+AI search engine for developers. Code-focused answers.
+
+### [Pi](https://agentx.market/agents/pi)
+Empathetic AI designed for meaningful conversations.
+
+### [Pika Labs](https://agentx.market/agents/pika-labs)
+AI video generation and editing platform.
+
+### [Pinecone](https://agentx.market/agents/pinecone)
+Vector database for AI applications. Semantic search.
+
+### [Play.ht](https://agentx.market/agents/play.ht)
+AI voice generation and text-to-speech API.
+
+### [Qdrant](https://agentx.market/agents/qdrant)
+Vector search engine. Real-time vector matching.
+
+### [Rask AI](https://agentx.market/agents/rask-ai)
+AI video dubbing and localization. Translate videos.
+
+### [Replicate](https://agentx.market/agents/replicate)
+Run AI models in the cloud. Simple API for ML.
+
+### [Replika](https://agentx.market/agents/replika)
+AI companion for conversation and emotional support.
+
+### [Replit AI](https://agentx.market/agents/replit-ai) (Free)
+AI-powered IDE. Code, run, and deploy from browser.
+
+### [Resemble AI](https://agentx.market/agents/resemble-ai)
+AI voice cloning and synthesis platform.
+
+### [Rivian AI](https://agentx.market/agents/rivian-ai) (Free)
+AI-powered customer support. Automate support tickets and chats.
+
+### [RunPod](https://agentx.market/agents/runpod)
+Cloud GPU rental for AI workloads and inference.
+
+### [Runway](https://agentx.market/agents/runway)
+AI creative tools for video and image editing.
+
+### [Runway ML](https://agentx.market/agents/runway-ml) (Free)
+AI creative tools for video, image, and audio.
+
+### [Salesforce Einstein](https://agentx.market/agents/salesforce-einstein) (Free)
+AI for CRM. Predictive insights and automation.
+
+### [SambaNova](https://agentx.market/agents/sambanova)
+AI infrastructure for large-scale model training and inference.
+
+### [Semantic Kernel](https://agentx.market/agents/semantic-kernel)
+SDK for integrating LLMs into traditional codebases.
+
+### [Slack AI](https://agentx.market/agents/slack-ai) (Free)
+AI-powered collaboration. Summarize channels and find info.
+
+### [Snowflake AI](https://agentx.market/agents/snowflake-ai)
+AI and ML capabilities on the data cloud.
+
+### [Speechify](https://agentx.market/agents/speechify)
+AI text-to-speech for reading and accessibility.
+
+### [Stability AI](https://agentx.market/agents/stability-ai)
+Open-source AI models for image and video generation.
+
+### [Stability AI](https://agentx.market/agents/stability-ai) (Free)
+Open AI for everyone. Create images, audio, and 3D with AI.
+
+### [Stable Diffusion](https://agentx.market/agents/stable-diffusion)
+Open-source AI image generation model.
+
+### [Stable Video](https://agentx.market/agents/stable-video)
+Text-to-video generation from Stable Diffusion team.
+
+### [Synthesia](https://agentx.market/agents/synthesia) (Free)
+AI video generation with avatars. Create videos from text.
+
+### [Synthesys](https://agentx.market/agents/synthesys)
+AI video and voice generation for content creators.
+
+### [Synthesys](https://agentx.market/agents/synthesys) (Free)
+AI video creation platform. Generate videos with AI avatars.
+
+### [Tabnine](https://agentx.market/agents/tabnine) (Free)
+AI code completion for all developers. Supports any IDE.
+
+### [Tome](https://agentx.market/agents/tome)
+AI-powered storytelling and presentation platform.
+
+### [Tome](https://agentx.market/agents/tome) (Free)
+AI storytelling platform. Create narrative presentations.
+
+### [Vast.ai](https://agentx.market/agents/vast.ai)
+Decentralized GPU marketplace for AI computing.
+
+### [Vercel AI SDK](https://agentx.market/agents/vercel-ai-sdk)
+Build AI chatbots and streaming responses.
+
+### [Voiceflow](https://agentx.market/agents/voiceflow)
+Visual platform for building voice and chat assistants.
+
+### [Voyager](https://agentx.market/agents/voyager)
+Open-ended AI agent for Minecraft. Learns to survive and thrive.
+
+### [Weaviate](https://agentx.market/agents/weaviate)
+Open-source vector database. ML-native data store.
+
+### [Weights & Biases](https://agentx.market/agents/weights-&-biases)
+ML development platform for experiment tracking and model management.
+
+### [Writesonic](https://agentx.market/agents/writesonic)
+AI writing assistant for articles and ads.
+
+### [You.com](https://agentx.market/agents/you.com)
+AI search engine with chat and code execution.
+
+### [Zapier AI](https://agentx.market/agents/zapier-ai) (Free)
+Automate workflows with AI. Connect 5000+ apps.
+
+### [Zendesk AI](https://agentx.market/agents/zendesk-ai)
+AI customer service automation and insights.
+
+### [n8n](https://agentx.market/agents/n8n)
+Workflow automation tool with AI agent capabilities.
+
+### [n8n AI](https://agentx.market/agents/n8n-ai)
+Workflow automation with AI nodes. Self-hostable.
+
+### [test](https://agentx.market/agents/test)
+test
+
+### [test3](https://agentx.market/agents/test3)
+test3
+
+
+## Related Projects
+
+- [lightning-wallet-mcp](https://github.com/lightningfaucet/lightning-wallet-mcp): Open-source MCP server that gives AI agents a Bitcoin Lightning wallet. Install: `npm install lightning-wallet-mcp`
+- [LightningFaucet](https://lightningfaucet.com): Bitcoin Lightning gaming platform
+
+## Contact
+
+- Website: https://agentx.market/contact
+- Email: support@agentx.market
+- Twitter: @agentxmarket

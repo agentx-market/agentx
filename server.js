@@ -196,6 +196,10 @@ app.get('/api/health', (req, res) => {
   });
 });
 
+// SEO redirects for old/moved pages (indexed by Google but 404)
+app.get('/how-it-works', (req, res) => res.redirect(301, '/features'));
+app.get('/registry', (req, res) => res.redirect(301, '/browse'));
+
 app.get('/robots.txt', (req, res) => {
   res.set('Content-Type', 'text/plain');
   res.send(`User-agent: *
@@ -203,7 +207,14 @@ Allow: /
 Disallow: /api/
 Disallow: /auth/
 Disallow: /webhooks/
-Sitemap: https://agentx.market/sitemap.xml`);
+Disallow: /dashboard
+Disallow: /login
+
+Sitemap: https://agentx.market/sitemap.xml
+
+# AI Agent Discovery
+# See https://agentx.market/llms.txt for LLM-readable site description
+# See https://agentx.market/llms-full.txt for complete agent registry`);
 });
 
 // Auth middleware for agent-specific routes is applied inline on each handler below
@@ -1066,8 +1077,29 @@ app.post('/webhooks/:service', webhookLimiter, (req, res) => {
   res.json({ status: 'ok', service, handled: false });
 });
 
-// Static files from public/ (with clean URL extensions)
-app.use(express.static(path.join(__dirname, 'public'), { extensions: ['html'] }));
+// Canonical URL redirect: www → non-www (SEO: avoid duplicate content)
+app.use((req, res, next) => {
+  const host = req.get('host') || '';
+  if (host.startsWith('www.')) {
+    return res.redirect(301, `https://agentx.market${req.originalUrl}`);
+  }
+  next();
+});
+
+// Static files from public/ (with clean URL extensions + cache headers)
+app.use(express.static(path.join(__dirname, 'public'), {
+  extensions: ['html'],
+  maxAge: '1h',
+  setHeaders: (res, filePath) => {
+    if (filePath.endsWith('.css') || filePath.endsWith('.js')) {
+      res.setHeader('Cache-Control', 'public, max-age=86400'); // 1 day
+    } else if (filePath.match(/\.(png|jpg|jpeg|gif|svg|ico|webp)$/)) {
+      res.setHeader('Cache-Control', 'public, max-age=604800'); // 7 days
+    } else if (filePath.endsWith('.txt')) {
+      res.setHeader('Cache-Control', 'public, max-age=3600'); // 1 hour
+    }
+  }
+}));
 
 // ===== OAuth Routes =====
 
@@ -1490,15 +1522,23 @@ app.get('/docs', (req, res) => res.render('docs'));
 // Sitemap route
 app.get('/sitemap.xml', async (req, res) => {
   const now = new Date().toISOString().split('T')[0];
-  const agents = db.all('SELECT id, name FROM agents');
-  
-  const agentUrls = agents.map(agent => {
+  const agents = db.all('SELECT id, name, updated_at FROM agents');
+
+  // Deduplicate by slug and filter out test entries
+  const seen = new Set();
+  const agentUrls = agents.filter(agent => {
     const slug = agent.name.toLowerCase().replace(/ /g, '-');
+    if (seen.has(slug) || slug.startsWith('test')) return false;
+    seen.add(slug);
+    return true;
+  }).map(agent => {
+    const slug = agent.name.toLowerCase().replace(/ /g, '-');
+    const lastmod = (agent.updated_at && typeof agent.updated_at === 'string') ? agent.updated_at.split('T')[0] : now;
     return `    <url>
       <loc>https://agentx.market/agents/${slug}</loc>
       <changefreq>weekly</changefreq>
       <priority>0.8</priority>
-      <lastmod>${now}</lastmod>
+      <lastmod>${lastmod}</lastmod>
     </url>`;
   }).join('\n');
   
@@ -1542,12 +1582,6 @@ app.get('/sitemap.xml', async (req, res) => {
     <lastmod>${now}</lastmod>
   </url>
   <url>
-    <loc>https://agentx.market/login</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-    <lastmod>${now}</lastmod>
-  </url>
-  <url>
     <loc>https://agentx.market/docs</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
@@ -1560,9 +1594,15 @@ app.get('/sitemap.xml', async (req, res) => {
     <lastmod>${now}</lastmod>
   </url>
   <url>
+    <loc>https://agentx.market/getting-started</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <lastmod>${now}</lastmod>
+  </url>
+  <url>
     <loc>https://agentx.market/register</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
     <lastmod>${now}</lastmod>
   </url>
   <url>

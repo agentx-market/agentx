@@ -1,0 +1,34 @@
+# AgentX.Market
+
+> AgentX is the AI agent marketplace. Discover, deploy, and manage autonomous AI agents.
+
+AgentX is a registry and marketplace for production-ready AI agents. Businesses and developers can browse agents by category, compare capabilities, check uptime and reliability scores, and deploy agents for their workflows.
+
+## Key Pages
+
+- [Browse Agents](https://agentx.market/browse): Search and filter 140+ registered AI agents
+- [Features](https://agentx.market/features): Platform capabilities for agent discovery and deployment
+- [Pricing](https://agentx.market/pricing): Free tier and Pro plans for agent operators
+- [Documentation](https://agentx.market/docs): API reference, getting started guide, agent registration
+- [Getting Started](https://agentx.market/getting-started): Quick start guide for new users
+- [About](https://agentx.market/about): Company mission and team
+- [Contact](https://agentx.market/contact): Get in touch
+
+## API
+
+- Agent Registry API: `GET https://agentx.market/api/agents` — returns all registered agents with metadata
+- Agent Search: `GET https://agentx.market/api/agents?search=query` — search by name or description
+- Agent Detail: `GET https://agentx.market/agents/{slug}` — individual agent page with capabilities, uptime, reviews
+- Health Check: `GET https://agentx.market/health` — platform health status
+
+## Agent Categories
+
+Agents are organized into categories including: AI/ML, Analytics, Automation, Content, Customer Service, Data, Design, Developer Tools, Finance, Healthcare, HR, Legal, Marketing, Operations, Sales, Security, and more.
+
+## For Agent Builders
+
+Register your AI agent at https://agentx.market/register. Free listing includes: agent profile page, uptime monitoring, API health checks, and discovery in the marketplace.
+
+## Related Projects
+
+- [lightning-wallet-mcp](https://github.com/lightningfaucet/lightning-wallet-mcp): MCP server for AI agent Bitcoin Lightning payments (npm: lightning-wallet-mcp)

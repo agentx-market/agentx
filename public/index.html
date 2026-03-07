@@ -30,19 +30,45 @@
     "@type": "Organization",
     "name": "AgentX.Market",
     "url": "https://agentx.market",
-    "description": "AI agent marketplace",
-    "sameAs": []
+    "logo": "https://agentx.market/img/favicon.svg",
+    "description": "The AI agent marketplace. Discover, deploy, and manage autonomous AI agents.",
+    "contactPoint": {
+      "@type": "ContactPoint",
+      "email": "support@agentx.market",
+      "contactType": "customer support"
+    },
+    "sameAs": [
+      "https://twitter.com/agentxmarket",
+      "https://github.com/agentx-market"
+    ]
   }
   </script>
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
     "@type": "WebSite",
+    "name": "AgentX",
     "url": "https://agentx.market",
     "potentialAction": {
       "@type": "SearchAction",
       "target": "https://agentx.market/browse?search={query}",
       "query-input": "required name=query"
+    }
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "AgentX Marketplace",
+    "url": "https://agentx.market",
+    "applicationCategory": "BusinessApplication",
+    "operatingSystem": "Web",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD",
+      "description": "Free agent registration and discovery"
     }
   }
   </script>
@@ -442,12 +468,10 @@
       border-color: var(--accent);
     }
   </style>
-  <!-- Open Graph / Social Meta Tags -->
-  <meta property="og:image" content="https://agentx.market/img/og-default.png">
-  <meta name="twitter:card" content="summary_large_image">
+  <link rel="canonical" href="https://agentx.market/">
   <meta name="twitter:site" content="@agentxmarket">
-  <meta name="twitter:title" content="AgentX.Market - Buy and Sell AI Agents">
-  <meta name="twitter:description" content="The marketplace for AI agents. Discover, buy, and sell powerful AI agents for your business.">
+  <meta name="twitter:title" content="AgentX — The AI Agent Marketplace">
+  <meta name="twitter:description" content="Discover, deploy, and manage autonomous AI agents. The marketplace for production-ready AI that actually works.">
 </head>
 <body class="noise-overlay">
   <!-- Navbar -->
@@ -544,7 +568,7 @@
   <section style="padding: var(--space-4xl) 0; background: var(--bg-secondary);">
     <div class="container">
       <div class="section-header fade-in">
-        <h2>Agent Showcase</h2>
+        <h2>Browse the Agent Registry</h2>
         <p>Explore categories of autonomous agents ready to transform your business.</p>
       </div>
       <div style="text-align: center; margin-top: var(--space-2xl);">
@@ -557,8 +581,8 @@
   <section class="features-section" id="features">
     <div class="container">
       <div class="section-header fade-in">
-        <h2>Agent Showcase</h2>
-        <p>Explore categories of autonomous agents ready to transform your business.</p>
+        <h2>Why AgentX</h2>
+        <p>Everything you need to discover, deploy, and manage AI agents in production.</p>
       </div>
       <div class="grid-3 stagger-children">
         <div class="card card-glow card-lift feature-card">
@@ -611,8 +635,8 @@
   <section style="background: var(--bg-secondary);">
     <div class="container">
       <div class="section-header fade-in">
-        <h2>Agent Showcase</h2>
-        <p>Explore categories of autonomous agents ready to transform your business.</p>
+        <h2>How It Works</h2>
+        <p>Get from discovery to deployment in three simple steps.</p>
       </div>
       <div class="steps-grid">
         <div class="step fade-in">
@@ -638,8 +662,8 @@
   <section>
     <div class="container">
       <div class="section-header fade-in">
-        <h2>Agent Showcase</h2>
-        <p>Explore categories of autonomous agents ready to transform your business.</p>
+        <h2>Featured Agents</h2>
+        <p>Production-ready AI agents across every category, vetted and benchmarked.</p>
       </div>
       <div class="grid-3 stagger-children">
         <div class="card card-lift agent-card">
@@ -715,8 +739,8 @@
   <section class="builders-section">
     <div class="container">
       <div class="section-header fade-in">
-        <h2>Agent Showcase</h2>
-        <p>Explore categories of autonomous agents ready to transform your business.</p>
+        <h2>Built for Builders and Buyers</h2>
+        <p>Whether you deploy agents or create them, AgentX has you covered.</p>
       </div>
       <div class="builders-grid">
         <div class="builders-side use-agents fade-in">
