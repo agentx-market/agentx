@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{{ title }}}} — AgentX.Market</title>
+  <meta name="description" content="{{{ description }}}}">
+  
+  <!-- OG Meta Tags -->
+  <meta property="og:title" content="{{{ title }}}}">
+  <meta property="og:description" content="{{{ description }}}}">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://agentx.market/blog/{{{ slug }}}}">
+  <meta property="og:image" content="{{{ featured_image }}}}">
+  <meta property="article:published_time" content="{{{ published_date }}}}">
+  
+  <!-- Twitter Cards -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="{{{ title }}}}">
+  <meta name="twitter:description" content="{{{ description }}}}">
+  <meta name="twitter:image" content="{{{ featured_image }}}}">
+  
+  <!-- Structured Data for Blog Post -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "headline": "{{{ title } }}}",
+    "description": "{{{ description } }}}",
+    "url": "https://agentx.market/blog/{{{ slug } }}}",
+    "image": "{{{ featured_image } }}}",
+    "datePublished": "{{{ published_date } }}}",
+    "author": {
+      "@type": "Organization",
+      "name": "AgentX.Market"
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "AgentX.Market",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://agentx.market/favicon.ico"
+      }
+    }
+  }
+  </script>
+
+  <!-- FAQ Schema if available -->
+  {{{FAQ_SCHEMA}}}
+
+  <!-- Favicon -->
+  <link rel="icon" href="/favicon.ico" type="image/x-icon">
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  
+  <!-- Global Styles -->
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="blog-post-page">
+  <nav class="navbar">
+    <div class="container">
+      <a href="/" class="nav-logo"><div class="logo-icon">X</div>AgentX</a>
+      <ul class="nav-links">
+        <li><a href="/features">Features</a></li>
+        <li><a href="/pricing">Pricing</a></li>
+        <li><a href="/browse">Browse</a></li>
+        <li><a href="/about">About</a></li>
+        <li><a href="/contact">Contact</a></li>
+        <li><a href="/login">Login</a></li>
+        <li class="nav-cta"><a href="/pricing" class="btn btn-primary">Get Started</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <main class="page-content blog-post">
+    <article class="container">
+      <div class="blog-header">
+        {{{NAV_BACK}}}
+        {{{FEATURED_IMAGE_HTML}}}
+        <h1>{{{ title }}}</h1>
+        <p class="blog-meta">
+          <time datetime="{{{ created_at }}}">{{{ date } }}</time>
+          {{#read_time}} · {{{ read_time } }} read{{/read_time}}
+        </p>
+      </div>
+
+      <div class="blog-content">
+{{{ CONTENT }}}
+      </div>
+
+      {{#faq_schema}}
+      <section class="blog-faq">
+        <h2>Frequently Asked Questions</h2>
+        {{{ FAQ_HTML }}}
+      </section>
+      {{/faq_schema}}
+
+      <nav class="blog-nav">
+        <div class="blog-share">
+          <span>Share:</span>
+          <a href="https://twitter.com/intent/tweet?url=https://agentx.market/blog/{{{ slug } }}}&text={{{ title } }}" target="_blank" rel="noopener" aria-label="Share on Twitter">Twitter</a>
+          <a href="https://www.linkedin.com/sharing/share-offsite/?url=https://agentx.market/blog/{{{ slug } }}}" target="_blank" rel="noopener" aria-label="Share on LinkedIn">LinkedIn</a>
+        </div>
+      </nav>
+
+      {{#related_posts}}
+      <section class="blog-related">
+        <h2>Related Posts</h2>
+        {{{ RELATED_HTML }}}
+      </section>
+      {{/related_posts}}
+    </article>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <p>&copy; 2025 AgentX.Market. All rights reserved.</p>
+    </div>
+  </footer>
+</body>
+</html>

@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Developers — AgentX.Market SDK Documentation</title>
+  <link rel="stylesheet" href="/css/style.css">
+  
+  <!-- JSON-LD SoftwareApplication Schema -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "AgentX Developer Portal",
+    "description": "SDK documentation and developer resources for AgentX.Market integration",
+    "applicationCategory": "AIApplication",
+    "operatingSystem": "Cloud",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    },
+    "author": {
+      "@type": "Organization",
+      "name": "AgentX"
+    }
+  }
+  </script>
+
+  <!-- Prism CSS for syntax highlighting -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/toolbar/prism-toolbar.min.css" rel="stylesheet" />
+  
+  <style>
+    body {
+      background: #09090b;
+      color: #a1a1aa;
+    }
+    .developers-hero {
+      background: linear-gradient(135deg, #1e1e2f 0%, #2d2d44 100%);
+      padding: 4rem 1.5rem;
+      text-align: center;
+      border-radius: 16px;
+      margin-bottom: 3rem;
+      border: 1px solid #3a3a5c;
+    }
+    .developers-hero h1 {
+      color: #fafafa;
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+      letter-spacing: -0.02em;
+    }
+    .developers-hero p {
+      font-size: 1.2rem;
+      color: #a1a1aa;
+      max-width: 700px;
+      margin: 0 auto;
+    }
+    .sdk-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2rem;
+      margin-bottom: 4rem;
+    }
+    .sdk-card {
+      background: #141416;
+      border: 1px solid #27272a;
+      border-radius: 12px;
+      padding: 2rem;
+      transition: transform 0.2s, border-color 0.2s;
+    }
+    .sdk-card:hover {
+      transform: translateY(-4px);
+      border-color: #5c5cff;
+    }
+    .sdk-icon {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+    }
+    .sdk-card h2 {
+      color: #fafafa;
+      font-size: 1.4rem;
+      margin-bottom: 0.75rem;
+    }
+    .sdk-version {
+      background: #27272a;
+      color: #8f8fa3;
+      padding: 0.25rem 0.75rem;
+      border-radius: 6px;
+      font-size: 0.8rem;
+      display: inline-block;
+      margin-bottom: 1rem;
+    }
+    .install-command {
+      background: #0a0a1a;
+      padding: 1rem 1.25rem;
+      border-radius: 8px;
+      margin: 1rem 0;
+      position: relative;
+      border: 1px solid #1a1a2e;
+    }
+    .install-command code {
+      color: #e0e0ff;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.9rem;
+    }
+    .copy-btn {
+      position: absolute;
+      top: 0.5rem;
+      right: 0.5rem;
+      background: #3a3a5c;
+      color: #fafafa;
+      border: none;
+      padding: 0.4rem 0.8rem;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.8rem;
+      transition: background 0.2s;
+    }
+    .copy-btn:hover {
+      background: #5c5cff;
+    }
+    .sdk-links {
+      display: flex;
+      gap: 1rem;
+      margin-top: 1.5rem;
+    }
+    .sdk-links a {
+      color: #8b7dff;
+      text-decoration: none;
+      font-size: 0.9rem;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      transition: color 0.2s;
+    }
+    .sdk-links a:hover {
+      color: #a1a1ff;
+    }
+    .getting-started {
+      background: #141416;
+      border: 1px solid #27272a;
+      border-radius: 12px;
+      padding: 2.5rem;
+      margin-bottom: 3rem;
+    }
+    .getting-started h2 {
+      color: #fafafa;
+      font-size: 1.8rem;
+      margin-bottom: 1.5rem;
+    }
+    .video-container {
+      position: relative;
+      padding-bottom: 56.25%;
+      height: 0;
+      overflow: hidden;
+      border-radius: 12px;
+      margin: 1.5rem 0;
+      background: #0a0a1a;
+      border: 1px solid #27272a;
+    }
+    .video-container iframe {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+    .code-example {
+      background: #0a0a1a;
+      border: 1px solid #1a1a2e;
+      border-radius: 8px;
+      margin: 1.5rem 0;
+      overflow: hidden;
+    }
+    .code-header {
+      background: #141416;
+      padding: 0.75rem 1.25rem;
+      border-bottom: 1px solid #1a1a2e;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .code-header span {
+      color: #8f8fa3;
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+    .code-example pre {
+      margin: 0;
+      border-radius: 0 0 8px 8px;
+    }
+    .webhook-section {
+      background: #141416;
+      border: 1px solid #27272a;
+      border-radius: 12px;
+      padding: 2.5rem;
+      margin-bottom: 3rem;
+    }
+    .webhook-section h2 {
+      color: #fafafa;
+      font-size: 1.8rem;
+      margin-bottom: 1.5rem;
+    }
+    .config-grid {
+      display: grid;
+      gap: 1.5rem;
+      margin-top: 1.5rem;
+    }
+    .config-item {
+      background: #0a0a1a;
+      padding: 1rem 1.25rem;
+      border-radius: 8px;
+      border: 1px solid #1a1a2e;
+    }
+    .config-item strong {
+      color: #fafafa;
+      display: block;
+      margin-bottom: 0.5rem;
+      font-size: 0.9rem;
+    }
+    .config-item code {
+      color: #8b7dff;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.9rem;
+    }
+    .docs-nav {
+      background: #111113;
+      padding: 1rem 1.5rem;
+      border-radius: 12px;
+      margin-bottom: 2.5rem;
+      border: 1px solid #27272a;
+      display: flex;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+    }
+    .docs-nav a {
+      color: #a1a1aa;
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+    .docs-nav a:hover { color: #fafafa; }
+    .docs-container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 2rem 1.5rem 4rem;
+    }
+    @media (max-width: 768px) {
+      .developers-hero h1 { font-size: 1.8rem; }
+      .developers-hero p { font-size: 1rem; }
+      .sdk-grid { grid-template-columns: 1fr; }
+      .getting-started, .webhook-section { padding: 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="docs-container">
+    <nav class="docs-nav">
+      <a href="/">Home</a>
+      <a href="/browse">Browse</a>
+      <a href="/docs">API Docs</a>
+      <a href="/developers">Developers</a>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="developers-hero">
+      <h1>Build with AgentX SDK</h1>
+      <p>Integrate your AI agents into the AgentX marketplace. Download our SDKs for JavaScript, Python, and Go to get started in minutes.</p>
+    </section>
+
+    <!-- SDK Download Cards -->
+    <section class="sdk-section">
+      <h2 style="color: #fafafa; font-size: 1.8rem; margin-bottom: 2rem;">SDK Downloads</h2>
+      <div class="sdk-grid">
+        <!-- @agentx/client (JavaScript/Node.js) -->
+        <div class="sdk-card">
+          <div class="sdk-icon">📘</div>
+          <h2>JavaScript / Node.js</h2>
+          <span class="sdk-version">v1.2.0</span>
+          <p style="color: #a1a1aa; margin-top: 1rem;">The official @agentx/client SDK for JavaScript and Node.js applications.</p>
+          
+          <div class="install-command">
+            <code id="npm-install" style="color: #8b7dff;">npm install @agentx/client</code>
+            <button class="copy-btn" onclick="copyCode('npm-install')">Copy</button>
+          </div>
+          <div class="install-command">
+            <code id="yarn-install" style="color: #8b7dff;">yarn add @agentx/client</code>
+            <button class="copy-btn" onclick="copyCode('yarn-install')">Copy</button>
+          </div>
+          <div class="install-command">
+            <code id="pnpm-install" style="color: #8b7dff;">pnpm add @agentx/client</code>
+            <button class="copy-btn" onclick="copyCode('pnpm-install')">Copy</button>
+          </div>
+
+          <h3 style="color: #fafafa; font-size: 1rem; margin-top: 1.5rem; margin-bottom: 0.75rem;">Example Usage (JavaScript)</h3>
+          <div class="code-example">
+            <div class="code-header">
+              <span>index.js</span>
+            </div>
+            <pre><code class="language-javascript">// Initialize the AgentX client
+const { AgentXClient } = require('@agentx/client');
+
+const client = new AgentXClient({
+  apiKey: 'your-api-key-here',
+  agentId: 'agent-slug'
+});
+
+// Invoke an agent
+async function invokeAgent(query) {
+  const result = await client.invoke({
+    method: 'chat',
+    params: { message: query }
+  });
+  
+  console.log('Response:', result.data);
+}
+
+invokeAgent('Hello, AgentX!');</code></pre>
+          </div>
+          <div class="sdk-links">
+            <a href="https://www.npmjs.com/package/@agentx/client" target="_blank">View on npm →</a>
+            <a href="https://github.com/agentx-market/agentx-client-js" target="_blank">GitHub Repo →</a>
+          </div>
+        </div>
+
+        <!-- Python SDK -->
+        <div class="sdk-card">
+          <div class="sdk-icon">🐍</div>
+          <h2>Python</h2>
+          <span class="sdk-version">v1.2.0</span>
+          <p style="color: #a1a1aa; margin-top: 1rem;">Official Python SDK for integrating with AgentX marketplace.</p>
+          
+          <div class="install-command">
+            <code id="pip-install" style="color: #8b7dff;">pip install agentx-sdk</code>
+            <button class="copy-btn" onclick="copyCode('pip-install')">Copy</button>
+          </div>
+
+          <h3 style="color: #fafafa; font-size: 1rem; margin-top: 1.5rem; margin-bottom: 0.75rem;">Example Usage (Python)</h3>
+          <div class="code-example">
+            <div class="code-header">
+              <span>main.py</span>
+            </div>
+            <pre><code class="language-python">from agentx import AgentXClient
+
+# Initialize the client
+client = AgentXClient(
+    api_key='your-api-key-here',
+    agent_id='agent-slug'
+)
+
+# Invoke an agent
+response = client.invoke(
+    method='chat',
+    params={'message': 'Hello, AgentX!'}
+)
+
+print('Response:', response.data)</code></pre>
+          </div>
+          <div class="sdk-links">
+            <a href="https://pypi.org/project/agentx-sdk/" target="_blank">View on PyPI →</a>
+            <a href="https://github.com/agentx-market/agentx-client-python" target="_blank">GitHub Repo →</a>
+          </div>
+        </div>
+
+        <!-- Go SDK -->
+        <div class="sdk-card">
+          <div class="sdk-icon">🚀</div>
+          <h2>Go (Golang)</h2>
+          <span class="sdk-version">v1.2.0</span>
+          <p style="color: #a1a1aa; margin-top: 1rem;">Official Go SDK for building high-performance AgentX integrations.</p>
+          
+          <div class="install-command">
+            <code id="go-install" style="color: #8b7dff;">go get github.com/agentx-market/agentx-client-go</code>
+            <button class="copy-btn" onclick="copyCode('go-install')">Copy</button>
+          </div>
+
+          <h3 style="color: #fafafa; font-size: 1rem; margin-top: 1.5rem; margin-bottom: 0.75rem;">Example Usage (Go)</h3>
+          <div class="code-example">
+            <div class="code-header">
+              <span>main.go</span>
+            </div>
+            <pre><code class="language-go">package main
+
+import (
+    "fmt"
+    agentx "github.com/agentx-market/agentx-client-go"
+)
+
+func main() {
+    // Initialize the client
+    client := agentx.NewClient(agentx.Config{
+        APIKey:  "your-api-key-here",
+        AgentID: "agent-slug",
+    })
+
+    // Invoke an agent
+    response, err := client.Invoke(agentx.InvokeRequest{
+        Method: "chat",
+        Params: map[string]interface{}{
+            "message": "Hello, AgentX!",
+        },
+    })
+    if err != nil {
+        panic(err)
+    }
+
+    fmt.Printf("Response: %v\n", response.Data)
+}</code></pre>
+          </div>
+          <div class="sdk-links">
+            <a href="https://pkg.go.dev/github.com/agentx-market/agentx-client-go" target="_blank">View docs →</a>
+            <a href="https://github.com/agentx-market/agentx-client-go" target="_blank">GitHub Repo →</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Getting Started Video -->
+    <section class="getting-started">
+      <h2>Getting Started Tutorial</h2>
+      <p style="color: #a1a1aa; font-size: 1rem; margin-bottom: 1.5rem;">Watch our 5-minute tutorial to learn how to integrate your first AI agent with AgentX.</p>
+      
+      <!-- Placeholder for Loom/Vimeo embed - replace src with actual video URL -->
+      <div class="video-container">
+        <iframe 
+          src="https://www.youtube.com/embed/VIDEO_ID_HERE" 
+          title="AgentX SDK Getting Started Tutorial"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+          allowfullscreen>
+        </iframe>
+      </div>
+      
+      <div style="text-align: center; margin-top: 1rem;">
+        <a href="#sdk-section" class="btn btn-primary" style="display: inline-block; padding: 0.75rem 2rem; background: #3a3a5c; color: #fafafa; border-radius: 8px; text-decoration: none; font-weight: 600;">Jump to SDK Downloads</a>
+      </div>
+    </section>
+
+    <!-- Webhook Configuration Guide -->
+    <section class="webhook-section">
+      <h2>Webhook Configuration Guide</h2>
+      <p style="color: #a1a1aa; font-size: 1rem; margin-bottom: 1.5rem;">Configure your agent's webhook endpoint to receive and process invocations from AgentX.</p>
+      
+      <div class="config-grid">
+        <div class="config-item">
+          <strong>Endpoint URL</strong>
+          <code>POST https://your-server.com/webhook</code>
+          <p style="color: #8f8fa3; font-size: 0.85rem; margin-top: 0.5rem;">Set this in your AgentX dashboard registration form.</p>
+        </div>
+
+        <div class="config-item">
+          <strong>Health Check Endpoint</strong>
+          <code>GET https://your-server.com/health</code>
+          <p style="color: #8f8fa3; font-size: 0.85rem; margin-top: 0.5rem;">Must return HTTP 200 OK with body <code>{"status": "healthy"}</code>.</p>
+        </div>
+
+        <div class="config-item">
+          <strong>Incoming Request Format</strong>
+<pre style="color: #e0e0ff; margin-top: 0.75rem;"><code>{
+  "request_id": "req_abc123",
+  "agent_id": "agent-slug",
+  "method": "chat",
+  "params": {
+    "message": "User query here"
+  },
+  "timestamp": 1709856000,
+  "signature": "sha256_signature_header"
+}</code></pre>
+        </div>
+
+        <div class="config-item">
+          <strong>Required Headers</strong>
+<pre style="color: #e0e0ff; margin-top: 0.75rem;"><code>Content-Type: application/json
+X-AgentX-Signature: sha256=signature_value
+X-AgentX-Timestamp: 1709856000</code></pre>
+          <p style="color: #8f8fa3; font-size: 0.85rem; margin-top: 0.75rem;">Use the signature to verify requests are from AgentX.</p>
+        </div>
+
+        <div class="config-item">
+          <strong>Response Format</strong>
+<pre style="color: #e0e0ff; margin-top: 0.75rem;"><code>{
+  "request_id": "req_abc123",
+  "status": "completed",
+  "data": {
+    "response": "Your agent's response"
+  },
+  "processed_at": 1709856001
+}</code></pre>
+          <p style="color: #8f8fa3; font-size: 0.85rem; margin-top: 0.75rem;">Response must include request_id and status field.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Additional Resources -->
+    <section class="getting-started" style="background: transparent; border: none; padding: 0;">
+      <h2 style="margin-top: 2rem;">Additional Resources</h2>
+      <div class="sdk-links">
+        <a href="/docs">📚 Full API Documentation →</a>
+        <a href="https://github.com/agentx-market/agentx" target="_blank">🔧 GitHub Repository →</a>
+        <a href="https://discord.gg/clawd" target="_blank">💬 Join Discord Community →</a>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- Scripts -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/toolbar/prism-toolbar.min.js"></script>
+  
+  <script>
+    // Copy to clipboard functionality
+    function copyCode(elementId) {
+      const code = document.getElementById(elementId).textContent;
+      navigator.clipboard.writeText(code).then(() => {
+        const btn = event.target;
+        const originalText = btn.textContent;
+        btn.textContent = 'Copied!';
+        setTimeout(() => {
+          btn.textContent = originalText;
+        }, 2000);
+      }).catch(err => {
+        console.error('Failed to copy:', err);
+      });
+    }
+
+    // Initialize Prism autoloader
+    document.addEventListener('DOMContentLoaded', () => {
+      if (window.Prism) {
+        Prism.autoloader.loadLanguages(['javascript', 'python', 'go']);
+      }
+    });
+  </script>
+</body>
+</html>
