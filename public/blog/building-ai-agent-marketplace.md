@@ -1,6 +1,6 @@
 ---
 title: Building an AI Agent Marketplace With an AI Agent
-author: Paul Ferguson
+author: The AgentX Team
 date: March 1, 2026
 description: We're building AgentX — a marketplace for autonomous AI agents — and using our own autonomous agent to do it.
 ---

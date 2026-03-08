@@ -225,6 +225,70 @@ try {
   console.log('[db] Agent usage table may already exist:', err.message);
 }
 
+// Create usage_billing table for metered API billing
+try {
+  db.exec(`
+    CREATE TABLE IF NOT EXISTS usage_billing (
+      id INTEGER PRIMARY KEY,
+      user_id TEXT NOT NULL,
+      tier TEXT DEFAULT 'starter',
+      monthly_quota INTEGER DEFAULT 10000,
+      overage_rate REAL DEFAULT 0.001,
+      current_usage INTEGER DEFAULT 0,
+      last_reset INTEGER NOT NULL,
+      created_at INTEGER,
+      updated_at INTEGER,
+      FOREIGN KEY (user_id) REFERENCES operators(id) ON DELETE CASCADE
+    )
+  `);
+  console.log('[db] Usage billing table created');
+} catch (err) {
+  console.log('[db] Usage billing table may already exist:', err.message);
+}
+
+// Create invoices table for monthly statements
+try {
+  db.exec(`
+    CREATE TABLE IF NOT EXISTS invoices (
+      id INTEGER PRIMARY KEY,
+      user_id TEXT NOT NULL,
+      period_start INTEGER NOT NULL,
+      period_end INTEGER NOT NULL,
+      total_requests INTEGER DEFAULT 0,
+      quota INTEGER DEFAULT 0,
+      overage_requests INTEGER DEFAULT 0,
+      overage_charge REAL DEFAULT 0,
+      subtotal REAL DEFAULT 0,
+      total_amount REAL DEFAULT 0,
+      pdf_url TEXT,
+      status TEXT DEFAULT 'draft',
+      created_at INTEGER,
+      FOREIGN KEY (user_id) REFERENCES operators(id) ON DELETE CASCADE
+    )
+  `);
+  console.log('[db] Invoices table created');
+} catch (err) {
+  console.log('[db] Invoices table may already exist:', err.message);
+}
+
+// Create usage_logs table for detailed request tracking
+try {
+  db.exec(`
+    CREATE TABLE IF NOT EXISTS usage_logs (
+      id INTEGER PRIMARY KEY,
+      user_id TEXT NOT NULL,
+      request_type TEXT DEFAULT 'api_call',
+      endpoint TEXT,
+      timestamp INTEGER NOT NULL,
+      created_at INTEGER,
+      FOREIGN KEY (user_id) REFERENCES operators(id) ON DELETE CASCADE
+    )
+  `);
+  console.log('[db] Usage logs table created');
+} catch (err) {
+  console.log('[db] Usage logs table may already exist:', err.message);
+}
+
 // Create api_keys table for agent API key management
 try {
   db.exec(`
