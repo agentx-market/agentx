@@ -764,6 +764,42 @@ app.post('/api/waitlist', formLimiter, async (req, res) => {
   }
 });
 
+// Newsletter subscription endpoint
+app.post('/api/subscribe-newsletter', formLimiter, async (req, res) => {
+  const { email: userEmail } = req.body;
+  if (!userEmail) {
+    return res.status(400).json({ error: 'Email is required' });
+  }
+  // Input validation - must be valid email format
+  if (typeof userEmail !== 'string' || userEmail.length > 254 || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(userEmail)) {
+    return res.status(400).json({ error: 'Invalid email address' });
+  }
+
+  try {
+    const now = Date.now();
+    
+    // Check if already subscribed (and not unsubscribed)
+    const existing = db.get('SELECT id FROM newsletter_subscribers WHERE email = ? AND unsubscribed_at IS NULL', [userEmail]);
+    
+    if (existing) {
+      return res.json({ status: 'ok', message: 'Already subscribed!', subscribed: true });
+    }
+
+    // Insert new subscriber
+    db.run(
+      'INSERT INTO newsletter_subscribers (email, subscribed_at) VALUES (?, ?)',
+      [userEmail, now]
+    );
+
+    console.log(`[newsletter] ${userEmail} subscribed to newsletter`);
+
+    res.json({ status: 'ok', message: 'Successfully subscribed!', subscribed: true });
+  } catch (err) {
+    console.error('[newsletter] Error:', err.message);
+    res.status(500).json({ error: 'Internal error' });
+  }
+});
+
 // Submit agent endpoint
 app.post('/api/submit-agent', formLimiter, async (req, res) => {
   const { agentName, agentUrl, healthUrl, description, category, pricing, logoUrl, contactEmail } = req.body;

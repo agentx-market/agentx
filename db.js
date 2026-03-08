@@ -37,6 +37,22 @@ db.exec(`
   )
 `);
 
+// Create newsletter_subscribers table for email signup form
+try {
+  db.exec(`
+    CREATE TABLE IF NOT EXISTS newsletter_subscribers (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      email TEXT UNIQUE NOT NULL,
+      subscribed_at INTEGER NOT NULL,
+      unsubscribed_at INTEGER DEFAULT NULL,
+      UNIQUE(email, unsubscribed_at)
+    )
+  `);
+  console.log('[db] Newsletter subscribers table created');
+} catch (err) {
+  console.log('[db] Newsletter subscribers table may already exist:', err.message);
+}
+
 // Create operators table if it doesn't exist
 try {
   db.exec(`
