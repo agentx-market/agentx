@@ -255,6 +255,23 @@ try {
   console.log('[db] Label column may already exist:', err.message);
 }
 
+// Search analytics table for Algolia query tracking
+try {
+  db.exec(`
+    CREATE TABLE IF NOT EXISTS search_analytics (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      query TEXT NOT NULL,
+      filters TEXT,
+      results_count INTEGER DEFAULT 0,
+      response_time_ms INTEGER DEFAULT 0,
+      created_at INTEGER DEFAULT (strftime('%s', 'now'))
+    )
+  `);
+  console.log('[db] Search analytics table created');
+} catch (err) {
+  console.log('[db] Search analytics table may already exist:', err.message);
+}
+
 // ============ Migration Runner ============
 function runMigrations() {
   const migrationsDir = path.join(__dirname, 'migrations');

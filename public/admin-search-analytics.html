@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Search Analytics — Admin Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+  <style>
+    .analytics-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2rem;
+    }
+    
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+    
+    .stat-card {
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+      border: 1px solid #2a2a4a;
+      border-radius: 8px;
+      padding: 1.5rem;
+      text-align: center;
+    }
+    
+    .stat-value {
+      font-size: 2rem;
+      font-weight: 700;
+      color: #e0e0ff;
+      margin-bottom: 0.5rem;
+    }
+    
+    .stat-label {
+      color: #a0a0c0;
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    
+    .chart-container {
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+      border: 1px solid #2a2a4a;
+      border-radius: 8px;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+    
+    .chart-title {
+      color: #e0e0ff;
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+    }
+    
+    .search-query-card {
+      background: linear-gradient(135deg, #2a2a4a 0%, #1f1f3a 100%);
+      border: 1px solid #3a3a6a;
+      border-radius: 6px;
+      padding: 1rem;
+      margin-bottom: 0.5rem;
+    }
+    
+    .query-text {
+      color: #e0e0ff;
+      font-weight: 600;
+      margin-bottom: 0.25rem;
+    }
+    
+    .query-stats {
+      color: #a0a0c0;
+      font-size: 0.85rem;
+    }
+    
+    .chart-canvas {
+      width: 100%;
+      height: 300px;
+    }
+    
+    .response-time-good {
+      color: #4ade80;
+    }
+    
+    .response-time-warning {
+      color: #fbbf24;
+    }
+    
+    .response-time-bad {
+      color: #f87171;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <nav class="navbar">
+      <div class="container">
+        <a href="/" class="nav-logo"><div class="logo-icon">X</div>AgentX</a>
+        <ul class="nav-links">
+          <li><a href="/features">Features</a></li>
+          <li><a href="/pricing">Pricing</a></li>
+          <li><a href="/browse">Browse</a></li>
+          <li><a href="/about">About</a></li>
+          <li><a href="/contact">Contact</a></li>
+        </ul>
+      </div>
+    </nav>
+
+    <div class="page-header" style="margin-bottom: 2rem;">
+      <h1 style="color: #e0e0ff; font-size: 2rem; margin-bottom: 0.5rem;">Search Analytics</h1>
+      <p style="color: #a0a0c0;">Monitor search performance, user queries, and Algolia integration status</p>
+    </div>
+
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-value" id="total-searches">-</div>
+        <div class="stat-label">Total Searches (Last 7 Days)</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value response-time-good" id="avg-response-time">-</div>
+        <div class="stat-label">Avg Response Time (ms)</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" id="zero-result-count">-</div>
+        <div class="stat-label">Zero Result Searches</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" id="algolia-status">Active</div>
+        <div class="stat-label">Algolia Status</div>
+      </div>
+    </div>
+
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(500px, 1fr)); gap: 1.5rem;">
+      <div>
+        <div class="chart-container">
+          <div class="chart-title">Daily Search Activity</div>
+          <canvas id="search-activity-chart" class="chart-canvas"></canvas>
+        </div>
+
+        <div class="chart-container">
+          <div class="chart-title">Response Time Trend</div>
+          <canvas id="response-time-chart" class="chart-canvas"></canvas>
+        </div>
+      </div>
+
+      <div>
+        <div class="chart-container">
+          <div class="chart-title">Top Search Queries</div>
+          <div id="top-queries-list"></div>
+        </div>
+
+        <div class="chart-container">
+          <div class="chart-title">Zero Result Searches</div>
+          <div id="zero-results-list"></div>
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-top: 2rem; text-align: center;">
+      <button onclick="loadAnalytics()" class="btn btn-primary" style="padding: 0.75rem 2rem;">Refresh Analytics</button>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script>
+    let analyticsData = null;
+
+    async function loadAnalytics() {
+      const days = new URLSearchParams(window.location.search).get('days') || '7';
+      
+      try {
+        const response = await fetch(`/admin/search-analytics?days=${days}`);
+        if (!response.ok) throw new Error('Failed to load analytics');
+        
+        analyticsData = await response.json();
+        updateDashboard();
+      } catch (error) {
+        console.error('Error loading analytics:', error);
+        document.body.insertAdjacentHTML('beforeend', 
+          `<div style="background: #f87171; color: white; padding: 1rem; border-radius: 8px; margin-top: 1rem;">
+            Error loading analytics: ${error.message}
+          </div>`
+        );
+      }
+    }
+
+    function updateDashboard() {
+      const data = analyticsData;
+      
+      // Update stat cards
+      document.getElementById('total-searches').textContent = data.totalSearches || 0;
+      document.getElementById('avg-response-time').textContent = formatMs(data.avgResponseTime);
+      document.getElementById('zero-result-count').textContent = 
+        data.zeroResultSearches?.reduce((sum, item) => sum + item.count, 0) || 0;
+
+      // Update charts
+      updateSearchActivityChart(data.dailyStats);
+      updateResponseTimeChart(data.dailyStats);
+      updateTopQueriesList(data.topQueries);
+      updateZeroResultsList(data.zeroResultSearches);
+    }
+
+    function formatMs(ms) {
+      if (ms < 100) return `<${ms}ms`;
+      if (ms < 200) return `${Math.round(ms)}ms ✓`;
+      if (ms < 500) return `<span class="response-time-warning">${Math.round(ms)}ms</span>`;
+      return `<span class="response-time-bad">${Math.round(ms)}ms</span>`;
+    }
+
+    function updateSearchActivityChart(dailyStats) {
+      const ctx = document.getElementById('search-activity-chart');
+      if (!dailyStats || dailyStats.length === 0) return;
+
+      new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: dailyStats.map(d => d.date),
+          datasets: [{
+            label: 'Searches',
+            data: dailyStats.map(d => d.search_count),
+            backgroundColor: 'rgba(96, 165, 250, 0.8)',
+            borderColor: 'rgba(96, 165, 250, 1)',
+            borderWidth: 1
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { display: false }
+          },
+          scales: {
+            x: {
+              grid: { color: 'rgba(42, 42, 74, 0.5)' },
+              ticks: { color: '#e0e0ff' }
+            },
+            y: {
+              beginAtZero: true,
+              grid: { color: 'rgba(42, 42, 74, 0.5)' },
+              ticks: { color: '#e0e0ff' }
+            }
+          }
+        }
+      });
+    }
+
+    function updateResponseTimeChart(dailyStats) {
+      const ctx = document.getElementById('response-time-chart');
+      if (!dailyStats || dailyStats.length === 0) return;
+
+      new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: dailyStats.map(d => d.date),
+          datasets: [{
+            label: 'Avg Response Time (ms)',
+            data: dailyStats.map(d => d.avg_response_time),
+            borderColor: 'rgba(74, 222, 128, 1)',
+            backgroundColor: 'rgba(74, 222, 128, 0.1)',
+            fill: true,
+            tension: 0.3
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { display: false }
+          },
+          scales: {
+            x: {
+              grid: { color: 'rgba(42, 42, 74, 0.5)' },
+              ticks: { color: '#e0e0ff' }
+            },
+            y: {
+              beginAtZero: true,
+              grid: { color: 'rgba(42, 42, 74, 0.5)' },
+              ticks: { color: '#e0e0ff' }
+            }
+          }
+        }
+      });
+    }
+
+    function updateTopQueriesList(topQueries) {
+      const container = document.getElementById('top-queries-list');
+      if (!topQueries || topQueries.length === 0) {
+        container.innerHTML = '<p style="color: #a0a0c0; text-align: center;">No search data yet</p>';
+        return;
+      }
+
+      container.innerHTML = topQueries.map(q => `
+        <div class="search-query-card">
+          <div class="query-text">${escapeHtml(q.query)}</div>
+          <div class="query-stats">
+            ${q.count} searches • ${Math.round(q.avg_time)}ms avg • ${q.total_results} results found
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function updateZeroResultsList(zeroResults) {
+      const container = document.getElementById('zero-results-list');
+      if (!zeroResults || zeroResults.length === 0) {
+        container.innerHTML = '<p style="color: #a0a0c0; text-align: center;">No zero-result searches</p>';
+        return;
+      }
+
+      container.innerHTML = zeroResults.map(r => `
+        <div class="search-query-card" style="border-color: #f87171;">
+          <div class="query-text">${escapeHtml(r.query)}</div>
+          <div class="query-stats">
+            ${r.count} times • ${new Date(r.created_at * 1000).toLocaleDateString()}
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function escapeHtml(text) {
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    }
+
+    // Load on page load
+    window.addEventListener('DOMContentLoaded', loadAnalytics);
+  </script>
+</body>
+</html>

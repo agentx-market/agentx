@@ -429,15 +429,17 @@ app.get('/api/agents/search', async (req, res) => {
       offset: offset || 0
     };
 
-    const { search } = require('./lib/agent-search');
-    const results = await search(q || '', filters);
+    const { searchAlgolia } = require('./lib/search-client');
+    const results = await searchAlgolia(q || '', filters);
 
     res.json({
       success: true,
       query: q,
       filters,
-      count: results.length,
-      results
+      count: Array.isArray(results.results) ? results.results.length : (results.totalHits || 0),
+      results: Array.isArray(results.results) ? results.results : results,
+      processingTimeMs: results.processingTimeMs,
+      hasAlgoliaFallback: !results.hasAlgoliaFallback
     });
   } catch (error) {
     console.error('[search] Error:', error.message);
@@ -1364,6 +1366,49 @@ app.get('/api/category-counts', (req, res) => {
   res.json(counts);
 });
 
+// Admin: Sync search index to Algolia (requires authentication)
+app.get('/admin/search/sync', authenticatedLimiter, async (req, res) => {
+  try {
+    const { syncIndex } = require('./lib/search-client');
+    const result = await syncIndex();
+    
+    if (result.success) {
+      res.json({ success: true, message: 'Search index synced', ...result });
+    } else {
+      res.status(500).json(result);
+    }
+  } catch (error) {
+    console.error('[admin/search/sync] Error:', error.message);
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+// Admin: Get search analytics dashboard data
+app.get('/admin/search-analytics', authenticatedLimiter, async (req, res) => {
+  try {
+    const { getSearchAnalytics } = require('./lib/search-client');
+    const { days = '7' } = req.query;
+    const analytics = await getSearchAnalytics({ 
+      days: parseInt(days),
+      topQueriesLimit: 10
+    });
+
+    if (!analytics) {
+      return res.status(500).json({ error: 'Failed to fetch analytics' });
+    }
+
+    res.json(analytics);
+  } catch (error) {
+    console.error('[admin/search-analytics] Error:', error.message);
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Admin search analytics dashboard
+app.get('/admin/search-analytics', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'admin-search-analytics.html'));
+});
+
 // Browse page route
 app.get('/browse', (req, res) => {
   const agentCount = db.get('SELECT COUNT(*) as count FROM agents').count;
@@ -1381,6 +1426,10 @@ app.get('/changelog', (req, res) => {
   const features = backlogDb.prepare('SELECT id, title, completed_at, built_by FROM features WHERE status = ? ORDER BY completed_at DESC LIMIT 20').all('shipped');
   res.render('changelog', { title: 'Changelog', features });
 });
+
+app.get('/terms', (req, res) => res.render('terms'));
+app.get('/privacy', (req, res) => res.render('privacy'));
+app.get('/callback', (req, res) => res.redirect('/'));
 
 app.get('/login', (req, res) => {
   if (req.operatorId) return res.redirect('/my-agents');
