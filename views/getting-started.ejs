@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Getting Started — AgentX.Market</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=JetBrains+Mono&display=swap" rel="stylesheet">
+  <style>
+    body{margin:0;background:#0a0a1a;color:#e0e0ff;font-family:system-ui,-apple-system,sans-serif}
+    .navbar{background:#1a1a2e;padding:16px;border-bottom:1px solid #2a2a4a}
+    .container{max-width:900px;margin:0 auto;padding:0 20px}
+    .nav-logo{font-size:20px;font-weight:600;color:#7c3aed;text-decoration:none}
+    .nav-links{list-style:none;display:flex;gap:24px;margin:0;padding:0}
+    .nav-links a{color:#e0e0ff;text-decoration:none}
+    .hero{padding:48px 20px;text-align:center}
+    .hero h1{font-size:32px;margin:0 0 12px;color:#fff}
+    .hero p{color:#a0a0b0;margin:0;font-size:16px}
+    .steps{padding:48px 20px}
+    .step{background:#1a1a2e;border:1px solid #2a2a4a;border-radius:8px;padding:24px;margin-bottom:24px}
+    .step h2{font-size:20px;margin:0 0 12px;color:#7c3aed}
+    .step p{color:#b0b0c0;margin:0 0 16px;font-size:14px;line-height:1.5}
+    pre{background:#1e1e2e;border-radius:6px;padding:16px;overflow-x:auto;font-family:'JetBrains Mono',monospace;font-size:13px;color:#d0d0e0}
+    code{font-family:'JetBrains Mono',monospace;background:#2a2a4a;padding:2px 6px;border-radius:4px;font-size:12.5px;color:#c0a0ff}
+    .btn{display:inline-block;background:#7c3aed;color:#fff;padding:10px 20px;text-decoration:none;border-radius:6px;margin-top:8px;font-size:14px}
+    footer{padding:32px 20px;text-align:center;color:#606070;font-size:13px;border-top:1px solid #2a2a4a;margin-top:48px}
+    footer a{color:#7c3aed;text-decoration:none}
+  </style>
+</head>
+<body>
+  <nav class="navbar">
+    <div class="container">
+      <a href="/" class="nav-logo"><div class="logo-icon">X</div>AgentX</a>
+      <ul class="nav-links">
+        <li><a href="/features">Features</a></li>
+        <li><a href="/pricing">Pricing</a></li>
+        <li><a href="/browse">Browse</a></li>
+        <li><a href="/about">About</a></li>
+        <li><a href="/docs">Docs</a></li>
+        <li><a href="/login">Login</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="hero">
+    <div class="container">
+      <h1>Getting Started with AgentX.Market</h1>
+      <p>Follow these steps to get your AI agent discovered by thousands of users.</p>
+    </div>
+  </div>
+
+  <div class="steps">
+    <div class="container">
+      <div class="step">
+        <h2>Step 1: Sign in with GitHub</h2>
+        <p>Start by creating an account using your GitHub credentials. This links your developer identity to the marketplace.</p>
+        <pre><code>$ curl -X POST https://agentx.market/api/agents \\
+  -H "Content-Type: application/json" \\
+  -d '{\\n  "name": "My AI Assistant",\\n  "description": "A helpful assistant for developers"...}'</code></pre>
+        <pre><code>{\\"status\\":\\"pending\\",\\"id\\":\\"abc123\\",\\"apiKey\\":\\"xag_...\\",\\"healthCheckUrl\\":\\"https://agentx.market/healthcheck/abc123\\",\\"message\\":\\"Agent registered successfully! Configure your health endpoint next.\\"}</code></pre>
+        <a href="/login" class="btn">Sign in with GitHub</a>
+      </div>
+
+      <div class="step">
+        <h2>Step 2: Register Your Agent</h2>
+        <p>Send a POST request to create your agent listing. Include name, description, capabilities (JSON array), endpoint URL, and pricing.</p>
+        <pre><code>$ curl -X POST https://agentx.market/api/agents \\
+  -H "Content-Type: application/json" \\
+  -d '{\\n  "name": "DevHelper AI",\\n  "description": "Code review and explanation assistant",\\n  "capabilities": ["code_review","debugging"],\\n  "endpoint_url": "https://my-agent.com/api/chat",\\n  "pricing": {"tier": "freemium"}\\n}'</code></pre>
+        <pre><code>{\\"status\\":\\"approved\\",\\"slug\\":\\"devhelper-ai\\",\\"message\\":\\"Agent approved and published!\\"}</code></pre>
+      </div>
+
+      <div class="step">
+        <h2>Step 3: Configure Health Endpoint</h2>
+        <p>Set up your health check endpoint so our system can monitor availability. Visit the dashboard to configure your webhook URL.</p>
+        <pre><code>$ curl -X POST https://agentx.market/api/agents/abc123/health \\
+  -H "Content-Type: application/json" \\
+  -d '{\\"url\\":\\"https://my-agent.com/healthcheck\\"}'</code></pre>
+        <pre><code>{\\"status\\":\\"ok\\",\\"healthCheckPassedAt\\":1709856000000,\\"message\\":\\"Health endpoint configured and verified\\"}</code></pre>
+      </div>
+
+      <div class="step">
+        <h2>Step 4: Get Discovered</h2>
+        <p>Your agent is now live! Promote it on social media, submit to directories, or wait for users to find you through browsing and search.</p>
+        <pre><code>$ curl https://agentx.market/browse | grep -o "href=\"/browse.*\""</code></pre>
+        <pre><code>&lt;a href="/browse?category=productivity"&gt;Browse Productivity Agents&lt;/a&gt;</code></pre>
+      </div>
+
+      <div class="step">
+        <h2>What's Next?</h2>
+        <p>Monitor your agent's performance in the dashboard, update capabilities as you add features, and respond to user feedback. Need help? Check our docs or contact support.</p>
+        <a href="/docs" class="btn">View Full Documentation</a>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <div class="container">
+      <p>&copy; 2025 AgentX.Market. Built for the AI developer community.</p>
+      <p><a href="/terms">Terms</a> • <a href="/privacy">Privacy</a> • <a href="/contact">Contact</a></p>
+    </div>
+  </footer>
+</body>
+</html>

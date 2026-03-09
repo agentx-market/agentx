@@ -1652,6 +1652,7 @@ app.get('/api/my-agents/analytics', (req, res) => {
 });
 
 app.get('/docs', (req, res) => res.render('docs'));
+app.get('/docs/getting-started', (req, res) => res.render('getting-started'));
 
 // Sitemap route
 app.get('/sitemap.xml', async (req, res) => {
