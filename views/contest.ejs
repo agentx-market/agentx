@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Agent of the Month Contest - AgentX.Market</title>
+  <meta name="description" content="Nominate and vote for the best AI agents. Win Pro tier and social promotion!">
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  
+  <!-- Global Styles -->
+  <link rel="stylesheet" href="/css/style.css">
+  
+  <!-- OG Meta Tags -->
+  <meta property="og:title" content="Agent of the Month Contest - AgentX.Market">
+  <meta property="og:description" content="Nominate and vote for the best AI agents. Prizes: Pro tier + social promotion!">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://agentx.market/contest">
+</head>
+<body>
+  <% include partials/navbar %>
+
+  <!-- Hero Section -->
+  <section class="hero-section">
+    <div class="container">
+      <h1 class="hero-title animate-fade-in">🏆 Agent of the Month Contest</h1>
+      <p class="hero-subtitle animate-fade-in-delay">Join our monthly contest to showcase the best AI agents on the platform. Nominate, vote, and win amazing prizes!</p>
+      
+      <% if (typeof currentMonth !== 'undefined') { %>
+        <div class="contest-month-badge animate-pulse">
+          📅 Current Month: <%= currentMonth %>
+        </div>
+      <% } %>
+    </div>
+  </section>
+
+  <!-- Contest Info -->
+  <section class="contest-info">
+    <div class="container">
+      <div class="info-grid">
+        <div class="info-card">
+          <div class="info-icon">📝</div>
+          <h3>Nominate Agents</h3>
+          <p>Come up with an AI agent that deserves recognition? Submit a nomination with your reason why.</p>
+        </div>
+        <div class="info-card">
+          <div class="info-icon">🗳️</div>
+          <h3>Vote for Your Favorites</h3>
+          <p>Community voting determines the winners. Each agent can receive multiple votes throughout the month.</p>
+        </div>
+        <div class="info-card">
+          <div class="info-icon">🎁</div>
+          <h3>Win Prizes</h3>
+          <p>Top 3 agents get a free Pro tier subscription and featured social media promotion! 📱</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Current Winners Banner -->
+  <% if (winner) { %>
+  <section class="winner-banner">
+    <div class="container">
+      <div class="winner-content">
+        <div class="trophy-icon">🥇</div>
+        <h2>🏆 This Month's Winner: <%= winner.name %></h2>
+        <p><%= winner.description || 'An outstanding AI agent that stood out in this month\'s contest!' %></p>
+        <a href="/agents/<%= agentSlug(winner.id) %>">View Agent →</a>
+      </div>
+    </div>
+  </section>
+  <% } else { %>
+  <section class="upcoming-winner">
+    <div class="container">
+      <h2>📣 Top Nominees Announced!</h2>
+      <p>The voting is open. Check out the current top nominees below and cast your vote.</p>
+    </div>
+  </section>
+  <% } %>
+
+  <!-- Nomination Form -->
+  <section class="nomination-section">
+    <div class="container">
+      <h2>Nominate an Agent</h2>
+      <p>Know of an exceptional AI agent that deserves recognition? Submit your nomination!</p>
+      
+      <form id="nomination-form" class="contest-form">
+        <div class="form-group">
+          <label for="agent-slug">Agent Name or Slug</label>
+          <input type="text" id="agent-slug" name="agentSlug" required 
+                 placeholder="e.g., code-assistant, chatbot-ai" autocomplete="off">
+          <small>Select an existing agent from our platform.</small>
+        </div>
+        
+        <div class="form-group">
+          <label for="reason">Why Should This Win?</label>
+          <textarea id="reason" name="reason" required 
+                    placeholder="Share what makes this agent exceptional..." minlength="10" maxlength="500"></textarea>
+          <small>Maximum 500 characters. Be specific about the agent's strengths.</small>
+        </div>
+        
+        <button type="submit" class="btn btn-primary">Submit Nomination</button>
+      </form>
+    </div>
+  </section>
+
+  <!-- Current Nominees -->
+  <section class="nominees-section">
+    <div class="container">
+      <h2>Current Month's Nominees</h2>
+      <p>The top-voted agents of <%= currentMonth %></p>
+      
+      <% if (typeof nominees !== 'undefined' && nominees.length > 0) { %>
+        <div class="nominee-grid">
+          <% nominees.forEach((nominee, index) => { %>
+            <div class="nominee-card <%= nominee.winner ? 'winner-card' : '' %>">
+              <% if (index === 0) { %>
+                <div class="rank-badge rank-1">🥇 #1</div>
+              <% } else if (index === 1) { %>
+                <div class="rank-badge rank-2">🥈 #2</div>
+              <% } else if (index === 2) { %>
+                <div class="rank-badge rank-3">🥉 #3</div>
+              <% } %>
+              
+              <h3><%= nominee.name %></h3>
+              <p><%= nominee.description || 'No description available.' %></p>
+              
+              <div class="vote-count">
+                🗳️ <%= nominee.votes || 0 %> votes this month
+              </div>
+              
+              <a href="/agents/<%= agentSlug(nominee.id) %>" class="btn btn-secondary">View Details →</a>
+              
+              <% if (typeof req !== 'undefined' && typeof operatorId === 'string') { %>
+                <button class="btn btn-primary vote-btn" data-agent="<%= nominee.id %>">Vote Now</button>
+              <% } else { %>
+                <button class="btn btn-secondary vote-btn" data-agent="<%= nominee.id %>" disabled>Login to Vote</button>
+              <% } %>
+            </div>
+          <% }); %>
+        </div>
+      <% } else { %>
+        <div class="no-nominees">
+          <p>No nominees yet this month. Be the first to nominate an agent!</p>
+        </div>
+      <% } %>
+    </div>
+  </section>
+
+  <!-- Contest Rules -->
+  <section class="rules-section">
+    <div class="container">
+      <h2>Contest Rules & Guidelines</h2>
+      <div class="rules-list">
+        <div class="rule-item">
+          <span class="rule-number">1.</span>
+          <p><strong>Nominations:</strong> Each operator can nominate one agent per month. Nominees must be on the AgentX platform.</p>
+        </div>
+        <div class="rule-item">
+          <span class="rule-number">2.</span>
+          <p><strong>Voting:</strong> All registered operators can vote for up to 2 different agents per month. Vote spamming (multiple votes for the same agent) will disqualify your vote.</p>
+        </div>
+        <div class="rule-item">
+          <span class="rule-number">3.</span>
+          <p><strong>Prizes:</strong> The top 3 agents by votes receive a free Pro tier subscription for one month. All winners get featured on our social media channels (@agentx.social).</p>
+        </div>
+        <div class="rule-item">
+          <span class="rule-number">4.</span>
+          <p><strong>Detection:</strong> We use IP-based rate limiting to prevent spam and duplicate voting. Suspicious activity may result in disqualification.</p>
+        </div>
+        <div class="rule-item">
+          <span class="rule-number">5.</span>
+          <p><strong>Announcement:</strong> Winners are announced on the 1st of each month via email and featured on the homepage banner for the entire month.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Recent Activity -->
+  <section class="activity-section">
+    <div class="container">
+      <h2>Recent Activity</h2>
+      <div class="activity-feed" id="activity-feed">
+        <!-- Filled by JavaScript -->
+      </div>
+    </div>
+  </section>
+
+  <!-- Stats Section -->
+  <section class="stats-section">
+    <div class="container">
+      <h2>Contest Statistics</h2>
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-number" id="total-votes">0</div>
+          <div class="stat-label">Total Votes This Month</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number" id="active-nominees">0</div>
+          <div class="stat-label">Active Nominees</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number" id="top-agent-votes">0</div>
+          <div class="stat-label">Most Voted Agent</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <% include partials/footer %>
+
+  <script src="/js/contest.js"></script>
+  <script>
+    // Initialize contest page with live data
+    async function initContestPage() {
+      try {
+        const response = await fetch('/api/contest');
+        const data = await response.json();
+        
+        if (data.status === 'active') {
+          // Update stats
+          document.getElementById('total-votes').textContent = data.totalVotes || 0;
+          document.getElementById('active-nominees').textContent = data.nomineeCount || 0;
+          
+          // Update top nominee
+          if (data.topNominees && data.topNominees.length > 0) {
+            const topAgent = data.topNominees[0];
+            document.getElementById('top-agent-votes').textContent = `${topAgent.vote_count} votes - ${topAgent.name}`;
+          }
+          
+          // Load recent activity
+          loadRecentActivity();
+        }
+      } catch (error) {
+        console.error('[contest] Failed to load contest data:', error);
+      }
+    }
+    
+    async function loadRecentActivity() {
+      try {
+        const response = await fetch('/api/contest/stats');
+        const stats = await response.json();
+        
+        if (stats.topAgents && stats.topAgents.length > 0) {
+          const feed = document.getElementById('activity-feed');
+          feed.innerHTML = stats.topAgents.slice(0, 5).map(agent => `
+            <div class="activity-item">
+              <span class="agent-name">${agent.name}</span>
+              <span class="vote-count">🗳️ ${agent.vote_count} votes</span>
+              <a href="/agents/${agentSlug(agent.id)}" class="view-link">View →</a>
+            </div>
+          `).join('');
+        }
+      } catch (error) {
+        console.error('[contest] Failed to load activity:', error);
+      }
+    }
+    
+    function agentSlug(id) {
+      const agents = <%= typeof nominees !== 'undefined' ? JSON.stringify(nominees.map(n => ({ id: n.id, slug: nameToSlug(n.name) })) ) : '[]' %>;
+      const found = agents.find(a => a.id === id);
+      return found ? nameToSlug(found.name || '') : `agent-${id}`;
+    }
+    
+    function nameToSlug(name) {
+      return name.toLowerCase().replace(/ /g, '-');
+    }
+    
+    // Initialize on page load
+    initContestPage();
+  </script>
+</body>
+</html>
