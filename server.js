@@ -766,6 +766,55 @@ app.post('/api/waitlist', formLimiter, async (req, res) => {
   }
 });
 
+// Partner application endpoint
+app.post('/api/partner-application', formLimiter, async (req, res) => {
+  const { company_name, contact_email, partner_type, integration_description } = req.body;
+  
+  // Validate required fields
+  if (!company_name || !contact_email || !partner_type) {
+    return res.status(400).json({ error: 'Company name, email, and partnership type are required' });
+  }
+
+  // Input validation
+  if (typeof company_name !== 'string' || company_name.length > 100) {
+    return res.status(400).json({ error: 'Invalid company name' });
+  }
+  if (typeof contact_email !== 'string' || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(contact_email)) {
+    return res.status(400).json({ error: 'Invalid email address' });
+  }
+
+  try {
+    const now = Date.now();
+    
+    // Insert partner application
+    db.run(
+      `INSERT INTO partner_applications 
+       (company_name, contact_email, partner_type, integration_description, ip, created_at) 
+       VALUES (?, ?, ?, ?, ?, ?)`,
+      [company_name, contact_email, partner_type, integration_description || '', 
+       req.headers['cf-connecting-ip'] || req.headers['x-forwarded-for'] || req.ip, now]
+    );
+
+    console.log(`[partnerships] New application from ${company_name} (${partner_type})`);
+
+    // Notify Paul via Telegram
+    const text = `🤝 *New Partnership Application*\n\n*Company:* ${company_name}\n*Email:* ${contact_email}\n*Type:* ${partner_type}\n*Description:* ${integration_description?.substring(0, 100) || 'None'}\n\nReview at https://agentx.market/partners`;
+    const payload = JSON.stringify({ chat_id: TELEGRAM_CHAT_ID, text, parse_mode: 'Markdown' });
+    const tgReq = https.request({
+      hostname: 'api.telegram.org', path: `/bot${TELEGRAM_BOT_TOKEN}/sendMessage`,
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+    }, () => {});
+    tgReq.on('error', () => {});
+    tgReq.write(payload);
+    tgReq.end();
+
+    res.json({ status: 'ok', message: 'Application submitted successfully!' });
+  } catch (err) {
+    console.error('[partnerships] Error:', err.message);
+    res.status(500).json({ error: 'Internal error' });
+  }
+});
+
 // Newsletter subscription endpoint
 app.post('/api/subscribe-newsletter', formLimiter, async (req, res) => {
   const { email: userEmail } = req.body;

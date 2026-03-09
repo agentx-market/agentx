@@ -1,0 +1,597 @@
+<!DOCTYPE html><html lang="en"><head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Partners — AI Agent Integrations | AgentX</title>
+  <meta name="description" content="Explore AI agent platform integrations: GitHub, Docker Hub, Hugging Face, Replicate. Discover how partners leverage AgentX for autonomous agents.">
+  <meta name="keywords" content="AI agent partnerships, GitHub integration, Docker Hub, Hugging Face, Replicate, agent marketplace">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://agentx.market/partners">
+  <meta property="og:title" content="Partners — AI Agent Integrations | AgentX">
+  <meta property="og:description" content="Explore AI agent platform integrations. GitHub, Docker Hub, Hugging Face, Replicate partners showcase.">
+  <meta property="og:image" content="https://agentx.market/img/og-image.png">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="/img/favicon.svg">
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="/css/style.css">
+
+  <!-- Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "name": "Partners — AI Agent Integrations",
+    "url": "https://agentx.market/partners",
+    "description": "AI agent platform integrations and partnership opportunities",
+    "potentialAction": {
+      "@type": "SearchAction",
+      "target": "https://agentx.market/browse?search={query}",
+      "query-input": "required name=query"
+    }
+  }
+  </script>
+
+  <style>
+    /* Partners Page Styles */
+    .partners-hero {
+      padding: var(--space-4xl) 0 var(--space-3xl);
+      position: relative;
+      overflow: hidden;
+    }
+    .partners-hero h1 {
+      margin-bottom: var(--space-lg);
+      font-size: 2.5rem;
+      letter-spacing: -0.04em;
+    }
+    .partners-hero p {
+      font-size: 1.1rem;
+      color: var(--text-muted);
+      max-width: 600px;
+    }
+
+    .partner-logos-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: var(--space-xl);
+      margin-top: var(--space-3xl);
+    }
+    .partner-card {
+      padding: var(--space-2xl);
+      border-radius: var(--radius-xl);
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      text-align: center;
+      transition: all var(--transition-fast);
+      cursor: pointer;
+      position: relative;
+    }
+    .partner-card:hover {
+      border-color: var(--accent);
+      transform: translateY(-4px);
+      box-shadow: 0 12px 32px rgba(109, 92, 255, 0.15);
+    }
+    .partner-logo {
+      width: 80px;
+      height: 80px;
+      margin: 0 auto var(--space-lg);
+      border-radius: var(--radius-lg);
+      background: var(--bg-tertiary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+      font-weight: 800;
+      color: var(--accent-light);
+    }
+    .partner-card h3 {
+      font-size: 1.2rem;
+      margin-bottom: var(--space-sm);
+    }
+    .partner-card p {
+      font-size: 0.95rem;
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
+    .partner-badge {
+      display: inline-block;
+      padding: 4px 12px;
+      font-size: 0.75rem;
+      border-radius: var(--radius-full);
+      background: rgba(109, 92, 255, 0.1);
+      color: var(--accent-light);
+      margin-top: var(--space-md);
+    }
+
+    .partner-stats-bar {
+      padding: var(--space-2xl) 0;
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      margin-top: var(--space-3xl);
+    }
+    .stats-row {
+      display: flex;
+      justify-content: space-around;
+      flex-wrap: wrap;
+      gap: var(--space-xl);
+    }
+    .stat-item {
+      text-align: center;
+    }
+    .stat-number {
+      font-size: 2.5rem;
+      font-weight: 800;
+      color: var(--accent-light);
+      letter-spacing: -0.03em;
+    }
+    .stat-label {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    .case-studies-section {
+      padding: var(--space-5xl) 0;
+    }
+    .case-study-card {
+      padding: var(--space-2xl);
+      border-radius: var(--radius-xl);
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+    }
+    .case-study-meta {
+      display: flex;
+      align-items: center;
+      gap: var(--space-md);
+      margin-bottom: var(--space-lg);
+    }
+    .case-study-logo {
+      width: 48px;
+      height: 48px;
+      border-radius: var(--radius-md);
+      background: var(--bg-tertiary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+    }
+    .case-study-title h4 {
+      margin-bottom: 2px;
+    }
+    .case-study-title span {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+    .case-study-result {
+      display: flex;
+      gap: var(--space-lg);
+      margin-top: var(--space-lg);
+      padding-top: var(--space-md);
+      border-top: 1px solid var(--border);
+    }
+    .result-badge {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.9rem;
+      color: var(--success);
+    }
+
+    .apply-partner-section {
+      padding: var(--space-5xl) 0;
+      background: linear-gradient(135deg, rgba(109, 92, 255, 0.1), rgba(0, 212, 170, 0.05));
+      border-radius: var(--radius-xl);
+      padding: var(--space-4xl) var(--space-3xl);
+    }
+    .apply-partner-section h2 {
+      margin-bottom: var(--space-lg);
+    }
+    .apply-form {
+      max-width: 600px;
+      margin-top: var(--space-2xl);
+    }
+    .form-group {
+      margin-bottom: var(--space-lg);
+    }
+    .form-group label {
+      display: block;
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      margin-bottom: 8px;
+    }
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      width: 100%;
+      padding: 0.85rem 1.4rem;
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border-light);
+      background: var(--bg-tertiary);
+      color: var(--text-primary);
+      font-family: var(--font-sans);
+      font-size: 0.95rem;
+      outline: none;
+      transition: border-color var(--transition-fast);
+    }
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+      border-color: var(--accent);
+    }
+    .form-group textarea {
+      min-height: 120px;
+      resize: vertical;
+    }
+
+    @media (max-width: 768px) {
+      .partners-hero h1 { font-size: 2rem; }
+      .partner-logos-grid { grid-template-columns: 1fr; }
+      .stats-row { flex-direction: column; gap: var(--space-lg); }
+      .apply-partner-section { padding: var(--space-3xl) var(--space-xl); }
+    }
+  </style>
+</head>
+<body class="noise-overlay">
+  <!-- Navbar -->
+  <nav class="navbar">
+    <div class="container">
+      <a href="/" class="nav-logo">
+        <div class="logo-icon">X</div>
+        AgentX
+      </a>
+      <ul class="nav-links">
+        <li><a href="/features">Features</a></li>
+        <li><a href="/pricing">Pricing</a></li>
+        <li><a href="/browse">Browse</a></li>
+        <li><a href="/docs">Docs</a></li>
+        <li><a href="/about">About</a></li>
+        <li><a href="/contact">Contact</a></li>
+        <li class="nav-cta">
+          <a href="/pricing" class="btn btn-primary">Get Started</a>
+        </li>
+      </ul>
+      <button class="nav-toggle" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <section class="partners-hero">
+    <div class="container">
+      <h1 class="fade-in">AI Agent Platform Partnerships</h1>
+      <p class="fade-in fade-in-delay-1">
+        Explore how leading platforms integrate with AgentX for autonomous agent deployment. Discover partnerships, success stories, and how to become a partner.
+      </p>
+    </div>
+  </section>
+
+  <!-- Partner Logos Grid -->
+  <section style="background: var(--bg-secondary);">
+    <div class="container">
+      <h2 style="text-align: center; margin-bottom: var(--space-xl);">Featured Partners</h2>
+      <div class="partner-logos-grid">
+        <!-- GitHub Partner -->
+        <div class="partner-card js-partner-card" data-partner="github" data-click-tracking="true">
+          <div class="partner-logo" style="color: #f0f6fc;">GH</div>
+          <h3>GitHub</h3>
+          <p>Seamless integration with GitHub repositories. Deploy agents directly from your codebase with automated CI/CD workflows.</p>
+          <span class="partner-badge">Integration Partner</span>
+        </div>
+
+        <!-- Docker Hub Partner -->
+        <div class="partner-card js-partner-card" data-partner="dockerhub" data-click-tracking="true">
+          <div class="partner-logo" style="color: #09d3ac;">DH</div>
+          <h3>Docker Hub</h3>
+          <p>Publish and discover agent containers. One-click deployment from Docker Hub registries to AgentX infrastructure.</p>
+          <span class="partner-badge">Container Partner</span>
+        </div>
+
+        <!-- Hugging Face Partner -->
+        <div class="partner-card js-partner-card" data-partner="huggingface" data-click-tracking="true">
+          <div class="partner-logo" style="color: #fcd116;">HF</div>
+          <h3>Hugging Face</h3>
+          <p>Access thousands of pre-trained models. Bridge AI agents with the world's largest model repository.</p>
+          <span class="partner-badge">Model Partner</span>
+        </div>
+
+        <!-- Replicate Partner -->
+        <div class="partner-card js-partner-card" data-partner="replicate" data-click-tracking="true">
+          <div class="partner-logo" style="color: #ff0000;">RP</div>
+          <h3>Replicate</h3>
+          <p>Run ML models at scale. Deploy agents with Replicate APIs for on-demand inference and model serving.</p>
+          <span class="partner-badge">Inference Partner</span>
+        </div>
+
+        <!-- Stripe Partner -->
+        <div class="partner-card js-partner-card" data-partner="stripe" data-click-tracking="true">
+          <div class="partner-logo" style="color: #635bff;">ST</div>
+          <h3>Stripe</h3>
+          <p>Integrated payments for agent deployments. Accept payments, manage subscriptions, and track revenue.</p>
+          <span class="partner-badge">Payment Partner</span>
+        </div>
+
+        <!-- Discord Partner -->
+        <div class="partner-card js-partner-card" data-partner="discord" data-click-tracking="true">
+          <div class="partner-logo" style="color: #5865f2;">DC</div>
+          <h3>Discord</h3>
+          <p>Deploy agents as Discord bots. Manage communities with autonomous moderation, support, and engagement.</p>
+          <span class="partner-badge">Community Partner</span>
+        </div>
+      </div>
+
+      <!-- Stats Bar -->
+      <div class="partner-stats-bar">
+        <div class="stats-row">
+          <div class="stat-item">
+            <div class="stat-number" id="partner-clicks-total">0</div>
+            <div class="stat-label">Partner Link Clicks</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-number" id="weekly-visits">4,200+</div>
+            <div class="stat-label">Weekly Visitors</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-number" id="integration-count">50+</div>
+            <div class="stat-label">Active Integrations</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Case Studies -->
+  <section class="case-studies-section">
+    <div class="container">
+      <h2 style="text-align: center; margin-bottom: var(--space-xl);">Partner Success Stories</h2>
+      <div class="partner-logos-grid">
+        <!-- GitHub Case Study -->
+        <div class="case-study-card js-case-study" data-case-study="github-migration">
+          <div class="case-study-meta">
+            <div class="case-study-logo">GH</div>
+            <div class="case-study-title">
+              <h4>TechCorp's Agent Migration</h4>
+              <span>GitHub Integration • 6 months</span>
+            </div>
+          </div>
+          <p style="color: var(--text-secondary); line-height: 1.7;">
+            TechCorp migrated their legacy bot infrastructure to AgentX, leveraging GitHub CI/CD pipelines for automated deployments across 20+ agent instances.
+          </p>
+          <div class="case-study-result">
+            <span class="result-badge">✓ 60% faster deployment</span>
+            <span class="result-badge">✓ 99.9% uptime</span>
+          </div>
+        </div>
+
+        <!-- Docker Hub Case Study -->
+        <div class="case-study-card js-case-study" data-case-study="docker-registry">
+          <div class="case-study-meta">
+            <div class="case-study-logo">DH</div>
+            <div class="case-study-title">
+              <h4>AI Factory Container Registry</h4>
+              <span>Docker Hub • 8 months</span>
+            </div>
+          </div>
+          <p style="color: var(--text-secondary); line-height: 1.7;">
+            AI Factory published 50+ agent containers on Docker Hub, with AgentX providing one-click deployment and auto-scaling infrastructure.
+          </p>
+          <div class="case-study-result">
+            <span class="result-badge">✓ 50 agents published</span>
+            <span class="result-badge">✓ Auto-scaling enabled</span>
+          </div>
+        </div>
+
+        <!-- Hugging Face Case Study -->
+        <div class="case-study-card js-case-study" data-case-study="hf-models">
+          <div class="case-study-meta">
+            <div class="case-study-logo">HF</div>
+            <div class="case-study-title">
+              <h4>SaaS Co Model Integration</h4>
+              <span>Hugging Face • 12 months</span>
+            </div>
+          </div>
+          <p style="color: var(--text-secondary); line-height: 1.7;">
+            SaaS Co integrated Hugging Face models with AgentX agents, enabling dynamic model selection based on task complexity and cost optimization.
+          </p>
+          <div class="case-study-result">
+            <span class="result-badge">✓ 40% cost reduction</span>
+            <span class="result-badge">✓ Multi-model routing</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Apply to be Partner Section -->
+  <section class="apply-partner-section">
+    <div class="container">
+      <h2 class="fade-in">Apply to be a Partner</h2>
+      <p style="color: var(--text-secondary); max-width: 600px;">
+        Join our growing network of platform partners. Whether you're a code repository, container registry, model hub, or API service, we want to hear from you.
+      </p>
+
+      <!-- Apply Form -->
+      <form id="partner-application-form" class="apply-form">
+        <div class="form-group">
+          <label for="company-name">Company / Platform Name</label>
+          <input type="text" id="company-name" name="company_name" required="" placeholder="e.g., GitHub, Docker Hub">
+        </div>
+
+        <div class="form-group">
+          <label for="contact-email">Contact Email</label>
+          <input type="email" id="contact-email" name="contact_email" required="" placeholder="your@email.com">
+        </div>
+
+        <div class="form-group">
+          <label for="partner-type">Partnership Type</label>
+          <select id="partner-type" name="partner_type" required="">
+            <option value="">Select partnership type...</option>
+            <option value="code-platform">Code Platform (GitHub, GitLab, Bitbucket)</option>
+            <option value="container-registry">Container Registry (Docker Hub, Quay)</option>
+            <option value="model-hub">Model Hub (Hugging Face, ModelScope)</option>
+            <option value="inference-api">Inference API (Replicate, Together AI)</option>
+            <option value="payment-processor">Payment Processor (Stripe, PayPal)</option>
+            <option value="communication">Communication Platform (Discord, Slack)</option>
+            <option value="other">Other Integration</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="integration-description">Integration Description</label>
+          <textarea id="integration-description" name="integration_description" required="" placeholder="Describe how your platform integrates with AI agents or how you'd like to partner with AgentX..."></textarea>
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-large" id="partner-submit-btn">
+          Submit Application
+        </button>
+      </form>
+
+      <!-- Form Success Message -->
+      <div id="partner-form-success" style="display: none; margin-top: var(--space-lg); padding: var(--space-lg); background: rgba(0, 212, 170, 0.1); border-radius: var(--radius-lg); color: var(--success);">
+        ✓ Thank you for your application! We'll review your submission and contact you within 5 business days.
+      </div>
+
+      <!-- Additional Info -->
+      <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: var(--space-lg); text-align: center;">
+        By submitting, you agree to our <a href="/terms" style="color: var(--accent-light);">Terms</a> and <a href="/privacy" style="color: var(--accent-light);">Privacy Policy</a>. Partnership applications are reviewed within 5 business days.
+      </p>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a href="/" class="nav-logo" style="margin-bottom: 0.5rem;">
+            <div class="logo-icon">X</div>
+            AgentX
+          </a>
+          <p>The AI agent marketplace. Discover, deploy, and manage autonomous agents that handle real business tasks.</p>
+        </div>
+        <div class="footer-col">
+          <h4>Product</h4>
+          <ul>
+            <li><a href="/features">Features</a></li>
+            <li><a href="/pricing">Pricing</a></li>
+            <li><a href="/browse">Browse Agents</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Company</h4>
+          <ul>
+            <li><a href="/about">About</a></li>
+            <li><a href="/blog">Blog</a></li>
+            <li><a href="/contact">Contact</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Resources</h4>
+          <ul>
+            <li><a href="/partners">Partners</a></li>
+            <li><a href="/docs">Documentation</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© 2026 AgentX Market. All rights reserved.</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Click Tracking Script -->
+  <script>
+    // Partner click tracking
+    const trackedPartners = ['github', 'dockerhub', 'huggingface', 'replicate', 'stripe', 'discord'];
+    let totalClicks = 0;
+
+    function trackPartnerClick(partnerName) {
+      totalClicks++;
+      document.getElementById('partner-clicks-total').textContent = totalClicks.toLocaleString();
+      
+      // Send to analytics (implement with your analytics provider)
+      if (window.dataLayer) {
+        window.dataLayer.push({ event: 'partner_link_click', partner: partnerName });
+      }
+
+      console.log(`[Analytics] Partner link clicked: ${partnerName}`);
+    }
+
+    document.querySelectorAll('.js-partner-card').forEach(card => {
+      card.addEventListener('click', function(e) {
+        e.preventDefault();
+        const partner = this.dataset.partner;
+        trackPartnerClick(partner);
+        
+        // Redirect to partner page or details
+        const partnerUrls = {
+          github: 'https://github.com/agentx-market',
+          dockerhub: 'https://hub.docker.com/orgs/agentx',
+          huggingface: 'https://huggingface.co/agentx',
+          replicate: 'https://replicate.com/agentx',
+          stripe: 'https://stripe.com/agentx',
+          discord: 'https://discord.gg/agentx'
+        };
+        
+        if (partnerUrls[partner]) {
+          window.open(partnerUrls[partner], '_blank');
+        }
+      });
+    });
+
+    // Partner application form
+    document.getElementById('partner-application-form').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      
+      const btn = document.getElementById('partner-submit-btn');
+      const successMsg = document.getElementById('partner-form-success');
+      const formData = {
+        company_name: document.getElementById('company-name').value.trim(),
+        contact_email: document.getElementById('contact-email').value.trim(),
+        partner_type: document.getElementById('partner-type').value,
+        integration_description: document.getElementById('integration-description').value.trim()
+      };
+
+      if (!formData.company_name || !formData.contact_email || !formData.partner_type) {
+        alert('Please fill in all required fields');
+        return;
+      }
+
+      btn.disabled = true;
+      btn.textContent = 'Submitting...';
+
+      try {
+        const resp = await fetch('/api/partner-application', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(formData)
+        });
+
+        if (!resp.ok) throw new Error();
+
+        btn.style.display = 'none';
+        this.style.display = 'none';
+        successMsg.style.display = 'block';
+
+        // Log form submission
+        console.log('[Analytics] Partner application submitted:', formData);
+        if (window.dataLayer) {
+          window.dataLayer.push({ event: 'partner_application_submitted', partner_type: formData.partner_type });
+        }
+
+      } catch {
+        btn.disabled = false;
+        btn.textContent = 'Submit Application';
+        alert('There was an error submitting your application. Please try again or contact us at support@agentx.market');
+      }
+    });
+  </script>
+  <script src="/js/main.js"></script>
+</body></html>
