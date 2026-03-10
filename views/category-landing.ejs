@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= typeof pageTitle !== 'undefined' ? pageTitle : category.name + ' Agents | AI Agent Directory' %></title>
+  <meta name="description" content="<%= typeof pageDescription !== 'undefined' ? pageDescription : category.description %>">
+  
+  <!-- OG Meta Tags -->
+  <meta property="og:title" content="<%= category.name %> Agents - AI Agent Directory">
+  <meta property="og:description" content="<%= category.description %>">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://agentx.market/agents/<%= category.slug %>">
+  <meta property="og:image" content="https://agentx.market/images/og/category-<%= category.slug %>.png">
+  
+  <!-- Twitter Cards -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="<%= category.name %> Agents">
+  <meta name="twitter:description" content="<%= category.description %>">
+  
+  <!-- Canonical URL -->
+  <link rel="canonical" href="https://agentx.market/agents/<%= category.slug %>">
+  
+  <!-- Schema.org Structured Data -->
+  <script type="application/ld+json">
+    <%= typeof schemaJson !== 'undefined' ? schemaJson : '{}' %>
+  </script>
+  
+  <!-- Favicon -->
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <link rel="icon" href="/icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  
+  <!-- Global CSS -->
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/browse.css">
+  
+  <!-- Category-specific color from theme -->
+  <style>
+    :root {
+      --category-color: <%= category.color || '#3b82f6' %>;
+    }
+    
+    .category-hero {
+      background: linear-gradient(135deg, var(--category-color) 0%, #1a1a2e 100%);
+      padding: 4rem 0;
+      margin-bottom: 2rem;
+    }
+    
+    .category-icon {
+      font-size: 3rem;
+      display: inline-block;
+      margin-right: 1rem;
+    }
+    
+    .agents-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+      gap: 2rem;
+      margin-top: 2rem;
+    }
+    
+    .category-card {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 1.5rem;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    
+    .category-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+    }
+    
+    .agent-count-badge {
+      background: var(--category-color);
+      color: white;
+      padding: 0.25rem 0.75rem;
+      border-radius: 20px;
+      font-size: 0.875rem;
+      font-weight: 600;
+    }
+    
+    @media (max-width: 768px) {
+      .category-hero {
+        padding: 3rem 1rem;
+      }
+      
+      .agents-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body class="dark-theme">
+  <%- include("partials/navbar") %>
+
+  <!-- Category Hero Section -->
+  <section class="category-hero">
+    <div class="container">
+      <h1>
+        <span class="category-icon"><%= category.icon || '🤖' %></span>
+        <%= category.name %> Agents
+      </h1>
+      <p class="hero-subtitle" style="font-size: 1.25rem; opacity: 0.9;">
+        <%= category.description %>
+      </p>
+    </div>
+  </section>
+
+  <!-- Agent Listings -->
+  <main class="container" style="padding: 3rem 0;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+      <h2 style="margin: 0;">
+        <span class="agent-count-badge"><%= agents.length %> Agents</span>
+      </h2>
+      <a href="/browse" class="btn btn-secondary">Browse All Agents</a>
+    </div>
+
+    <% if (agents.length === 0) { %>
+      <div class="empty-state" style="text-align: center; padding: 4rem 0;">
+        <p style="font-size: 1.5rem; opacity: 0.7;">No agents in this category yet.</p>
+        <a href="/submit" class="btn btn-primary">Submit Your Agent</a>
+      </div>
+    <% } else { %>
+      <div class="agents-grid">
+        <% agents.forEach(function(agent) { %>
+          <article class="agent-card">
+            <div class="card-header">
+              <h3 style="margin: 0;">
+                <a href="/agents/<%= agent.slug %>" style="color: inherit; text-decoration: none;">
+                  <%= agent.name %>
+                </a>
+              </h3>
+            </div>
+            
+            <% if (agent.description) { %>
+              <p class="agent-description">
+                <%= agent.description.length > 120 ? agent.description.substring(0, 120) + '...' : agent.description %>
+              </p>
+            <% } %>
+            
+            <% if (agent.capabilities) { %>
+              <div class="capabilities" style="display: flex; gap: 0.5rem; flex-wrap: wrap; margin-top: 1rem;">
+                <% agent.capabilities.split(', ').slice(0, 3).forEach(function(cap) { %>
+                  <span class="capability-tag">
+                    <%= cap %>
+                  </span>
+                <% }); %>
+              </div>
+            <% } %>
+            
+            <div class="card-actions" style="margin-top: 1.5rem;">
+              <a href="/agents/<%= agent.slug %>" class="btn btn-primary">View Agent</a>
+            </div>
+          </article>
+        <% }); %>
+      </div>
+    <% } %>
+  </main>
+
+  <!-- Related Categories -->
+  <% if (relatedCategories && relatedCategories.length > 0) { %>
+    <section class="container" style="padding: 3rem 0;">
+      <h2 style="margin-bottom: 1.5rem;">Related Categories</h2>
+      <div class="agents-grid">
+        <% relatedCategories.forEach(function(cat) { %>
+          <a href="/agents/<%= cat.slug %>" class="category-card">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <h3>
+                <%= cat.icon || '🤖' %> <%= cat.name %>
+              </h3>
+              <span class="agent-count-badge"><%= cat.agent_count %> agents</span>
+            </div>
+          </a>
+        <% }); %>
+      </div>
+    </section>
+  <% } %>
+
+  <!-- SEO Internal Linking Section -->
+  <footer style="background: var(--bg-secondary); padding: 4rem 0; margin-top: 4rem;">
+    <div class="container">
+      <h3 style="margin-bottom: 1.5rem;">Related Searches</h3>
+      <div class="related-tags" style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
+        <% const relatedTerms = [
+          `AI ${category.name.toLowerCase()} agent`,
+          `${category.name.toLowerCase()} AI tools`,
+          `best ${category.name.toLowerCase()} agents`,
+          `${category.slug.replace(/-/g, ' ')} directory`
+        ]; %>
+        <% relatedTerms.forEach(function(term) { %>
+          <a href="/agents/search?q=<%= encodeURIComponent(term) %>" class="tag">
+            <%= term %>
+          </a>
+        <% }); %>
+      </div>
+    </div>
+  </footer>
+
+  <%- include("partials/footer") %>
+</body>
+</html>
