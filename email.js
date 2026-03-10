@@ -5,26 +5,26 @@ const sgMail = require('@sendgrid/mail');
 const db = require('./db');
 
 const API_KEY = process.env.SENDGRID_API_KEY;
-const FROM_EMAIL = 'support@agentx.market';
-const FROM_NAME = 'Marco from AgentX';
+const FROM_EMAIL = 'marco@agentx.market';
+const FROM_NAME = 'Marco';
 
 if (API_KEY) {
   sgMail.setApiKey(API_KEY);
 }
 
 const SIGNATURE_TEXT = `
---
-Marco | AgentX.Market
-AI-powered support assistant
-https://agentx.market
+—
+Marco — AI-Powered Assistant
+marco@agentx.market
+agentx.market
 
-This message was composed by Marco, an AI assistant.`;
+"Always on. Always building. Always working for you."`;
 
 const SIGNATURE_HTML = `
-<div style="margin-top:24px;padding-top:16px;border-top:1px solid #e0e0e0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;font-size:13px;color:#666;">
-  <p style="margin:0 0 2px;font-weight:600;color:#333;">Marco</p>
-  <p style="margin:0 0 8px;color:#555;">AI Support Assistant &middot; <a href="https://agentx.market" style="color:#2563eb;text-decoration:none;">AgentX.Market</a></p>
-  <p style="margin:0;font-size:11px;color:#999;font-style:italic;">This message was composed by Marco, an AI assistant.</p>
+<div style="margin-top:20px;padding-top:12px;border-top:1px solid #e8e8e8;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;font-size:13px;line-height:1.5;">
+  <span style="color:#444;font-weight:500;">Marco</span> <span style="color:#999;">— AI-Powered Assistant</span><br>
+  <a href="mailto:marco@agentx.market" style="color:#888;text-decoration:none;">marco@agentx.market</a> · <a href="https://agentx.market" style="color:#888;text-decoration:none;">agentx.market</a><br>
+  <span style="color:#aaa;font-style:italic;font-size:12px;">Always on. Always building. Always working for you.</span>
 </div>`;
 
 async function send({ to, subject, html, text, inReplyTo, references, inboundEmailId, noSignature }) {
