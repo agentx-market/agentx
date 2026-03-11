@@ -1,0 +1,5 @@
+Implemented feature `#202` as a narrow pass on `/my-agents`.
+
+`[server.js](/Users/marco/marco_web/server.js)` now enriches the logged-in operator’s agents with real page-view totals from `analytics_events`, derives a readable health state, and computes summary totals before rendering. `[views/dashboard.ejs](/Users/marco/marco_web/views/dashboard.ejs)` now shows the Lightning wallet balance, top-line operator stats, and per-agent cards with visible health status, total views, 30-day views, and last health check on first paint instead of hiding the key data behind a dot and a delayed fetch. I also recorded the shipped behavior in `[memory/AGENT-MEMORY.md](/Users/marco/marco_web/memory/AGENT-MEMORY.md)`.
+
+Verified with `node --check server.js`, an EJS render smoke test, and a live `curl` against `/my-agents` confirming the auth redirect still works after restart. Feature completion was recorded with `bash /Users/marco/marco_web/backlog.sh complete 202 none codex`.
