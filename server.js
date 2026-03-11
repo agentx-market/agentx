@@ -581,6 +581,71 @@ app.get('/api/agents/:id/embed', async (req, res) => {
   }
 });
 
+// Agent status badge by slug - embeddable in READMEs
+app.get('/badge/:slug', (req, res) => {
+  try {
+    const slug = req.params.slug;
+    const agent = db.get('SELECT id, name, health_check_passed_at, created_at FROM agents WHERE LOWER(REPLACE(name, " ", "-"))=? OR REPLACE(name, " ", "-")=? LIMIT 1', [slug.toLowerCase(), slug]);
+    
+    if (!agent) {
+      // Generate offline badge for non-existent agent
+      const now = new Date();
+      let lastCheckText = 'never';
+      
+      const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="210" height="30" viewBox="0 0 210 30">
+        <a href="https://agentx.market/agents/${slug}" target="_blank">
+          <rect width="210" height="30" rx="5" fill="#e05d44"/>
+          <text x="8" y="14" font-family="Arial, sans-serif" font-size="13" font-weight="bold" fill="white" text-anchor="start">${slug}</text>
+        </a>
+        <a href="https://agentx.market/agents/${slug}" target="_blank">
+          <rect x="130" y="16" width="80" height="12" rx="4" fill="#e05d44" opacity="0.9"/>
+          <text x="170" y="25" font-family="Arial, sans-serif" font-size="9" fill="white" text-anchor="middle">Offline | Last check: ${lastCheckText}</text>
+        </a>
+      </svg>`;
+      
+      res.set('Content-Type', 'image/svg+xml');
+      return res.send(svg);
+    }
+    
+    const now = new Date();
+    const lastHealth = agent.health_check_passed_at ? new Date(agent.health_check_passed_at) : null;
+    const isOnline = lastHealth && (now - lastHealth) <= 5 * 60 * 1000;
+    const statusColor = isOnline ? '#4c1' : '#e05d44';
+    
+    // Calculate uptime percentage
+    const createdAt = agent.created_at ? new Date(agent.created_at) : now;
+    const uptimeMs = lastHealth ? now - createdAt : 0;
+    const totalMs = now - createdAt;
+    const uptimePercent = totalMs > 0 ? Math.round((uptimeMs / totalMs) * 100) : 0;
+    
+    // Format last check time
+    let lastCheckText = 'never';
+    if (lastHealth) {
+      const diffSeconds = Math.floor((now - lastHealth) / 1000);
+      if (diffSeconds < 60) lastCheckText = `${diffSeconds}s ago`;
+      else if (diffSeconds < 3600) lastCheckText = `${Math.floor(diffSeconds / 60)}m ago`;
+      else lastCheckText = `${Math.floor(diffSeconds / 3600)}h ago`;
+    }
+    
+    const badgeSlug = slug.toLowerCase();
+    const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="210" height="30" viewBox="0 0 210 30">
+      <a href="https://agentx.market/agents/${badgeSlug}" target="_blank">
+        <rect width="210" height="30" rx="5" fill="${statusColor}"/>
+        <text x="8" y="14" font-family="Arial, sans-serif" font-size="13" font-weight="bold" fill="white" text-anchor="start">${agent.name}</text>
+      </a>
+      <a href="https://agentx.market/agents/${badgeSlug}" target="_blank">
+        <rect x="130" y="16" width="80" height="12" rx="4" fill="${statusColor}" opacity="0.9"/>
+        <text x="170" y="25" font-family="Arial, sans-serif" font-size="9" fill="white" text-anchor="middle">Uptime: ${uptimePercent}% | Last check: ${lastCheckText}</text>
+      </a>
+    </svg>`;
+    
+    res.set('Content-Type', 'image/svg+xml');
+    res.send(svg);
+  } catch (err) {
+    res.status(500).send(err.message);
+  }
+});
+
 // Agent invoke endpoint - forwards method+params to agent's endpoint with HMAC-SHA256 signature
 app.post('/api/agents/:id/invoke', authMiddleware, authenticatedLimiter, async (req, res) => {
   try {
