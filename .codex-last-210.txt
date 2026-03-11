@@ -1,0 +1,7 @@
+Implemented the narrow `/submit` flow for feature `#210`.
+
+The backend change in [server.js](/Users/marco/marco_web/server.js#L946) replaces the old URL-autodetect submission contract with `agentName + healthUrl + contactEmail`, validates them, runs a live health check with a 5s timeout, and only inserts the agent if the URL returns `HTTP 200`. Successful submissions are stored as `community_listing=1` so they appear immediately, and the operator gets an email with claim/upgrade-later instructions at [server.js](/Users/marco/marco_web/server.js#L1015).
+
+The frontend at [public/submit.html](/Users/marco/marco_web/public/submit.html#L223) is now a minimal three-field form with simple status messaging and no OAuth dependency. The submit behavior is wired in at [public/submit.html](/Users/marco/marco_web/public/submit.html#L282).
+
+Verification: `node --check server.js` passed. I did not modify any of the blocked dirty paths. Backlog was marked complete with `bash ~/marco_web/backlog.sh complete 210 none codex`.

@@ -1,0 +1,244 @@
+- generic [active] [ref=e1]:
+  - navigation [ref=e2]:
+    - generic [ref=e3]:
+      - link "X AgentX" [ref=e4] [cursor=pointer]:
+        - /url: /
+        - generic [ref=e5]: X
+        - text: AgentX
+      - list [ref=e6]:
+        - listitem [ref=e7]:
+          - link "Features" [ref=e8] [cursor=pointer]:
+            - /url: /features
+        - listitem [ref=e9]:
+          - link "Pricing" [ref=e10] [cursor=pointer]:
+            - /url: /pricing
+        - listitem [ref=e11]:
+          - link "About" [ref=e12] [cursor=pointer]:
+            - /url: /about
+        - listitem [ref=e13]:
+          - link "Contact" [ref=e14] [cursor=pointer]:
+            - /url: /contact
+        - listitem [ref=e15]:
+          - link "List Your Agent" [ref=e16] [cursor=pointer]:
+            - /url: /register
+  - generic [ref=e19]:
+    - generic [ref=e20]:
+      - generic [ref=e21]: Pricing that maps to trust
+      - heading "Start free. Upgrade when your listing needs to convert." [level=1] [ref=e22]
+      - paragraph [ref=e23]: "AgentX pricing should feel like a direct extension of the marketplace itself: free to get listed honestly, paid when you want stronger proof, monitoring, and buyer-ready operator presence."
+      - generic [ref=e24]:
+        - generic [ref=e25]: No fake scale claims
+        - generic [ref=e26]: Built for operator trust
+        - generic [ref=e27]: Designed to generate real demand
+    - complementary [ref=e28]:
+      - generic [ref=e29]:
+        - generic [ref=e30]:
+          - generic [ref=e31]:
+            - strong [ref=e32]: Free tier job
+            - text: Show up honestly and get claim flow started.
+          - generic [ref=e33]: $0
+        - generic [ref=e34]:
+          - generic [ref=e35]:
+            - strong [ref=e36]: Verified Operator job
+            - text: Turn your page into a trust and conversion surface.
+          - generic [ref=e37]: $29/mo
+        - generic [ref=e38]:
+          - generic [ref=e39]:
+            - strong [ref=e40]: Concierge job
+            - text: White-glove verification, onboarding, and launch support.
+          - generic [ref=e41]: Custom
+  - generic [ref=e44]:
+    - generic [ref=e45]:
+      - generic [ref=e46]: Why this pricing exists
+      - heading "We are charging for credibility infrastructure, not for generic “AI marketplace access.”" [level=2] [ref=e48]
+      - paragraph [ref=e49]: "That means the paid tier has to earn its keep with things operators actually need: clearer trust signals, better health visibility, a stronger listing page, and better conversion surfaces. If it does not help you look more credible or get more buyer intent, it should not be on the pricing page."
+      - generic [ref=e50]:
+        - generic [ref=e51]:
+          - generic [ref=e52]: "01"
+          - generic [ref=e53]:
+            - strong [ref=e54]: Free should stay useful.
+            - text: Operators should be able to create an honest presence without being forced into dark patterns or fake urgency.
+        - generic [ref=e55]:
+          - generic [ref=e56]: "02"
+          - generic [ref=e57]:
+            - strong [ref=e58]: Paid should help you close trust faster.
+            - text: Verification, richer proof, and stronger buyer pathways are the first revenue-driving layer.
+        - generic [ref=e59]:
+          - generic [ref=e60]: "03"
+          - generic [ref=e61]:
+            - strong [ref=e62]: Enterprise should be operationally real.
+            - text: It exists for custom verification, onboarding help, and operator recruitment that needs hands-on support.
+    - generic [ref=e63]:
+      - generic [ref=e64]:
+        - generic [ref=e65]: Marketplace principle
+        - generic [ref=e66]: Sparse but real
+        - paragraph [ref=e67]: Trust compounds faster than inflated directory counts.
+      - generic [ref=e68]:
+        - generic [ref=e69]: Paid tier goal
+        - generic [ref=e70]: More demos
+        - paragraph [ref=e71]: The right upgrade is the one that makes buyer action easier.
+      - generic [ref=e72]:
+        - generic [ref=e73]: 30-day objective
+        - generic [ref=e74]: First revenue
+        - paragraph [ref=e75]: Verified Operator is the fastest path to something sellable now.
+  - generic [ref=e78]:
+    - generic [ref=e79]:
+      - generic [ref=e80]: Free
+      - generic [ref=e81]: For early operators
+      - generic [ref=e82]:
+        - text: $0 / month
+        - generic [ref=e83]: Useful from day one
+      - generic [ref=e84]: Get listed honestly, make your claim visible, and start building public presence without the page feeling fake.
+      - list [ref=e85]:
+        - listitem [ref=e86]: ✓ Public operator listing or claimable listing
+        - listitem [ref=e87]: ✓ Basic marketplace visibility
+        - listitem [ref=e88]: ✓ Essential profile metadata
+        - listitem [ref=e89]: ✓ Claim flow and onboarding capture
+      - generic [ref=e91]:
+        - generic [ref=e92]:
+          - textbox "Enter your work email" [ref=e93]
+          - button "Join the Waitlist" [ref=e94] [cursor=pointer]
+        - paragraph [ref=e95]: No credit card required
+    - generic [ref=e96]:
+      - text: Best path to revenue
+      - generic [ref=e97]: Verified Operator
+      - generic [ref=e98]: For serious marketplace sellers
+      - generic [ref=e99]:
+        - text: $29 / month
+        - generic [ref=e100]: Monthly, simple, no annual trap
+      - generic [ref=e101]: Turn your listing into a real trust surface with stronger proof, monitoring, and buyer-ready presentation.
+      - list [ref=e102]:
+        - listitem [ref=e103]: ✓ Verified operator badge
+        - listitem [ref=e104]: ✓ Richer public profile and trust panel
+        - listitem [ref=e105]: ✓ Health checks and public status visibility
+        - listitem [ref=e106]: ✓ Lead capture, demo intent, and contact CTAs
+        - listitem [ref=e107]: ✓ Featured placement rotation as inventory grows
+        - listitem [ref=e108]: ✓ Priority support
+      - link "Upgrade to Verified Operator" [ref=e109] [cursor=pointer]:
+        - /url: "#"
+    - generic [ref=e110]:
+      - generic [ref=e111]: Concierge
+      - generic [ref=e112]: For teams who want hands-on help
+      - generic [ref=e113]:
+        - text: Custom
+        - generic [ref=e114]: Structured around your launch
+      - generic [ref=e115]: For organizations that want manual verification help, launch support, buyer introductions, or custom onboarding.
+      - list [ref=e116]:
+        - listitem [ref=e117]: ✓ Everything in Verified Operator
+        - listitem [ref=e118]: ✓ Hands-on onboarding and proof setup
+        - listitem [ref=e119]: ✓ Priority listing launch support
+        - listitem [ref=e120]: ✓ Custom reporting or integration planning
+      - link "Talk to the Founder" [ref=e121] [cursor=pointer]:
+        - /url: /contact
+  - generic [ref=e123]:
+    - generic [ref=e124]:
+      - heading "Compare plans" [level=2] [ref=e125]
+      - paragraph [ref=e126]: Each tier should map to a clear job, not just a bigger feature bucket.
+    - table [ref=e128]:
+      - rowgroup [ref=e129]:
+        - row "Feature Free Verified Operator Concierge" [ref=e130]:
+          - columnheader "Feature" [ref=e131]
+          - columnheader "Free" [ref=e132]
+          - columnheader "Verified Operator" [ref=e133]
+          - columnheader "Concierge" [ref=e134]
+      - rowgroup [ref=e135]:
+        - row "Public listing ✓ ✓ ✓" [ref=e136]:
+          - cell "Public listing" [ref=e137]
+          - cell "✓" [ref=e138]
+          - cell "✓" [ref=e139]
+          - cell "✓" [ref=e140]
+        - row "Claim flow ✓ ✓ ✓" [ref=e141]:
+          - cell "Claim flow" [ref=e142]
+          - cell "✓" [ref=e143]
+          - cell "✓" [ref=e144]
+          - cell "✓" [ref=e145]
+        - row "Verified badge — ✓ ✓" [ref=e146]:
+          - cell "Verified badge" [ref=e147]
+          - cell "—" [ref=e148]
+          - cell "✓" [ref=e149]
+          - cell "✓" [ref=e150]
+        - row "Public health visibility Basic Expanded Custom" [ref=e151]:
+          - cell "Public health visibility" [ref=e152]
+          - cell "Basic" [ref=e153]
+          - cell "Expanded" [ref=e154]
+          - cell "Custom" [ref=e155]
+        - row "Lead capture + demo CTA — ✓ ✓" [ref=e156]:
+          - cell "Lead capture + demo CTA" [ref=e157]
+          - cell "—" [ref=e158]
+          - cell "✓" [ref=e159]
+          - cell "✓" [ref=e160]
+        - row "Featured placement — Rotation Priority launch" [ref=e161]:
+          - cell "Featured placement" [ref=e162]
+          - cell "—" [ref=e163]
+          - cell "Rotation" [ref=e164]
+          - cell "Priority launch" [ref=e165]
+        - row "Hands-on onboarding — — ✓" [ref=e166]:
+          - cell "Hands-on onboarding" [ref=e167]
+          - cell "—" [ref=e168]
+          - cell "—" [ref=e169]
+          - cell "✓" [ref=e170]
+  - generic [ref=e172]:
+    - heading "Frequently asked questions" [level=2] [ref=e174]
+    - generic [ref=e175]:
+      - generic [ref=e176]:
+        - button "Why is the free tier still free if you care about marketplace quality?" [ref=e177] [cursor=pointer]:
+          - text: Why is the free tier still free if you care about marketplace quality?
+          - generic [ref=e178]: +
+        - paragraph [ref=e179]: Because the first step is getting real operators onto the network honestly. Charging too early would incentivize weak listings and worse trust.
+      - generic [ref=e180]:
+        - button "What am I actually paying for on Verified Operator?" [ref=e181] [cursor=pointer]:
+          - text: What am I actually paying for on Verified Operator?
+          - generic [ref=e182]: +
+        - paragraph [ref=e183]: You are paying for stronger trust signals, public health visibility, and conversion-oriented presentation. The goal is to help your page look more credible and generate more buyer action.
+      - generic [ref=e184]:
+        - button "Is this a finished marketplace already?" [ref=e185] [cursor=pointer]:
+          - text: Is this a finished marketplace already?
+          - generic [ref=e186]: +
+        - paragraph [ref=e187]: No. It is an actively improving marketplace that is intentionally moving away from inflated directory inventory toward a smaller, more credible operator network.
+      - generic [ref=e188]:
+        - button "Can I talk to someone before upgrading?" [ref=e189] [cursor=pointer]:
+          - text: Can I talk to someone before upgrading?
+          - generic [ref=e190]: +
+        - paragraph [ref=e191]: Yes. If your operator page needs a specific workflow, onboarding help, or a launch plan, use the contact page and we will handle it directly.
+  - generic [ref=e194]:
+    - heading "Get listed honestly, then upgrade when the page needs to sell." [level=2] [ref=e195]
+    - paragraph [ref=e196]: That is the whole model. Start with a credible base, add stronger proof and conversion surfaces when you are ready, and keep the marketplace honest enough that humans trust it at first glance.
+    - generic [ref=e197]:
+      - link "List Your Agent" [ref=e198] [cursor=pointer]:
+        - /url: /register
+      - link "Browse Live Agents" [ref=e199] [cursor=pointer]:
+        - /url: /browse
+  - contentinfo [ref=e200]:
+    - generic [ref=e201]:
+      - generic [ref=e202]:
+        - generic [ref=e203]:
+          - link "X AgentX" [ref=e204] [cursor=pointer]:
+            - /url: /
+            - generic [ref=e205]: X
+            - text: AgentX
+          - paragraph [ref=e206]: A verified marketplace for operator-run AI agents and MCP services.
+        - generic [ref=e207]:
+          - heading "Product" [level=4] [ref=e208]
+          - list [ref=e209]:
+            - listitem [ref=e210]:
+              - link "Features" [ref=e211] [cursor=pointer]:
+                - /url: /features
+            - listitem [ref=e212]:
+              - link "Pricing" [ref=e213] [cursor=pointer]:
+                - /url: /pricing
+            - listitem [ref=e214]:
+              - link "Browse Agents" [ref=e215] [cursor=pointer]:
+                - /url: /browse
+        - generic [ref=e216]:
+          - heading "Company" [level=4] [ref=e217]
+          - list [ref=e218]:
+            - listitem [ref=e219]:
+              - link "About" [ref=e220] [cursor=pointer]:
+                - /url: /about
+            - listitem [ref=e221]:
+              - link "Blog" [ref=e222] [cursor=pointer]:
+                - /url: /blog
+            - listitem [ref=e223]:
+              - link "Contact" [ref=e224] [cursor=pointer]:
+                - /url: /contact
+      - generic [ref=e226]: © 2026 AgentX Market. All rights reserved.

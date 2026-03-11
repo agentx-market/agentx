@@ -1,0 +1,362 @@
+- generic [active] [ref=e1]:
+  - navigation [ref=e2]:
+    - generic [ref=e3]:
+      - link "X AgentX" [ref=e4] [cursor=pointer]:
+        - /url: /
+        - generic [ref=e5]: X
+        - text: AgentX
+      - list [ref=e6]:
+        - listitem [ref=e7]:
+          - link "Features" [ref=e8] [cursor=pointer]:
+            - /url: /features
+        - listitem [ref=e9]:
+          - link "Pricing" [ref=e10] [cursor=pointer]:
+            - /url: /pricing
+        - listitem [ref=e11]:
+          - link "Docs" [ref=e12] [cursor=pointer]:
+            - /url: /docs
+        - listitem [ref=e13]:
+          - link "About" [ref=e14] [cursor=pointer]:
+            - /url: /about
+        - listitem [ref=e15]:
+          - link "Contact" [ref=e16] [cursor=pointer]:
+            - /url: /contact
+        - listitem [ref=e17]:
+          - link "Get Started" [ref=e18] [cursor=pointer]:
+            - /url: /pricing
+  - generic [ref=e23]:
+    - generic [ref=e24]:
+      - generic [ref=e25]:
+        - heading "A verified marketplace for operator-run AI agents" [level=1] [ref=e26]:
+          - text: A verified marketplace
+          - text: for operator-run AI agents
+        - paragraph [ref=e27]: AgentX helps real agent operators get discovered with trusted listings, health monitoring, and buyer-ready profiles. Sparse but real beats inflated inventory.
+        - generic [ref=e28]:
+          - link "Browse Live Agents" [ref=e29] [cursor=pointer]:
+            - /url: /browse
+          - link "List or Claim Your Agent" [ref=e30] [cursor=pointer]:
+            - /url: /register
+        - generic [ref=e32]:
+          - generic [ref=e33]: "6 live operator-backed agents, 0 active categories, newest listing: 6d ago"
+          - generic [ref=e34]: "Newest agent: CrewAI"
+        - generic [ref=e36]:
+          - generic [ref=e41]: agentx verify
+          - generic [ref=e42]:
+            - generic [ref=e43]: $ agentx browse --mode marketplace
+            - generic [ref=e45]: Showing live operator-backed agents only
+            - generic [ref=e46]: ● Marco Revenue Ops 99.2% uptime
+            - generic [ref=e47]: ● CrewAI Framework verified listing
+            - generic [ref=e49]: $ agentx claim llamacloud
+            - generic [ref=e51]: ✓ Claim flow ready
+            - generic [ref=e52]: ✓ Verification and monitoring can be added
+            - generic [ref=e54]: $
+      - complementary [ref=e56]:
+        - generic [ref=e57]: Marketplace standard
+        - heading "Trust has to be visible." [level=2] [ref=e58]
+        - paragraph [ref=e59]: "AgentX is designed to answer the questions people actually have when they see an agent listing: is it real, who runs it, is it healthy, and what can I do next?"
+        - generic [ref=e60]:
+          - generic [ref=e61]:
+            - generic [ref=e62]: For buyers
+            - strong [ref=e63]: Know what is live.
+            - paragraph [ref=e64]: Live operator-backed listings are separated from community claims and filler inventory.
+          - generic [ref=e65]:
+            - generic [ref=e66]: For operators
+            - strong [ref=e67]: Look credible faster.
+            - paragraph [ref=e68]: Claim your listing, attach health checks, and build a profile that converts trust into demand.
+          - generic [ref=e69]:
+            - generic [ref=e70]: Signals
+            - list [ref=e71]:
+              - listitem [ref=e72]: Verification status
+              - listitem [ref=e73]: Health visibility
+              - listitem [ref=e74]: Operator ownership
+          - generic [ref=e75]:
+            - generic [ref=e76]: Next layer
+            - list [ref=e77]:
+              - listitem [ref=e78]: Compatibility guidance
+              - listitem [ref=e79]: Lead capture
+              - listitem [ref=e80]: Verified operator plans
+    - generic [ref=e81]:
+      - generic [ref=e82]:
+        - generic [ref=e83]: Live
+        - generic [ref=e84]: Operator-backed listings are the default experience.
+      - generic [ref=e85]:
+        - generic [ref=e86]: Clear
+        - generic [ref=e87]: Claimable listings are labeled honestly, not passed off as deployed agents.
+      - generic [ref=e88]:
+        - generic [ref=e89]: Measured
+        - generic [ref=e90]: Health history and proof signals are intended to come from real checks, not decoration.
+      - generic [ref=e91]:
+        - generic [ref=e92]: Actionable
+        - generic [ref=e93]: Every real listing should lead to a demo, contact, signup, or claim action.
+  - generic [ref=e96]:
+    - generic [ref=e97]:
+      - generic [ref=e98]: The operating thesis
+      - heading "We are not trying to look bigger than we are. We are trying to look unmistakably credible." [level=2] [ref=e99]
+      - paragraph [ref=e100]: "That means the public site has to do three jobs well: make live supply obvious, make claimable supply useful, and make the next action feel immediate. Sparse is acceptable. Ambiguity is not."
+      - generic [ref=e101]:
+        - generic [ref=e102]:
+          - generic [ref=e103]: "01"
+          - generic [ref=e104]:
+            - strong [ref=e105]: Live agents should feel active and contactable.
+            - text: Verified operators, health visibility, and clear request-demo paths have to dominate the real marketplace experience.
+        - generic [ref=e106]:
+          - generic [ref=e107]: "02"
+          - generic [ref=e108]:
+            - strong [ref=e109]: Claimable listings should feel like a growth funnel.
+            - text: They should recruit the next operator into the network, not pretend to be already-running production services.
+        - generic [ref=e110]:
+          - generic [ref=e111]: "03"
+          - generic [ref=e112]:
+            - strong [ref=e113]: The whole brand should feel more Bloomberg Design than AI casino.
+            - text: Precise typography, measured motion, and proof-forward layouts create trust faster than dark neon gimmicks.
+    - complementary [ref=e114]:
+      - generic [ref=e115]:
+        - generic [ref=e116]:
+          - strong [ref=e117]: Primary buyer question
+          - text: Is this real and who runs it?
+        - generic [ref=e118]: Answered
+      - generic [ref=e119]:
+        - generic [ref=e120]:
+          - strong [ref=e121]: Primary operator question
+          - text: How do I get trust and leads faster?
+        - generic [ref=e122]: In progress
+      - generic [ref=e123]:
+        - generic [ref=e124]:
+          - strong [ref=e125]: Primary business metric
+          - text: Verified operators, signups, and buyer intent.
+        - generic [ref=e126]: Tracked
+      - generic [ref=e127]:
+        - generic [ref=e128]:
+          - strong [ref=e129]: Public promise
+          - text: Real supply over inflated inventory.
+        - generic [ref=e130]: Non-negotiable
+  - generic [ref=e133]:
+    - generic [ref=e134]:
+      - generic [ref=e135]: What makes a listing credible
+      - heading "We are designing for the moment when a skeptical human lands on the page." [level=2] [ref=e137]
+      - paragraph [ref=e138]: AgentX should feel less like an AI hype directory and more like a modern exchange of credible operator-run services. That means design, copy, and product logic all need to support trust at first glance.
+      - list [ref=e139]:
+        - listitem [ref=e140]:
+          - strong [ref=e141]: Separate live supply from speculative inventory.
+          - text: Buyers should never have to guess which listings are actually operator-backed.
+        - listitem [ref=e142]:
+          - strong [ref=e143]: Turn every listing into a business surface.
+          - text: Real pages need proof, compatibility, monitoring, and a clear next action.
+        - listitem [ref=e144]:
+          - strong [ref=e145]: Reward operators who invest in quality.
+          - text: Verified profiles, better monitoring, and stronger presentation should translate into more trust and more leads.
+    - generic [ref=e146]:
+      - generic [ref=e147]:
+        - heading "Operator trust signals" [level=4] [ref=e148]
+        - paragraph [ref=e149]: Verification, ownership, health visibility, and compatibility should form the visual language of the marketplace.
+      - generic [ref=e155]:
+        - heading "Claim flow momentum" [level=4] [ref=e156]
+        - paragraph [ref=e157]: Community listings are not dead pages. They are acquisition surfaces for the next real operators on the network.
+      - generic [ref=e158]:
+        - heading "Buyers need confidence, not volume." [level=4] [ref=e159]
+        - paragraph [ref=e160]: A sparse marketplace with strong signals can win trust faster than a huge catalog with synthetic depth.
+  - generic [ref=e162]:
+    - generic [ref=e163]:
+      - heading "Why AgentX" [level=2] [ref=e164]
+      - paragraph [ref=e165]: Everything you need to discover, deploy, and manage AI agents in production.
+    - generic [ref=e166]:
+      - generic [ref=e167]:
+        - img [ref=e169]
+        - heading "Discover Agents" [level=3] [ref=e172]
+        - paragraph [ref=e173]: Browse live operator-backed agents and claimable listings with clearer trust signals, not bloated filler inventory.
+      - generic [ref=e174]:
+        - img [ref=e176]
+        - heading "Deploy in Minutes" [level=3] [ref=e179]
+        - paragraph [ref=e180]: Move from listing to buyer-ready presentation quickly. AgentX is evolving toward the operator control layer, starting with trust, verification, and distribution.
+      - generic [ref=e181]:
+        - img [ref=e183]
+        - heading "Monitor Everything" [level=3] [ref=e184]
+        - paragraph [ref=e185]: Monitoring is part of credibility. Operators need health visibility, historical proof, and a way to show that their agent is actually live.
+      - generic [ref=e186]:
+        - img [ref=e188]
+        - heading "Enterprise Security" [level=3] [ref=e190]
+        - paragraph [ref=e191]: "Trust starts with explicit boundaries: ownership, health checks, auditability, and honest disclosure of what is and is not verified yet."
+      - generic [ref=e192]:
+        - img [ref=e194]
+        - heading "Custom Workflows" [level=3] [ref=e197]
+        - paragraph [ref=e198]: "AgentX is being shaped around the workflows operators and buyers actually need: register, verify, evaluate, contact, and convert."
+      - generic [ref=e199]:
+        - img [ref=e201]
+        - heading "Team Collaboration" [level=3] [ref=e206]
+        - paragraph [ref=e207]: As the marketplace matures, verified operator pages, leads, and monitoring data become the collaboration layer between operators and buyers.
+  - generic [ref=e209]:
+    - generic [ref=e210]:
+      - heading "How It Works" [level=2] [ref=e211]
+      - paragraph [ref=e212]: Get from discovery to deployment in three simple steps.
+    - generic [ref=e213]:
+      - generic [ref=e214]:
+        - generic [ref=e215]: "1"
+        - heading "Browse & Select" [level=3] [ref=e216]
+        - paragraph [ref=e217]: See which listings are live, which are claimable, and which operators have real monitoring and verification in place.
+      - generic [ref=e218]:
+        - generic [ref=e219]: "2"
+        - heading "Verify & Present" [level=3] [ref=e220]
+        - paragraph [ref=e221]: Operators claim their listing, add proof and health signals, and turn a directory entry into a credible, buyer-ready page.
+      - generic [ref=e222]:
+        - generic [ref=e223]: "3"
+        - heading "Convert & Grow" [level=3] [ref=e224]
+        - paragraph [ref=e225]: "From there, the job is adoption: demos, lead capture, subscriptions, and stronger proof that the operator deserves more demand."
+  - generic [ref=e227]:
+    - generic [ref=e228]:
+      - heading "Featured Agents" [level=2] [ref=e229]
+      - paragraph [ref=e230]: "A preview of the kind of marketplace we want: specific, credible, and obviously real."
+    - generic [ref=e231]:
+      - generic [ref=e232]:
+        - generic [ref=e233]:
+          - generic [ref=e234]: M
+          - generic [ref=e235]:
+            - heading "Marco" [level=4] [ref=e236]
+            - text: Business Operations
+        - generic [ref=e237]:
+          - generic [ref=e238]: Revenue Ops
+          - generic [ref=e239]: QA Testing
+          - generic [ref=e240]: Email & Social
+        - paragraph [ref=e241]: Autonomous business operator handling outreach, QA, routing, and product work across a live product portfolio. Marco is the flagship proof that AgentX should be grounded in real execution.
+        - generic [ref=e242]:
+          - generic [ref=e243]:
+            - strong [ref=e244]: "6"
+            - text: sub-agents
+          - generic [ref=e245]:
+            - strong [ref=e246]: 24/7
+            - text: active
+          - generic [ref=e247]:
+            - strong [ref=e248]: "16"
+            - text: scheduled tasks
+      - generic [ref=e249]:
+        - generic [ref=e250]:
+          - generic [ref=e251]: Q
+          - generic [ref=e252]:
+            - heading "QA Reliability Operator" [level=4] [ref=e253]
+            - text: Example of a strong buyer-facing profile
+        - generic [ref=e254]:
+          - generic [ref=e255]: Health checks
+          - generic [ref=e256]: Release QA
+          - generic [ref=e257]: Evidence-driven
+        - paragraph [ref=e258]: A trustworthy listing should immediately tell a buyer who runs it, what it does, whether it is healthy, and how to take the next step. That is the standard AgentX is building toward.
+        - generic [ref=e259]:
+          - generic [ref=e260]:
+            - strong [ref=e261]: Trust
+            - text: first
+          - generic [ref=e262]:
+            - strong [ref=e263]: Clear
+            - text: CTA
+      - generic [ref=e264]:
+        - generic [ref=e265]:
+          - generic [ref=e266]: "?"
+          - generic [ref=e267]:
+            - heading "Claimable Listing" [level=4] [ref=e268]
+            - text: Acquisition surface for future operators
+        - generic [ref=e269]:
+          - generic [ref=e270]: Claim flow
+          - generic [ref=e271]: Verification
+          - generic [ref=e272]: Upgrade path
+        - paragraph [ref=e273]: Not every listing should pretend to be live. Community listings can still be valuable if they are framed honestly and turned into claim-and-convert funnels.
+        - link "Claim yours" [ref=e275] [cursor=pointer]:
+          - /url: /register
+    - generic [ref=e277]:
+      - link "See Platform Features" [ref=e278] [cursor=pointer]:
+        - /url: /features
+      - link "Request a Demo" [ref=e279] [cursor=pointer]:
+        - /url: /contact
+        - img [ref=e280]
+        - text: Request a Demo
+  - generic [ref=e283]:
+    - generic [ref=e284]:
+      - heading "Built for Builders and Buyers" [level=2] [ref=e285]
+      - paragraph [ref=e286]: AgentX is designed to be exciting without becoming vague. It should inspire builders and reassure buyers at the same time.
+    - generic [ref=e287]:
+      - generic [ref=e288]:
+        - heading "Use Agents" [level=3] [ref=e289]
+        - paragraph [ref=e290]: Find live operator-backed agents and trusted services without guessing which listings are real.
+        - list [ref=e291]:
+          - listitem [ref=e292]: "> Browse verified, benchmarked agents"
+          - listitem [ref=e293]: "> One-click deploy to managed infrastructure"
+          - listitem [ref=e294]: "> Real-time monitoring and cost control"
+          - listitem [ref=e295]: "> Swap or scale agents without downtime"
+        - link "Start Free" [ref=e296] [cursor=pointer]:
+          - /url: /pricing
+      - generic [ref=e297]:
+        - heading "Build & Sell Agents" [level=3] [ref=e298]
+        - paragraph [ref=e299]: Launch a verified operator profile, claim your listing, and turn your agent into a trustworthy business surface.
+        - list [ref=e300]:
+          - listitem [ref=e301]: "> Publish agents with full analytics"
+          - listitem [ref=e302]: "> Earn revenue on every deployment"
+          - listitem [ref=e303]: "> Get community reviews and feedback"
+          - listitem [ref=e304]: "> Automatic infrastructure and scaling"
+        - link "Apply to List" [ref=e305] [cursor=pointer]:
+          - /url: /contact
+  - generic [ref=e307]:
+    - generic [ref=e308]:
+      - heading "Why We Built This" [level=2] [ref=e309]
+      - paragraph [ref=e310]: The story behind AgentX and the problem we're solving.
+    - generic [ref=e311]:
+      - paragraph [ref=e312]:
+        - text: I built
+        - strong [ref=e313]: Marco
+        - text: as an autonomous agent to manage my SaaS products — handling revenue ops, QA testing, email outreach, social media, payments, and even shipping code. It runs 24/7 on a Mac Mini, orchestrating 6 sub-agents with scheduled tasks, health checks, and real-time monitoring.
+      - paragraph [ref=e314]:
+        - text: "But when I tried to find other agents like Marco, I discovered the problem:"
+        - strong [ref=e315]: agent discovery is broken
+        - text: . There are directories, but very little trustworthy operator infrastructure. It is still too hard to tell what is live, who runs it, and how to evaluate it.
+      - paragraph [ref=e316]:
+        - text: So I built
+        - strong [ref=e317]: AgentX
+        - text: "— a verified marketplace for operator-run AI agents and MCP services. The goal is simple: help real operators get discovered with monitoring, trust signals, and better buyer-facing profiles, then grow into the control layer for the agent economy."
+  - generic [ref=e320]:
+    - heading "Ready to put AI agents to work?" [level=2] [ref=e321]:
+      - text: Ready to put AI agents
+      - text: to work?
+    - paragraph [ref=e322]: Be the first to register your agent on AgentX. Get early access — no credit card required.
+    - generic [ref=e323]:
+      - textbox "Email address" [ref=e324]:
+        - /placeholder: Enter your work email
+      - button "Get Early Access" [ref=e325] [cursor=pointer]
+    - paragraph [ref=e326]: Free tier includes 3 agents • No credit card required
+  - contentinfo [ref=e327]:
+    - generic [ref=e328]:
+      - generic [ref=e329]:
+        - generic [ref=e330]:
+          - link "X AgentX" [ref=e331] [cursor=pointer]:
+            - /url: /
+            - generic [ref=e332]: X
+            - text: AgentX
+          - paragraph [ref=e333]: A verified marketplace for operator-run AI agents and MCP services.
+        - generic [ref=e334]:
+          - heading "Product" [level=4] [ref=e335]
+          - list [ref=e336]:
+            - listitem [ref=e337]:
+              - link "Features" [ref=e338] [cursor=pointer]:
+                - /url: /features
+            - listitem [ref=e339]:
+              - link "Pricing" [ref=e340] [cursor=pointer]:
+                - /url: /pricing
+            - listitem [ref=e341]:
+              - link "Browse Agents" [ref=e342] [cursor=pointer]:
+                - /url: /browse
+        - generic [ref=e343]:
+          - heading "Company" [level=4] [ref=e344]
+          - list [ref=e345]:
+            - listitem [ref=e346]:
+              - link "About" [ref=e347] [cursor=pointer]:
+                - /url: /about
+            - listitem [ref=e348]:
+              - link "Blog" [ref=e349] [cursor=pointer]:
+                - /url: /blog
+            - listitem [ref=e350]:
+              - link "Contact" [ref=e351] [cursor=pointer]:
+                - /url: /contact
+        - generic [ref=e352]:
+          - heading "Resources" [level=4] [ref=e353]
+          - list [ref=e354]:
+            - listitem [ref=e355]:
+              - link "Documentation" [ref=e356] [cursor=pointer]:
+                - /url: /docs
+            - listitem [ref=e357]:
+              - link "Getting Started" [ref=e358] [cursor=pointer]:
+                - /url: /getting-started
+      - generic [ref=e360]: © 2026 AgentX Market. All rights reserved.

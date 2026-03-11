@@ -1,0 +1,197 @@
+- generic [active] [ref=e1]:
+  - navigation [ref=e2]:
+    - generic [ref=e3]:
+      - link "X AgentX" [ref=e4] [cursor=pointer]:
+        - /url: /
+        - generic [ref=e5]: X
+        - text: AgentX
+      - list [ref=e6]:
+        - listitem [ref=e7]:
+          - link "Features" [ref=e8] [cursor=pointer]:
+            - /url: /features
+        - listitem [ref=e9]:
+          - link "Pricing" [ref=e10] [cursor=pointer]:
+            - /url: /pricing
+        - listitem [ref=e11]:
+          - link "About" [ref=e12] [cursor=pointer]:
+            - /url: /about
+        - listitem [ref=e13]:
+          - link "Contact" [ref=e14] [cursor=pointer]:
+            - /url: /contact
+        - listitem [ref=e15]:
+          - link "List Your Agent" [ref=e16] [cursor=pointer]:
+            - /url: /register
+  - generic [ref=e19]:
+    - generic [ref=e20]:
+      - generic [ref=e21]: Built for trust, not directory inflation
+      - heading "The feature set is becoming the credibility layer around real operators." [level=1] [ref=e22]
+      - paragraph [ref=e23]: "AgentX is most useful when it helps skeptical humans answer four questions fast: is this live, who runs it, can I use it, and what should I do next? The product surface is being shaped around those questions."
+    - complementary [ref=e24]:
+      - generic [ref=e25]:
+        - generic [ref=e26]:
+          - generic [ref=e27]:
+            - strong [ref=e28]: Marketplace default
+            - text: Show operator-backed listings first.
+          - generic [ref=e29]: Live
+        - generic [ref=e30]:
+          - generic [ref=e31]:
+            - strong [ref=e32]: Claimable layer
+            - text: Treat community listings as an acquisition funnel.
+          - generic [ref=e33]: Active
+        - generic [ref=e34]:
+          - generic [ref=e35]:
+            - strong [ref=e36]: Next product layer
+            - text: Verification, compatibility, health, and lead capture.
+          - generic [ref=e37]: Priority
+  - generic [ref=e40]:
+    - generic [ref=e41]:
+      - heading "For buyers" [level=3] [ref=e42]
+      - paragraph [ref=e43]: Clarity, proof, and immediate next steps matter more than catalog size.
+      - list [ref=e44]:
+        - listitem [ref=e45]: See which listings are actually operator-backed
+        - listitem [ref=e46]: Understand health, compatibility, and status quickly
+        - listitem [ref=e47]: Request a demo or contact the operator without digging
+    - generic [ref=e48]:
+      - heading "For operators" [level=3] [ref=e49]
+      - paragraph [ref=e50]: The product should help them look credible and capture demand faster.
+      - list [ref=e51]:
+        - listitem [ref=e52]: Claim a page and establish ownership
+        - listitem [ref=e53]: Attach verification and monitoring signals
+        - listitem [ref=e54]: Turn passive listing traffic into conversations
+    - generic [ref=e55]:
+      - heading "For the business" [level=3] [ref=e56]
+      - paragraph [ref=e57]: Everything should point toward revenue, adoption, and trust.
+      - list [ref=e58]:
+        - listitem [ref=e59]: Sell Verified Operator as real utility
+        - listitem [ref=e60]: Recruit real operators instead of padding inventory
+        - listitem [ref=e61]: Measure outcomes, not just uptime and activity
+  - generic [ref=e64]:
+    - article [ref=e65]:
+      - generic [ref=e66]:
+        - generic [ref=e67]: 01 · verification and status
+        - heading "Listings need visible proof, not just a name and a logo." [level=2] [ref=e68]
+        - paragraph [ref=e69]: "The first feature job is simple: show the difference between live operator supply and claimable community inventory. Then add enough status context that a buyer can form an opinion in seconds."
+        - list [ref=e70]:
+          - listitem [ref=e71]: ✓ Operator-backed listings separated from claimable listings
+          - listitem [ref=e72]: ✓ Verification state and public trust panel
+          - listitem [ref=e73]: ✓ Health history sourced from real checks instead of synthetic filler
+      - generic [ref=e75]:
+        - generic [ref=e76]:
+          - generic [ref=e77]: Listing status
+          - generic [ref=e78]: Verified Operator
+          - paragraph [ref=e79]: Owned page with live status, proof, and contact pathways.
+        - generic [ref=e80]:
+          - generic [ref=e81]: 7-day health
+          - generic [ref=e82]: 99.2%
+          - paragraph [ref=e83]: Healthy only if recent checks actually support it.
+    - article [ref=e92]:
+      - generic [ref=e93]:
+        - generic [ref=e94]: 02 · compatibility and setup
+        - heading "Humans and agents both need setup guidance they can trust." [level=2] [ref=e95]
+        - paragraph [ref=e96]: Compatibility and install context are conversion features. They reduce friction, help buyers understand what works with what, and make the listing more than a static brochure.
+        - list [ref=e97]:
+          - listitem [ref=e98]: ✓ Client compatibility badges and install guidance
+          - listitem [ref=e99]: ✓ Runtime and protocol expectations surfaced on the listing
+          - listitem [ref=e100]: ✓ Better docs pathways for real operator-backed pages
+      - generic [ref=e103]:
+        - generic [ref=e104]:
+          - strong [ref=e105]: MCP-ready
+          - text: Works with supported MCP client flows.
+        - generic [ref=e106]:
+          - strong [ref=e107]: Hosted endpoint
+          - text: Clear endpoint and auth posture.
+        - generic [ref=e108]:
+          - strong [ref=e109]: CLI usage
+          - text: Copyable install and usage docs.
+        - generic [ref=e110]:
+          - strong [ref=e111]: Claimable mode
+          - text: Not yet verified, but recruitable.
+    - article [ref=e112]:
+      - generic [ref=e113]:
+        - generic [ref=e114]: 03 · conversion surfaces
+        - heading "A marketplace page should do more than sit there looking respectable." [level=2] [ref=e115]
+        - paragraph [ref=e116]: Every operator page needs a next action. That means requests for demos, contact flows, claim paths, and eventually stronger lead handling for operators who are paying to be on the network.
+        - list [ref=e117]:
+          - listitem [ref=e118]: ✓ Request-demo and contact CTAs on live listings
+          - listitem [ref=e119]: ✓ Claim-this-listing flow on community inventory
+          - listitem [ref=e120]: ✓ Lead routing and revenue-oriented operator instrumentation
+      - generic [ref=e123]:
+        - generic [ref=e124]:
+          - generic [ref=e125]:
+            - strong [ref=e126]: New buyer inquiry
+            - text: Wants a revenue-ops agent with live status.
+          - generic [ref=e127]: Demo
+        - generic [ref=e128]:
+          - generic [ref=e129]:
+            - strong [ref=e130]: Claim request
+            - text: Community listing owner wants to verify page.
+          - generic [ref=e131]: Claim
+        - generic [ref=e132]:
+          - generic [ref=e133]:
+            - strong [ref=e134]: Qualified operator lead
+            - text: Asked about Verified Operator onboarding.
+          - generic [ref=e135]: Paid
+    - article [ref=e136]:
+      - generic [ref=e137]:
+        - generic [ref=e138]: 04 · proof and narrative
+        - heading "The brand needs to tell the truth elegantly." [level=2] [ref=e139]
+        - paragraph [ref=e140]: "That is a feature too. The site should feel sharp, modern, and unmistakably intentional without becoming another dark neon AI landing page. Visuals, copy, and information architecture should all reinforce the same point: real supply, real operators, real next actions."
+        - list [ref=e141]:
+          - listitem [ref=e142]: ✓ Truthful page states for live vs claimable listings
+          - listitem [ref=e143]: ✓ Design language centered on trust, not hype
+          - listitem [ref=e144]: ✓ Outcome-oriented reporting and operator growth focus
+      - generic [ref=e146]:
+        - generic [ref=e147]:
+          - generic [ref=e148]: Live marketplace page
+          - generic [ref=e149]: Operator-backed
+          - paragraph [ref=e150]: Proof, monitoring, contact, and compatibility working together.
+        - generic [ref=e151]:
+          - generic [ref=e152]: Claimable page
+          - generic [ref=e153]: Recruiting supply
+          - paragraph [ref=e154]: Honest state that still contributes to growth instead of confusion.
+        - generic [ref=e155]:
+          - generic [ref=e156]: Outcome lens
+          - generic [ref=e157]: Revenue first
+          - paragraph [ref=e158]: Posts, installs, replies, demos, signups, and subscriptions matter more than smoke tests.
+  - generic [ref=e161]:
+    - heading "Build the marketplace around credibility and buyer intent." [level=2] [ref=e162]
+    - paragraph [ref=e163]: That is the direction. Smaller, sharper, more trustworthy, and much more economically useful than a bloated directory.
+    - generic [ref=e164]:
+      - link "See Pricing" [ref=e165] [cursor=pointer]:
+        - /url: /pricing
+      - link "Browse Live Agents" [ref=e166] [cursor=pointer]:
+        - /url: /browse
+  - contentinfo [ref=e167]:
+    - generic [ref=e168]:
+      - generic [ref=e169]:
+        - generic [ref=e170]:
+          - link "X AgentX" [ref=e171] [cursor=pointer]:
+            - /url: /
+            - generic [ref=e172]: X
+            - text: AgentX
+          - paragraph [ref=e173]: A verified marketplace for operator-run AI agents and MCP services.
+        - generic [ref=e174]:
+          - heading "Product" [level=4] [ref=e175]
+          - list [ref=e176]:
+            - listitem [ref=e177]:
+              - link "Features" [ref=e178] [cursor=pointer]:
+                - /url: /features
+            - listitem [ref=e179]:
+              - link "Pricing" [ref=e180] [cursor=pointer]:
+                - /url: /pricing
+            - listitem [ref=e181]:
+              - link "Browse Agents" [ref=e182] [cursor=pointer]:
+                - /url: /browse
+        - generic [ref=e183]:
+          - heading "Company" [level=4] [ref=e184]
+          - list [ref=e185]:
+            - listitem [ref=e186]:
+              - link "About" [ref=e187] [cursor=pointer]:
+                - /url: /about
+            - listitem [ref=e188]:
+              - link "Blog" [ref=e189] [cursor=pointer]:
+                - /url: /blog
+            - listitem [ref=e190]:
+              - link "Contact" [ref=e191] [cursor=pointer]:
+                - /url: /contact
+      - generic [ref=e193]: © 2026 AgentX Market. All rights reserved.
