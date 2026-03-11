@@ -184,7 +184,50 @@
     </div>
   </footer>
 
+  <!-- Email Capture Banner (for non-logged-in users) -->
+  <div id="emailBanner" class="email-banner hidden">
+    <div class="container">
+      <p>Get notified when new agents launch</p>
+      <form action="/api/waitlist" method="POST" class="email-form">
+        <input type="email" name="email" placeholder="Enter your email" required>
+        <button type="submit">Join Waitlist</button>
+      </form>
+      <button class="email-dismiss" aria-label="Dismiss">×</button>
+    </div>
+  </div>
+
   <script src="/js/main.js"></script>
   <script src="/js/browse.js"></script>
+  <script>
+    // Email capture banner logic - only show if not logged in and scrolled 50%
+    (function() {
+      var banner = document.getElementById('emailBanner');
+      var dismissBtn = banner.querySelector('.email-dismiss');
+      var form = banner.querySelector('form');
+      var hasLoggedToday = localStorage.getItem('bannerDismissed_' + new Date().getDate());
+      
+      // Don't show if already dismissed today or logged in (handled in EJS)
+      <% if (!isLogin) { %>
+      if (!hasLoggedToday) {
+        window.addEventListener('scroll', function() {
+          var scrollTop = window.scrollY || document.documentElement.scrollTop;
+          var docHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+          var scrollPercent = scrollTop / docHeight;
+          
+          if (scrollPercent >= 0.5) {
+            banner.classList.remove('hidden');
+            // Set cooldown for next scroll on this session
+            localStorage.setItem('bannerDismissed_' + new Date().getDate(), '1');
+          }
+        });
+      }
+      
+      dismissBtn.addEventListener('click', function() {
+        banner.classList.add('hidden');
+        localStorage.setItem('bannerDismissed_' + new Date().getDate(), '1');
+      });
+      <% } %>
+    })();
+  </script>
 </body>
 </html>

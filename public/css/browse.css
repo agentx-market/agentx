@@ -543,6 +543,105 @@
   flex-wrap: wrap;
 }
 
+/* Email Capture Banner */
+.email-banner {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.15), rgba(139, 92, 246, 0.15));
+  border-top: 1px solid rgba(99, 102, 241, 0.3);
+  padding: var(--space-md) 0;
+  z-index: 5000;
+  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(10px);
+}
+
+.email-banner.hidden {
+  display: none;
+}
+
+.email-banner .container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-lg);
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 var(--space-md);
+}
+
+.email-banner p {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  white-space: nowrap;
+  flex: 0;
+}
+
+.email-form {
+  display: flex;
+  gap: var(--space-sm);
+  align-items: center;
+  flex: 1;
+  max-width: 500px;
+}
+
+.email-form input[type="email"] {
+  flex: 1;
+  padding: 0.6rem 1rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-full);
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  font-size: 0.9rem;
+  outline: none;
+  min-width: 200px;
+}
+
+.email-form input[type="email"]::placeholder {
+  color: var(--text-muted);
+}
+
+.email-form input[type="email"]:focus {
+  border-color: var(--accent);
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.email-banner .email-form button {
+  padding: 0.6rem 1.4rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  font-family: var(--font-sans);
+  border-radius: var(--radius-full);
+  background: var(--accent);
+  color: white;
+  border: none;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  white-space: nowrap;
+}
+
+.email-banner .email-form button:hover {
+  background: var(--accent-light);
+  transform: translateY(-1px);
+}
+
+.email-dismiss {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  font-size: 1.5rem;
+  line-height: 1;
+  cursor: pointer;
+  padding: var(--space-xs);
+  transition: color var(--transition-fast);
+}
+
+.email-dismiss:hover {
+  color: var(--text-primary);
+}
+
 .cta-buttons .btn {
   padding: 0.8rem 2rem;
   font-size: 1rem;

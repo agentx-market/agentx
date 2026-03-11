@@ -1483,7 +1483,7 @@ app.get('/admin/search-analytics', (req, res) => {
 // Browse page route
 app.get('/browse', (req, res) => {
   const agentCount = db.get('SELECT COUNT(*) as count FROM agents').count;
-  res.render('browse', { title: 'Browse Agents', agentCount });
+  res.render('browse', { title: 'Browse Agents', agentCount, isLogin: !!req.operatorId });
 });
 
 // Submit agent page
