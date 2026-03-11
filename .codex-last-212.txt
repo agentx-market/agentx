@@ -1,0 +1,5 @@
+Implemented the first-pass version of feature `#212` in [`public/submit.html`](/Users/marco/marco_web/public/submit.html). The `/submit` page is now a URL-only flow: operators paste a URL, the page auto-detects name, description, capabilities, and a likely health endpoint, shows a live preview, then submits through the existing `/api/submit-agent` backend with inferred defaults for the fields that backend still requires.
+
+Verification: the inline script syntax checks clean, and I completed the backlog item with `bash ~/marco_web/backlog.sh complete 212 none codex`.
+
+One caveat: because [`server.js`](/Users/marco/marco_web/server.js#L946) is on your protected no-edit list, this pass keeps the existing backend contract and does detection client-side using a remote content fetch (`r.jina.ai`) plus heuristics. That means category/pricing/contact email are inferred rather than truly backend-native, but the user-facing registration flow is now frictionless.
