@@ -499,11 +499,11 @@ app.get('/api/agents/:id/stats', authenticatedLimiter, async (req, res) => {
   }
 });
 
-// Agent status badge
+// Agent status badge with uptime and last check time
 app.get('/api/agents/:id/badge', async (req, res) => {
   try {
     const id = parseInt(req.params.id);
-    const agent = db.get('SELECT id, name, health_check_passed_at FROM agents WHERE id=?', [id]);
+    const agent = db.get('SELECT id, name, health_check_passed_at, created_at FROM agents WHERE id=?', [id]);
     if (!agent) return res.status(404).send('Not found');
     
     const now = new Date();
@@ -512,10 +512,32 @@ app.get('/api/agents/:id/badge', async (req, res) => {
     const status = isOnline ? 'online' : 'offline';
     const color = isOnline ? '#4c1' : '#e05d44';
     
-    const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="200" height="20" viewBox="0 0 200 20">
-      <rect width="200" height="20" rx="3" fill="${color}"/>
-      <text x="10" y="14" font-family="Arial" font-size="12" fill="white" text-anchor="start">${agent.name || 'Agent'}</text>
-      <text x="180" y="14" font-family="Arial" font-size="12" fill="white" text-anchor="end">${status}</text>
+    // Calculate uptime percentage
+    const createdAt = agent.created_at ? new Date(agent.created_at) : now;
+    const uptimeMs = lastHealth ? now - createdAt : 0;
+    const totalMs = now - createdAt;
+    const uptimePercent = totalMs > 0 ? Math.round((uptimeMs / totalMs) * 100) : 0;
+    
+    // Format last check time
+    let lastCheckText = 'never';
+    if (lastHealth) {
+      const diffSeconds = Math.floor((now - lastHealth) / 1000);
+      if (diffSeconds < 60) lastCheckText = `${diffSeconds}s ago`;
+      else if (diffSeconds < 3600) lastCheckText = `${Math.floor(diffSeconds / 60)}m ago`;
+      else lastCheckText = `${Math.floor(diffSeconds / 3600)}h ago`;
+    }
+    
+    const slug = agent.name.toLowerCase().replace(/ /g, '-');
+    const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="210" height="30" viewBox="0 0 210 30">
+      <a href="https://agentx.market/agents/${slug}" target="_blank">
+        <rect width="210" height="30" rx="5" fill="${color}"/>
+        <text x="8" y="14" font-family="Arial, sans-serif" font-size="13" font-weight="bold" fill="white" text-anchor="start">${agent.name || 'AgentX'}</text>
+        <text x="202" y="14" font-family="Arial, sans-serif" font-size="11" fill="white" text-anchor="end">↗</text>
+      </a>
+      <a href="https://agentx.market/agents/${slug}" target="_blank">
+        <rect x="130" y="16" width="80" height="12" rx="4" fill="${color}" opacity="0.9"/>
+        <text x="170" y="25" font-family="Arial, sans-serif" font-size="9" fill="white" text-anchor="middle">Uptime: ${uptimePercent}% | Last check: ${lastCheckText}</text>
+      </a>
     </svg>`;
     
     res.set('Content-Type', 'image/svg+xml');
