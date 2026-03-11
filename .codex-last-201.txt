@@ -1,0 +1,7 @@
+Implemented the first-pass welcome bonus flow for GitHub OAuth and marked backlog item `201` complete.
+
+The flow now provisions a one-time operator Lightning wallet and 21-sat bonus on first eligible GitHub login in [lib/oauth-handler.js](/Users/marco/marco_web/lib/oauth-handler.js#L170), using new operator wallet fields ensured in [db.js](/Users/marco/marco_web/db.js#L80) and wallet helpers added in [lib/lw-wallet.js](/Users/marco/marco_web/lib/lw-wallet.js#L43). I also fixed the callback to actually await operator creation/provisioning in [server.js](/Users/marco/marco_web/server.js#L1248), then load wallet balance into `/my-agents` in [server.js](/Users/marco/marco_web/server.js#L1628).
+
+The dashboard now shows a compact Lightning wallet card with wallet ID, live balance, and bonus status in [views/dashboard.ejs](/Users/marco/marco_web/views/dashboard.ejs#L106).
+
+Verified with `node --check` on the touched JS files, an EJS render smoke test, server restart, and `curl -I http://127.0.0.1:3000/my-agents` returning the expected `302` to `/auth/github`. One existing repo issue remains outside this feature: `db.js` still logs separate pre-existing SQLite `ALTER TABLE ... IF NOT EXISTS` syntax warnings in unrelated agent migration code.

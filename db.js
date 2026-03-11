@@ -77,31 +77,33 @@ try {
   console.log('[db] Operators table may already exist:', err.message);
 }
 
-// Add columns to operators table for abuse prevention
-try {
-  db.exec(`ALTER TABLE operators ADD COLUMN IF NOT EXISTS github_account_created_at INTEGER`);
-  db.exec(`ALTER TABLE operators ADD COLUMN IF NOT EXISTS welcome_bonus_claimed_at INTEGER`);
-  console.log('[db] Added abuse prevention columns to operators table');
-} catch (err) {
-  console.log('[db] Agents abuse columns may already exist:', err.message);
+function ensureTableColumns(tableName, columns) {
+  const existingColumns = new Set(
+    db.prepare(`PRAGMA table_info(${tableName})`).all().map((column) => column.name)
+  );
+
+  for (const [columnName, definition] of columns) {
+    if (existingColumns.has(columnName)) continue;
+
+    db.exec(`ALTER TABLE ${tableName} ADD COLUMN ${columnName} ${definition}`);
+    console.log(`[db] Added ${tableName}.${columnName}`);
+  }
 }
 
-// Add verification columns to operators table
 try {
-  db.exec(`ALTER TABLE operators ADD COLUMN IF NOT EXISTS verified INTEGER DEFAULT 0`);
-  db.exec(`ALTER TABLE operators ADD COLUMN IF NOT EXISTS verification_method TEXT`);
-  db.exec(`ALTER TABLE operators ADD COLUMN IF NOT EXISTS verified_at INTEGER`);
-  console.log('[db] Added verification columns to operators table');
+  ensureTableColumns('operators', [
+    ['github_account_created_at', 'INTEGER'],
+    ['welcome_bonus_claimed_at', 'INTEGER'],
+    ['updated_at', 'INTEGER'],
+    ['verified', 'INTEGER DEFAULT 0'],
+    ['verification_method', 'TEXT'],
+    ['verified_at', 'INTEGER'],
+    ['welcome_email_sent', 'INTEGER DEFAULT 0'],
+    ['wallet_id', 'TEXT'],
+    ['wallet_funded_at', 'INTEGER'],
+  ]);
 } catch (err) {
-  console.log('[db] Verification columns may already exist:', err.message);
-}
-
-// Add welcome_email_sent column to operators table
-try {
-  db.exec(`ALTER TABLE operators ADD COLUMN IF NOT EXISTS welcome_email_sent INTEGER DEFAULT 0`);
-  console.log('[db] Added welcome_email_sent column to operators table');
-} catch (err) {
-  console.log('[db] Welcome email column may already exist:', err.message);
+  console.log('[db] Operators columns may already exist:', err.message);
 }
 
 // Create agents table with health check fields (if it doesn't exist)
