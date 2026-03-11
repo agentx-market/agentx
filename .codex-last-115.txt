@@ -1,0 +1,10 @@
+Implementation is blocked by the protected paths you listed.
+
+The acceptance criteria depend on code wired through [`server.js`](/Users/marco/marco_web/server.js), [`views/dashboard.ejs`](/Users/marco/marco_web/views/dashboard.ejs), and [`webhooks/stripe.js`](/Users/marco/marco_web/webhooks/stripe.js):
+- The operator dashboard CTA is rendered from `/my-agents` in [`server.js`](/Users/marco/marco_web/server.js) and the dashboard template in [`views/dashboard.ejs`](/Users/marco/marco_web/views/dashboard.ejs).
+- The existing Stripe fulfillment path is handled in [`webhooks/stripe.js`](/Users/marco/marco_web/webhooks/stripe.js).
+- Without editing those entry points or being given alternate hooks, I can’t deliver a working purchase flow, review workflow entry, or newsletter attribution routes.
+
+I wrote a checkpoint at [`.checkpoint.json`](/Users/marco/marco_web/.checkpoint.json) and updated [`memory/AGENT-MEMORY.md`](/Users/marco/marco_web/memory/AGENT-MEMORY.md) so this can resume cleanly once those files are unprotected or replacement extension points are provided.
+
+I did not run `backlog.sh complete 115 none codex`, because no shippable source implementation was possible under the stated constraints.
