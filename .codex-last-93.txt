@@ -1,0 +1,10 @@
+Blocked by protected files.
+
+I inspected the route wiring and data sources and confirmed the smallest viable implementation for feature `#93` requires edits to protected entry points:
+- [server.js](/Users/marco/marco_web/server.js) to add `GET /dashboard/revenue` and `GET /api/dashboard/revenue-summary`
+- [views/dashboard.ejs](/Users/marco/marco_web/views/dashboard.ejs) to render the revenue tab in the operator dashboard
+- [webhooks/stripe.js](/Users/marco/marco_web/webhooks/stripe.js) to guarantee Stripe webhook-backed revenue accuracy
+
+I wrote the checkpoint in [FEATURE_93_CHECKPOINT.md](/Users/marco/marco_web/FEATURE_93_CHECKPOINT.md) and updated [.checkpoint.json](/Users/marco/marco_web/.checkpoint.json) so the next pass can resume directly. I also recorded the blocker in [memory/AGENT-MEMORY.md](/Users/marco/marco_web/memory/AGENT-MEMORY.md).
+
+I did not run `backlog.sh complete 93 none codex`, because the feature is not implementable within the protected-file constraints.
