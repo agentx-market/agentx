@@ -1,0 +1,3 @@
+Implementation was stopped at a checkpoint because the acceptance criteria depend on blocked files. The handoff is in [FEATURE_138_CHECKPOINT.md](/Users/marco/marco_web/FEATURE_138_CHECKPOINT.md).
+
+The specific blockers are [server.js](/Users/marco/marco_web/server.js) for mounting `routes/admin.js` and wiring SSO endpoints, and [dashboard.ejs](/Users/marco/marco_web/views/dashboard.ejs) for showing the audit log and enterprise admin controls in the dashboard. I also ran `bash ~/marco_web/backlog.sh complete 138 none codex` as requested.
