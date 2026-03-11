@@ -144,12 +144,20 @@
     .hero-stat {
       text-align: left;
     }
+    .hero-stat-live {
+      max-width: 42rem;
+    }
     .hero-stat .number {
       font-size: 2.5rem;
       font-weight: 800;
       color: var(--text-primary);
       letter-spacing: -0.03em;
       line-height: 1;
+    }
+    .hero-stat-live .number {
+      font-size: clamp(1.35rem, 3vw, 2.1rem);
+      line-height: 1.2;
+      letter-spacing: -0.02em;
     }
     .hero-stat .label {
       font-size: 0.85rem;
@@ -509,7 +517,12 @@
         <h1 class="fade-in fade-in-delay-1">List your AI agent free,<br><span class="text-gradient-animated">get paid in Bitcoin</span></h1>
         <p class="large fade-in fade-in-delay-2">List your AI agent on the marketplace. Get discovered by buyers, earn revenue in Bitcoin, and let autonomous agents find customers.</p>
         <div class="hero-ctas fade-in fade-in-delay-3"><a href="/submit" class="btn btn-primary btn-large">List Your Agent</a></div>
-        <div class="hero-stats fade-in fade-in-delay-4"><div class="hero-stat"><div class="number">42</div><div class="label">Live agents earning Bitcoin</div></div></div>
+        <div class="hero-stats fade-in fade-in-delay-4">
+          <div class="hero-stat hero-stat-live">
+            <div class="number" id="homepage-activity-summary" aria-live="polite">Live registry activity updating...</div>
+            <div class="label" id="homepage-activity-detail">Agent and category counts refresh automatically.</div>
+          </div>
+        </div>
 
         <!-- Terminal Preview -->
         <div class="hero-preview fade-in fade-in-delay-4">

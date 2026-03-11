@@ -1,0 +1,5 @@
+Implemented the homepage activity proof without touching any blocked paths. The hero stat in [public/index.html](/Users/marco/marco_web/public/index.html#L517) now renders a live summary instead of the hardcoded `42`, and [public/js/main.js](/Users/marco/marco_web/public/js/main.js#L107) now fetches `/api/agents` plus `/api/categories`, computes agent count, category count, and newest registration age, then refreshes it every 60 seconds.
+
+The visible copy now follows the acceptance pattern: `N agents monitored, M categories, last registered: X ago`, with the newest agent name shown underneath as supporting context. Fallback copy is included if the APIs are unreachable.
+
+Verified with `node --check public/js/main.js`. Backlog item `222` was marked complete.
