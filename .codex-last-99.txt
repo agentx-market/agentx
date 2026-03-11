@@ -1,0 +1,3 @@
+Blocked by the repo constraint: the required routes are hardcoded in [server.js](/Users/marco/marco_web/server.js), which you explicitly marked non-editable. Without changing that file, I can’t wire up `GET /status/:agent-slug.embed`, `GET /api/:agent-slug/status.json`, or `GET /docs/status-widget`.
+
+I left a concrete resume point in [FEATURE_99_CHECKPOINT.md](/Users/marco/marco_web/FEATURE_99_CHECKPOINT.md). It captures the exact blocked touchpoints, the reusable existing pieces (`/status?format=json`, `analytics_events`, uptime helper), and the minimal implementation plan for the next pass once `server.js` is allowed. I did not run `backlog.sh complete 99 ...` because the feature is not shipped.
