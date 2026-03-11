@@ -1,0 +1,5 @@
+Implemented feature `#208` with a narrow pass centered on the existing agent detail flow.
+
+`/agents/marco` now renders as a live demo page instead of 404ing. The live data comes from `/Users/marco/marco_memory/metrics.db` via [lib/marco-metrics.js](/Users/marco/marco_web/lib/marco-metrics.js), which reads snapshot health, uptime, completed request volume, recent cron-task groups, and distinct active projects in read-only mode. [lib/agent-queries.js](/Users/marco/marco_web/lib/agent-queries.js) upgrades the Marco slug into a live listing and attaches those metrics. [views/agent-detail.ejs](/Users/marco/marco_web/views/agent-detail.ejs) now adds Marco-only `Live Demo`, `Recent Tasks Completed`, and `Try It` sections, and it overrides the header status badge to use the live snapshot instead of stale heartbeat data.
+
+Verified with a live HTTP render at `http://127.0.0.1:3000/agents/marco`; the page now shows the new sections and current status. I also restarted the server, updated [memory/AGENT-MEMORY.md](/Users/marco/marco_web/memory/AGENT-MEMORY.md), cleared the checkpoint, and ran `bash ~/marco_web/backlog.sh complete 208 none codex`.
