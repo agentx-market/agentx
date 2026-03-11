@@ -1,0 +1,8 @@
+Implementation is blocked by protected files, so I stopped after writing a checkpoint as requested.
+
+The repo already has the necessary data primitives: `agents.featured`, `agents.featured_until`, `featured_agents`, and `featured_slots` exist, and `/api/browse` in the protected [server.js](/Users/marco/marco_web/server.js) already sorts featured agents first. But the acceptance criteria require changes in protected entry points:
+- [server.js](/Users/marco/marco_web/server.js): add 7/14/30-day boost checkout options, expose countdown/badge data to browse/category responses, and likely wire any new routes
+- [views/dashboard.ejs](/Users/marco/marco_web/views/dashboard.ejs): add the self-serve purchase UI for operators
+- [webhooks/stripe.js](/Users/marco/marco_web/webhooks/stripe.js): fulfill successful payments into `featured_agents` and `agents.featured_until`
+
+I wrote the checkpoint to [.checkpoint.json](/Users/marco/marco_web/.checkpoint.json) and updated [memory/AGENT-MEMORY.md](/Users/marco/marco_web/memory/AGENT-MEMORY.md). I did not run `backlog.sh complete 123 ...` because no source implementation was allowed under the protected-file constraint.
