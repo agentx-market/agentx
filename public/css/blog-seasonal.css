@@ -1,0 +1,198 @@
+.seasonal-hero {
+  padding-bottom: 3rem;
+}
+
+.seasonal-main {
+  padding: 0 0 4rem;
+}
+
+.seasonal-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+}
+
+.seasonal-meta span,
+.workflow-banner,
+.method-card,
+.featured-card,
+.month-card,
+.ranking-table-wrap {
+  background: rgba(26, 26, 46, 0.78);
+  border: 1px solid rgba(110, 110, 170, 0.24);
+  border-radius: 20px;
+}
+
+.seasonal-meta span {
+  padding: 0.85rem 1rem;
+  color: #c8c8e8;
+}
+
+.workflow-banner {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  padding: 1rem 1.25rem;
+  color: #d7d7f3;
+}
+
+.workflow-banner-preview {
+  border-color: rgba(255, 196, 61, 0.45);
+  background: rgba(57, 44, 8, 0.65);
+}
+
+.section-label {
+  color: #8fb7ff;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 0.85rem;
+}
+
+.method-grid,
+.featured-grid,
+.month-grid {
+  display: grid;
+  gap: 1rem;
+}
+
+.method-grid {
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  margin-bottom: 1.5rem;
+}
+
+.method-card {
+  padding: 1rem;
+}
+
+.method-card p {
+  margin: 0;
+  color: #d4d4ef;
+}
+
+.featured-grid {
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  margin-bottom: 1.5rem;
+}
+
+.featured-card {
+  position: relative;
+  overflow: hidden;
+  padding: 1.25rem;
+}
+
+.featured-rank {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #34d399, #60a5fa);
+  color: #08111f;
+  font-weight: 800;
+  margin-bottom: 1rem;
+}
+
+.featured-card h2 {
+  margin: 0 0 0.75rem;
+}
+
+.featured-proof,
+.affiliate-callout,
+.ranking-reason,
+.month-card p,
+.ranking-table td span,
+.ranking-table td p {
+  color: #b8b8d9;
+}
+
+.featured-stats,
+.featured-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+.featured-stats span {
+  font-size: 0.92rem;
+}
+
+.affiliate-callout {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(143, 183, 255, 0.18);
+  font-size: 0.92rem;
+}
+
+.month-grid {
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  margin-bottom: 1.5rem;
+}
+
+.month-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 1rem;
+}
+
+.month-card.is-active {
+  border-color: rgba(52, 211, 153, 0.5);
+  box-shadow: 0 0 0 1px rgba(52, 211, 153, 0.2) inset;
+}
+
+.month-card a,
+.ranking-table a {
+  color: #8fb7ff;
+  font-weight: 600;
+}
+
+.month-disabled {
+  color: #8d8da7;
+}
+
+.ranking-table-wrap {
+  overflow: hidden;
+  padding: 1rem;
+}
+
+.ranking-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.ranking-table th,
+.ranking-table td {
+  padding: 1rem 0.85rem;
+  border-bottom: 1px solid rgba(110, 110, 170, 0.16);
+  vertical-align: top;
+  text-align: left;
+}
+
+.ranking-table td strong,
+.ranking-table th {
+  color: #f4f5ff;
+}
+
+.ranking-table td span {
+  display: block;
+  font-size: 0.92rem;
+  margin-top: 0.2rem;
+}
+
+@media (max-width: 900px) {
+  .workflow-banner {
+    flex-direction: column;
+  }
+
+  .ranking-table {
+    display: block;
+    overflow-x: auto;
+  }
+}

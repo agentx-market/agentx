@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= page.title %> — AgentX</title>
+  <meta name="description" content="<%= page.description %>">
+  <link rel="canonical" href="https://agentx.market<%= page.canonicalPath %>">
+
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://agentx.market<%= page.canonicalPath %>">
+  <meta property="og:title" content="<%= page.title %>">
+  <meta property="og:description" content="<%= page.description %>">
+  <meta property="og:site_name" content="AgentX">
+  <meta property="og:image" content="https://agentx.market/img/og-image.png">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@agentxmarket">
+  <meta name="twitter:title" content="<%= page.title %>">
+  <meta name="twitter:description" content="<%= page.description %>">
+
+  <script type="application/ld+json"><%- page.schemaJson %></script>
+
+  <link rel="icon" type="image/svg+xml" href="/img/favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/blog.css">
+  <link rel="stylesheet" href="/css/blog-seasonal.css">
+</head>
+<body class="noise-overlay">
+  <nav class="navbar">
+    <div class="container">
+      <a href="/" class="nav-logo">
+        <div class="logo-icon">X</div>
+        AgentX
+      </a>
+      <ul class="nav-links">
+        <li><a href="/features">Features</a></li>
+        <li><a href="/pricing">Pricing</a></li>
+        <li><a href="/browse">Browse</a></li>
+        <li><a href="/about">About</a></li>
+        <li><a href="/contact">Contact</a></li>
+        <li><a href="/login">Login</a></li>
+        <li class="nav-cta"><a href="/pricing" class="btn btn-primary">Get Started</a></li>
+      </ul>
+      <button class="nav-toggle" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <section class="page-hero seasonal-hero">
+    <div class="bg-grid"></div>
+    <div class="container relative z-1">
+      <div class="badge fade-in">Seasonal Rankings</div>
+      <h1 class="fade-in fade-in-delay-1"><%= page.title %></h1>
+      <p class="large fade-in fade-in-delay-2"><%= page.description %></p>
+      <div class="seasonal-meta fade-in fade-in-delay-2">
+        <span><strong>Active edition:</strong> <%= page.activeMonth.label %> <%= page.year %></span>
+        <span><strong>Workflow:</strong> <%= page.workflow.status %></span>
+        <span><strong>Reviewed:</strong> <%= page.workflow.reviewedAt || 'Pending editorial QA' %></span>
+      </div>
+    </div>
+  </section>
+
+  <main class="seasonal-main">
+    <div class="container">
+      <% if (page.isPreview) { %>
+        <section class="workflow-banner workflow-banner-preview">
+          <strong>Editorial preview:</strong> This monthly page is auto-generated and still marked draft.
+        </section>
+      <% } else { %>
+        <section class="workflow-banner">
+          <strong>Editorial workflow:</strong> <%= page.workflow.summary || 'Reviewed monthly by the AgentX editorial team.' %>
+          <span><%= page.workflow.notes %></span>
+        </section>
+      <% } %>
+
+      <section class="ranking-method">
+        <div class="section-label">How ranking works</div>
+        <div class="method-grid">
+          <% page.rankingMethod.forEach(item => { %>
+            <article class="method-card">
+              <p><%= item %></p>
+            </article>
+          <% }) %>
+        </div>
+      </section>
+
+      <section class="featured-grid">
+        <% page.featuredAgents.forEach(agent => { %>
+          <article class="featured-card">
+            <div class="featured-rank">#<%= agent.rank %></div>
+            <div class="featured-copy">
+              <p class="section-label"><%= page.workflow.affiliateLabel %></p>
+              <h2><%= agent.name %></h2>
+              <p><%= agent.callout %></p>
+              <p class="featured-proof"><%= agent.primaryReason %></p>
+              <div class="featured-stats">
+                <span>Editorial score <strong><%= agent.editorialScore %>/5</strong></span>
+                <span>API calls <strong><%= agent.apiCalls %></strong></span>
+                <span>Reviews <strong><%= agent.reviewCount %></strong></span>
+              </div>
+              <div class="featured-actions">
+                <a href="<%= agent.url %>" class="btn btn-primary">View marketplace listing</a>
+                <a href="<%= agent.profileUrl %>" class="btn btn-secondary">Agent profile</a>
+              </div>
+              <div class="affiliate-callout"><%= agent.revenueCallout %></div>
+            </div>
+          </article>
+        <% }) %>
+      </section>
+
+      <section class="month-nav">
+        <div class="section-label">Monthly editions</div>
+        <div class="month-grid">
+          <% page.monthPages.forEach(month => { %>
+            <article class="month-card <%= month.slug === page.activeMonth.slug ? 'is-active' : '' %>">
+              <div>
+                <h3><%= month.label %></h3>
+                <p><%= month.workflow.status %></p>
+              </div>
+              <% if (month.href) { %>
+                <a href="<%= month.href %>">Open</a>
+              <% } else { %>
+                <span class="month-disabled">Awaiting review</span>
+              <% } %>
+            </article>
+          <% }) %>
+        </div>
+      </section>
+
+      <section class="ranking-table-wrap">
+        <div class="section-label">Top AI automation tools and agent marketplaces</div>
+        <table class="ranking-table">
+          <thead>
+            <tr>
+              <th>Rank</th>
+              <th>Agent</th>
+              <th>Why it ranks</th>
+              <th>Signals</th>
+              <th>CTA</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% page.agents.forEach(agent => { %>
+              <tr>
+                <td>#<%= agent.rank %></td>
+                <td>
+                  <strong><%= agent.name %></strong>
+                  <span><%= agent.pricing %></span>
+                </td>
+                <td>
+                  <p><%= agent.description %></p>
+                  <p class="ranking-reason"><%= agent.primaryReason %></p>
+                </td>
+                <td>
+                  <span>Score <strong><%= agent.totalScore %></strong></span>
+                  <span>Usage <strong><%= agent.apiCalls %></strong></span>
+                  <span>Reviews <strong><%= agent.reviewCount %></strong></span>
+                </td>
+                <td>
+                  <a href="<%= agent.url %>">Compare</a>
+                </td>
+              </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      </section>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a href="/" class="nav-logo" style="margin-bottom: 0.5rem;">
+            <div class="logo-icon">X</div>
+            AgentX
+          </a>
+          <p>The AI agent marketplace. Discover, deploy, and manage autonomous agents that handle real business tasks.</p>
+        </div>
+        <div class="footer-col">
+          <h4>Product</h4>
+          <ul>
+            <li><a href="/features">Features</a></li>
+            <li><a href="/pricing">Pricing</a></li>
+            <li><a href="/browse">Browse Agents</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Company</h4>
+          <ul>
+            <li><a href="/about">About</a></li>
+            <li><a href="/blog">Blog</a></li>
+            <li><a href="/contact">Contact</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>&copy; 2026 AgentX Market. All rights reserved.</span>
+      </div>
+    </div>
+  </footer>
+
+  <script src="/js/main.js"></script>
+</body>
+</html>

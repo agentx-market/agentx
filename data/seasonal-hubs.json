@@ -1,0 +1,103 @@
+{
+  "2026": {
+    "owner": "AgentX Editorial",
+    "months": {
+      "january": {
+        "status": "published",
+        "reviewedBy": "AgentX Editorial",
+        "reviewedAt": "2026-01-08",
+        "summary": "Baseline rankings for the new year.",
+        "notes": "Rankings seeded from marketplace activity and launch recency.",
+        "affiliateLabel": "January partner spotlight"
+      },
+      "february": {
+        "status": "published",
+        "reviewedBy": "AgentX Editorial",
+        "reviewedAt": "2026-02-10",
+        "summary": "Automation-first refresh for buyers comparing AI agent stacks.",
+        "notes": "Editorial review completed after marketplace QA.",
+        "affiliateLabel": "February partner spotlight"
+      },
+      "march": {
+        "status": "published",
+        "reviewedBy": "AgentX Editorial",
+        "reviewedAt": "2026-03-11",
+        "summary": "Launch month for the seasonal content hub.",
+        "notes": "Initial production release for feature #117.",
+        "affiliateLabel": "March partner spotlight"
+      },
+      "april": {
+        "status": "draft",
+        "reviewedBy": "",
+        "reviewedAt": "",
+        "summary": "Queued for the next monthly refresh.",
+        "notes": "Open for editorial QA and revenue-share callout updates.",
+        "affiliateLabel": "April partner spotlight"
+      },
+      "may": {
+        "status": "draft",
+        "reviewedBy": "",
+        "reviewedAt": "",
+        "summary": "Auto-generated shell waiting for editorial review.",
+        "notes": "Promote the strongest workflow automation agents.",
+        "affiliateLabel": "May partner spotlight"
+      },
+      "june": {
+        "status": "draft",
+        "reviewedBy": "",
+        "reviewedAt": "",
+        "summary": "Auto-generated shell waiting for editorial review.",
+        "notes": "Refresh pricing snapshots before publishing.",
+        "affiliateLabel": "June partner spotlight"
+      },
+      "july": {
+        "status": "draft",
+        "reviewedBy": "",
+        "reviewedAt": "",
+        "summary": "Auto-generated shell waiting for editorial review.",
+        "notes": "Keep tool comparisons aligned with summer launch cadence.",
+        "affiliateLabel": "July partner spotlight"
+      },
+      "august": {
+        "status": "draft",
+        "reviewedBy": "",
+        "reviewedAt": "",
+        "summary": "Auto-generated shell waiting for editorial review.",
+        "notes": "Prioritize API-heavy agent operators.",
+        "affiliateLabel": "August partner spotlight"
+      },
+      "september": {
+        "status": "draft",
+        "reviewedBy": "",
+        "reviewedAt": "",
+        "summary": "Auto-generated shell waiting for editorial review.",
+        "notes": "Tighten revenue-share messaging before publishing.",
+        "affiliateLabel": "September partner spotlight"
+      },
+      "october": {
+        "status": "draft",
+        "reviewedBy": "",
+        "reviewedAt": "",
+        "summary": "Auto-generated shell waiting for editorial review.",
+        "notes": "Highlight marketplace and agent automation buyers.",
+        "affiliateLabel": "October partner spotlight"
+      },
+      "november": {
+        "status": "draft",
+        "reviewedBy": "",
+        "reviewedAt": "",
+        "summary": "Auto-generated shell waiting for editorial review.",
+        "notes": "Prepare holiday campaign automation rankings.",
+        "affiliateLabel": "November partner spotlight"
+      },
+      "december": {
+        "status": "draft",
+        "reviewedBy": "",
+        "reviewedAt": "",
+        "summary": "Auto-generated shell waiting for editorial review.",
+        "notes": "Year-end update shell for final seasonal refresh.",
+        "affiliateLabel": "December partner spotlight"
+      }
+    }
+  }
+}

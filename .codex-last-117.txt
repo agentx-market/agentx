@@ -1,0 +1,12 @@
+Implemented a narrow pass for feature `#117` without touching the protected dirty paths.
+
+The feature is centered in [routes/blog.js](/Users/marco/marco_web/routes/blog.js), [lib/seasonal-content.js](/Users/marco/marco_web/lib/seasonal-content.js), and [views/blog-seasonal-hub.ejs](/Users/marco/marco_web/views/blog-seasonal-hub.ejs). `/blog/best-ai-agents-2026` now renders a yearly SEO hub, `/blog/best-ai-agents-2026/:monthSlug` auto-generates monthly editions, rankings are computed from `agent_usage` + reviews with a deterministic monthly rotation fallback, and draft months are gated behind `?preview=1` using [data/seasonal-hubs.json](/Users/marco/marco_web/data/seasonal-hubs.json). The view includes affiliate-style featured callouts and JSON-LD `Review` markup for rich snippets, with styling in [public/css/blog-seasonal.css](/Users/marco/marco_web/public/css/blog-seasonal.css).
+
+Verified with live HTTP fetches:
+- `/blog/best-ai-agents-2026` renders
+- `/blog/best-ai-agents-2026/march` renders
+- `/blog/best-ai-agents-2026/april` returns `404`
+- `/blog/best-ai-agents-2026/april?preview=1` renders
+- `/blog/` now includes the yearly hub entry
+
+Also updated [memory/AGENT-MEMORY.md](/Users/marco/marco_web/memory/AGENT-MEMORY.md) and completed the backlog item with `bash ~/marco_web/backlog.sh complete 117 none codex`.
