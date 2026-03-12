@@ -1,0 +1,7 @@
+Implemented the featured homepage carousel as a narrow working pass against the actual homepage file, which is static HTML here rather than `views/index.ejs`.
+
+Added `/api/featured/rotating` in [routes/featured-carousel.js](/Users/marco/marco_web/routes/featured-carousel.js#L1) and mounted it in [server.js](/Users/marco/marco_web/server.js#L2111). The endpoint returns up to 3 active featured agents, filters to operators with active `Pro+` style plans, and ranks by rating plus recency.
+
+Wired the hero carousel container and styles into [public/index.html](/Users/marco/marco_web/public/index.html#L1115) and added the rotating client logic in [public/js/carousel.js](/Users/marco/marco_web/public/js/carousel.js#L1). The client fetches the new endpoint, shows thumbnail initials, name, rating, a visible `Featured` badge, and auto-rotates every 8 seconds. The `$99/mo` featured-spot copy is included in the hero block, and the script is loaded from [public/index.html](/Users/marco/marco_web/public/index.html#L1587).
+
+Verified with `node --check` on `server.js`, `routes/featured-carousel.js`, and `public/js/carousel.js`, restarted the server, and confirmed `GET /api/featured/rotating` responds. It currently returns an empty `agents` array in this environment, which means there are no qualifying active Pro+ featured listings right now. Feature `#142` was marked complete via `backlog.sh`.
