@@ -1,0 +1,3 @@
+Implemented `/guides` as a new static page at [public/guides.html](/Users/marco/marco_web/public/guides.html). It includes four integration how-to sections for Slack, Discord, GitHub Actions, and Zapier, each with concise setup steps and copy-paste code snippets, while reusing the site’s existing visual shell and CSS.
+
+Verified the page resolves at `/guides` with `HTTP 200` via the current static-file setup. I also ran `bash ~/marco_web/backlog.sh complete 89 none codex` successfully.

@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Integration Guides — AgentX Market</title>
+  <meta name="description" content="Step-by-step integration guides for connecting AgentX with Slack, Discord, GitHub Actions, and Zapier.">
+  <link rel="canonical" href="https://agentx.market/guides">
+
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://agentx.market/guides">
+  <meta property="og:title" content="Integration Guides — AgentX Market">
+  <meta property="og:description" content="Connect AgentX to Slack, Discord, GitHub Actions, and Zapier with copy-paste examples.">
+  <meta property="og:image" content="https://agentx.market/img/og-image.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@agentxmarket">
+  <meta name="twitter:title" content="Integration Guides — AgentX Market">
+  <meta name="twitter:description" content="How-to guides and code snippets for the most common AgentX integrations.">
+
+  <link rel="icon" type="image/svg+xml" href="/img/favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+
+  <style>
+    .page-hero {
+      padding: 148px 0 72px;
+      position: relative;
+      overflow: hidden;
+    }
+    .page-hero-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.02fr) minmax(320px, 0.98fr);
+      gap: var(--space-3xl);
+      align-items: center;
+    }
+    .hero-kicker {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: var(--space-lg);
+      padding: 0.42rem 0.8rem;
+      border-radius: 999px;
+      background: rgba(18, 111, 255, 0.08);
+      color: #126fff;
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-weight: 800;
+    }
+    .hero-kicker::before {
+      content: '';
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: currentColor;
+      box-shadow: 0 0 0 6px rgba(18, 111, 255, 0.1);
+    }
+    .page-hero h1 {
+      margin-bottom: var(--space-md);
+      max-width: 11ch;
+      letter-spacing: -0.05em;
+    }
+    .page-hero p.large {
+      max-width: 58ch;
+      color: var(--text-muted);
+    }
+    .hero-panel {
+      position: relative;
+      overflow: hidden;
+      padding: var(--space-xl);
+      border-radius: 34px;
+      border: 1px solid rgba(19, 34, 56, 0.08);
+      background: rgba(255, 255, 255, 0.78);
+      box-shadow: 0 28px 64px rgba(19, 34, 56, 0.1);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+    }
+    .hero-panel::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at top right, rgba(18,111,255,0.12), transparent 30%),
+        radial-gradient(circle at bottom left, rgba(21,162,115,0.1), transparent 28%);
+      pointer-events: none;
+    }
+    .hero-stack {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      gap: 0.9rem;
+    }
+    .hero-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 1rem;
+      padding: 1rem 1.05rem;
+      border-radius: 20px;
+      background: rgba(248,251,255,0.94);
+      border: 1px solid rgba(19,34,56,0.08);
+    }
+    .hero-row strong {
+      display: block;
+      color: #132238;
+      margin-bottom: 0.15rem;
+    }
+    .hero-state {
+      white-space: nowrap;
+      align-self: center;
+      color: #126fff;
+      font-weight: 800;
+    }
+
+    .guides-section {
+      padding: 0 0 var(--space-5xl);
+    }
+    .guides-grid {
+      display: grid;
+      gap: var(--space-xl);
+    }
+    .guide-card {
+      border-radius: 34px;
+      padding: clamp(1.2rem, 2vw, 1.8rem);
+      background: rgba(255,255,255,0.72);
+      border: 1px solid rgba(19,34,56,0.08);
+      box-shadow: 0 24px 56px rgba(19,34,56,0.08);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+    }
+    .guide-header {
+      display: flex;
+      justify-content: space-between;
+      gap: 1rem;
+      align-items: flex-start;
+      margin-bottom: var(--space-lg);
+    }
+    .guide-label {
+      display: inline-flex;
+      align-items: center;
+      padding: 0.38rem 0.72rem;
+      border-radius: 999px;
+      background: rgba(18,111,255,0.08);
+      color: #126fff;
+      font-size: 0.78rem;
+      font-weight: 800;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+    .guide-card h2 {
+      margin: 0.4rem 0 0.5rem;
+      letter-spacing: -0.04em;
+    }
+    .guide-card p {
+      color: var(--text-muted);
+    }
+    .guide-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+      gap: var(--space-xl);
+      align-items: start;
+    }
+    .steps {
+      list-style: none;
+      display: grid;
+      gap: 0.8rem;
+      margin: 0;
+      padding: 0;
+    }
+    .steps li {
+      padding: 0.95rem 1rem;
+      border-radius: 20px;
+      background: rgba(248,251,255,0.94);
+      border: 1px solid rgba(19,34,56,0.08);
+      color: #425466;
+    }
+    .steps strong {
+      display: block;
+      margin-bottom: 0.25rem;
+      color: #132238;
+    }
+    .snippet {
+      border-radius: 24px;
+      overflow: hidden;
+      border: 1px solid rgba(19,34,56,0.08);
+      background: #0f172a;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.05);
+    }
+    .snippet-header {
+      display: flex;
+      justify-content: space-between;
+      gap: 1rem;
+      align-items: center;
+      padding: 0.8rem 1rem;
+      border-bottom: 1px solid rgba(148,163,184,0.18);
+      background: rgba(15,23,42,0.96);
+      color: #cbd5e1;
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-weight: 700;
+    }
+    .snippet pre {
+      margin: 0;
+      padding: 1rem;
+      overflow-x: auto;
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 0.84rem;
+      line-height: 1.7;
+      color: #e2e8f0;
+    }
+    .snippet code {
+      font-family: inherit;
+    }
+    .inline-code {
+      padding: 0.12rem 0.35rem;
+      border-radius: 0.45rem;
+      background: rgba(15,23,42,0.08);
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 0.88em;
+      color: #132238;
+    }
+    .guide-note {
+      margin-top: var(--space-md);
+      padding: 0.95rem 1rem;
+      border-radius: 18px;
+      background: rgba(18,111,255,0.06);
+      border: 1px solid rgba(18,111,255,0.12);
+      color: #29445f;
+    }
+
+    .cta-section {
+      padding: 0 0 var(--space-5xl);
+    }
+    .cta-panel {
+      padding: clamp(1.4rem, 2.4vw, 2rem);
+      border-radius: 34px;
+      background: linear-gradient(135deg, rgba(18,111,255,0.08), rgba(21,162,115,0.08));
+      border: 1px solid rgba(19,34,56,0.08);
+      box-shadow: 0 24px 56px rgba(19,34,56,0.08);
+    }
+    .cta-panel h2 {
+      margin-bottom: 0.5rem;
+      letter-spacing: -0.04em;
+    }
+    .cta-panel p {
+      max-width: 56ch;
+      color: #425466;
+      margin-bottom: var(--space-lg);
+    }
+    .cta-actions {
+      display: flex;
+      gap: 0.85rem;
+      flex-wrap: wrap;
+    }
+
+    @media (max-width: 960px) {
+      .page-hero-grid,
+      .guide-layout {
+        grid-template-columns: 1fr;
+      }
+      .guide-header {
+        flex-direction: column;
+      }
+    }
+    @media (max-width: 640px) {
+      .page-hero {
+        padding-top: 132px;
+      }
+      .hero-row {
+        flex-direction: column;
+      }
+      .cta-actions {
+        flex-direction: column;
+      }
+      .cta-actions .btn {
+        width: 100%;
+        justify-content: center;
+      }
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar">
+    <div class="container">
+      <a href="/" class="nav-logo"><div class="logo-icon">X</div>AgentX</a>
+      <ul class="nav-links">
+        <li><a href="/features">Features</a></li>
+        <li><a href="/pricing">Pricing</a></li>
+        <li><a href="/browse">Browse</a></li>
+        <li><a href="/guides" aria-current="page">Guides</a></li>
+        <li><a href="/about">About</a></li>
+        <li><a href="/contact">Contact</a></li>
+        <li><a href="/login">Login</a></li>
+        <li class="nav-cta"><a href="/pricing" class="btn btn-primary">Get Started</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <main>
+    <section class="page-hero">
+      <div class="container page-hero-grid">
+        <div>
+          <span class="hero-kicker">Integration Guides</span>
+          <h1>Connect AgentX to your stack.</h1>
+          <p class="large">Four fast-start guides for shipping notifications, CI automation, and no-code workflows. Each guide is static, copy-paste friendly, and tuned for a minimal setup path.</p>
+        </div>
+        <aside class="hero-panel" aria-label="Guide summary">
+          <div class="hero-stack">
+            <div class="hero-row">
+              <div>
+                <strong>Channels covered</strong>
+                <span>Slack, Discord, GitHub Actions, Zapier</span>
+              </div>
+              <span class="hero-state">4 guides</span>
+            </div>
+            <div class="hero-row">
+              <div>
+                <strong>Setup style</strong>
+                <span>Webhook-first and token-based examples</span>
+              </div>
+              <span class="hero-state">Static</span>
+            </div>
+            <div class="hero-row">
+              <div>
+                <strong>Snippet format</strong>
+                <span><span class="inline-code">curl</span>, JSON, YAML, and JavaScript</span>
+              </div>
+              <span class="hero-state">Copy/paste</span>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <section class="guides-section">
+      <div class="container guides-grid">
+        <article class="guide-card" id="slack">
+          <div class="guide-header">
+            <div>
+              <span class="guide-label">Slack</span>
+              <h2>Send AgentX events into a Slack channel</h2>
+              <p>Use an incoming webhook when you want deploy alerts, health changes, or operator actions to land in a single channel with minimal setup.</p>
+            </div>
+          </div>
+          <div class="guide-layout">
+            <ol class="steps">
+              <li><strong>1. Create a Slack incoming webhook</strong>In Slack, add the Incoming Webhooks app and generate a webhook URL for the target channel.</li>
+              <li><strong>2. Store the webhook securely</strong>Save it as <span class="inline-code">SLACK_WEBHOOK_URL</span> in your deployment environment.</li>
+              <li><strong>3. Post a structured payload</strong>Send JSON with a short title, status, and deep link back to the relevant AgentX page.</li>
+            </ol>
+            <div class="snippet" aria-label="Slack example">
+              <div class="snippet-header">
+                <span>curl example</span>
+                <span>Slack webhook</span>
+              </div>
+              <pre><code>curl -X POST "$SLACK_WEBHOOK_URL" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "text": "AgentX alert",
+    "blocks": [
+      {
+        "type": "section",
+        "text": {
+          "type": "mrkdwn",
+          "text": "*Health check passed*\nAgent `support-router` is healthy again."
+        }
+      },
+      {
+        "type": "context",
+        "elements": [
+          {
+            "type": "mrkdwn",
+            "text": "<https://agentx.market/status|Open status page>"
+          }
+        ]
+      }
+    ]
+  }'</code></pre>
+            </div>
+          </div>
+          <div class="guide-note">Use Slack blocks when you need readable incident updates; keep the payload flat and link operators back to <span class="inline-code">/status</span> or the relevant listing.</div>
+        </article>
+
+        <article class="guide-card" id="discord">
+          <div class="guide-header">
+            <div>
+              <span class="guide-label">Discord</span>
+              <h2>Broadcast updates with a Discord webhook</h2>
+              <p>Discord webhooks work well for community channels, internal ops rooms, or lightweight status broadcasts without maintaining a bot.</p>
+            </div>
+          </div>
+          <div class="guide-layout">
+            <ol class="steps">
+              <li><strong>1. Create a channel webhook</strong>Open channel settings in Discord, create a webhook, and copy the generated URL.</li>
+              <li><strong>2. Save it as an environment variable</strong>Use <span class="inline-code">DISCORD_WEBHOOK_URL</span> in your app or worker.</li>
+              <li><strong>3. Include embeds for context</strong>Embeds let you show status, actor, and a button-style link in a compact message.</li>
+            </ol>
+            <div class="snippet" aria-label="Discord example">
+              <div class="snippet-header">
+                <span>JSON payload</span>
+                <span>Discord webhook</span>
+              </div>
+              <pre><code>{
+  "username": "AgentX Monitor",
+  "content": "New marketplace event",
+  "embeds": [
+    {
+      "title": "Listing verified",
+      "description": "The `support-router` listing is now marked verified.",
+      "color": 2262786,
+      "fields": [
+        { "name": "Operator", "value": "marco", "inline": true },
+        { "name": "Environment", "value": "production", "inline": true }
+      ],
+      "url": "https://agentx.market/browse"
+    }
+  ]
+}</code></pre>
+            </div>
+          </div>
+          <div class="guide-note">Discord expects a plain webhook POST. If you need retries or fan-out, place a small worker between AgentX events and the webhook endpoint.</div>
+        </article>
+
+        <article class="guide-card" id="github-actions">
+          <div class="guide-header">
+            <div>
+              <span class="guide-label">GitHub Actions</span>
+              <h2>Call AgentX from CI after deploys or checks</h2>
+              <p>GitHub Actions is the fastest path for reporting deploy results, syncing listing metadata, or pinging an internal endpoint after tests pass.</p>
+            </div>
+          </div>
+          <div class="guide-layout">
+            <ol class="steps">
+              <li><strong>1. Add a repository secret</strong>Create <span class="inline-code">AGENTX_API_KEY</span> in GitHub repository or organization secrets.</li>
+              <li><strong>2. Trigger after your build or deploy</strong>Run the AgentX step only after the workflow reaches a stable state.</li>
+              <li><strong>3. Send a signed request</strong>Use the API key in the <span class="inline-code">X-AgentX-Key</span> header and keep payloads explicit.</li>
+            </ol>
+            <div class="snippet" aria-label="GitHub Actions example">
+              <div class="snippet-header">
+                <span>workflow yaml</span>
+                <span>.github/workflows/notify-agentx.yml</span>
+              </div>
+              <pre><code>name: Notify AgentX
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Report deploy to AgentX
+        run: |
+          curl -X POST "https://agentx.market/api/contact" \
+            -H "Content-Type: application/json" \
+            -H "X-AgentX-Key: ${{ secrets.AGENTX_API_KEY }}" \
+            -d '{
+              "name": "CI Bot",
+              "email": "ops@example.com",
+              "subject": "Deploy completed",
+              "message": "Production deploy finished from GitHub Actions."
+            }'</code></pre>
+            </div>
+          </div>
+          <div class="guide-note">If you later add a dedicated automation endpoint, keep the same secret pattern and tighten the payload contract instead of overloading free-form text fields.</div>
+        </article>
+
+        <article class="guide-card" id="zapier">
+          <div class="guide-header">
+            <div>
+              <span class="guide-label">Zapier</span>
+              <h2>Bridge AgentX into no-code workflows</h2>
+              <p>Zapier is the lowest-friction option when a non-engineering team needs to route form submissions, alerts, or listing events into downstream tools.</p>
+            </div>
+          </div>
+          <div class="guide-layout">
+            <ol class="steps">
+              <li><strong>1. Start with Webhooks by Zapier</strong>Choose a Catch Hook trigger if AgentX will send data into Zapier, or POST if Zapier will call out.</li>
+              <li><strong>2. Map the core fields</strong>Keep a small schema like agent name, event type, environment, and URL.</li>
+              <li><strong>3. Fan out to business tools</strong>From Zapier, route to Google Sheets, Slack, email, CRM, or an internal webhook.</li>
+            </ol>
+            <div class="snippet" aria-label="Zapier example">
+              <div class="snippet-header">
+                <span>javascript fetch</span>
+                <span>Catch Hook source</span>
+              </div>
+              <pre><code>await fetch("https://hooks.zapier.com/hooks/catch/123456/agentx/", {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json"
+  },
+  body: JSON.stringify({
+    event: "new_lead",
+    agent: "support-router",
+    source: "agentx_marketplace",
+    operator: "marco",
+    url: "https://agentx.market/contact",
+    created_at: new Date().toISOString()
+  })
+});</code></pre>
+            </div>
+          </div>
+          <div class="guide-note">Zapier works best when the payload is boring: predictable field names, ISO timestamps, and stable event strings make downstream steps easier to maintain.</div>
+        </article>
+      </div>
+    </section>
+
+    <section class="cta-section">
+      <div class="container">
+        <div class="cta-panel">
+          <h2>Need a different integration path?</h2>
+          <p>If your workflow needs a custom webhook shape, marketplace onboarding support, or a verified operator setup, use the contact flow and describe the destination system.</p>
+          <div class="cta-actions">
+            <a href="/contact" class="btn btn-primary">Talk to AgentX</a>
+            <a href="/docs" class="btn btn-secondary">Read API Docs</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
