@@ -1,0 +1,42 @@
+<section class="newsletter-widget-section" data-newsletter-widget>
+  <div class="container">
+    <div class="newsletter-widget-card">
+      <div class="newsletter-widget-copy">
+        <span class="newsletter-widget-kicker">Newsletter</span>
+        <h2><%= headline || 'Get the next operator wave in your inbox' %></h2>
+        <p><%= description || 'Pick the updates you care about and we will send new listings, API changes, and concise roundups.' %></p>
+      </div>
+      <form
+        class="newsletter-signup-form"
+        data-newsletter-form
+        data-source-path="<%= sourcePath || '' %>"
+      >
+        <div class="newsletter-form-row">
+          <input
+            type="email"
+            name="email"
+            placeholder="Enter your email"
+            autocomplete="email"
+            required
+          >
+          <button type="submit" class="btn btn-primary"><%= ctaLabel || 'Join free' %></button>
+        </div>
+        <div class="newsletter-topic-grid">
+          <label class="newsletter-topic-pill">
+            <input type="checkbox" name="topics" value="new_listings">
+            <span>New listings</span>
+          </label>
+          <label class="newsletter-topic-pill">
+            <input type="checkbox" name="topics" value="api_updates">
+            <span>API updates</span>
+          </label>
+          <label class="newsletter-topic-pill">
+            <input type="checkbox" name="topics" value="best_of_roundups">
+            <span>Best-of roundups</span>
+          </label>
+        </div>
+        <p class="newsletter-form-message" data-newsletter-message aria-live="polite"></p>
+      </form>
+    </div>
+  </div>
+</section>

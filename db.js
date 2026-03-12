@@ -53,6 +53,26 @@ try {
   console.log('[db] Newsletter subscribers table may already exist:', err.message);
 }
 
+const newsletterSubscriberColumns = [
+  { name: 'topics', definition: "TEXT DEFAULT '[]'" },
+  { name: 'source_path', definition: 'TEXT' },
+  { name: 'sync_status', definition: "TEXT DEFAULT 'pending'" },
+  { name: 'sync_provider', definition: 'TEXT' },
+  { name: 'welcome_email_sent_at', definition: 'INTEGER' },
+  { name: 'last_synced_at', definition: 'INTEGER' },
+];
+
+newsletterSubscriberColumns.forEach(({ name, definition }) => {
+  try {
+    db.exec(`ALTER TABLE newsletter_subscribers ADD COLUMN ${name} ${definition}`);
+    console.log(`[db] Added newsletter_subscribers.${name}`);
+  } catch (err) {
+    if (!String(err.message || '').includes('duplicate column name')) {
+      console.log(`[db] newsletter_subscribers.${name} migration skipped:`, err.message);
+    }
+  }
+});
+
 // Create newsletter sponsorship bookings for weekly issue placements
 try {
   db.exec(`

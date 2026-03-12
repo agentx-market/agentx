@@ -1,0 +1,10 @@
+Implemented the newsletter growth widget end to end. The backend now accepts `POST /api/newsletter/subscribe`, stores email + topics + source/sync metadata, aliases the old `/api/subscribe-newsletter`, posts to configured Mailchimp/ConvertKit webhook URLs, and sends a welcome email on signup. The main backend touchpoints are [server.js](/Users/marco/marco_web/server.js), [lib/newsletter.js](/Users/marco/marco_web/lib/newsletter.js), and the schema extension in [db.js](/Users/marco/marco_web/db.js).
+
+On the frontend, I added a reusable EJS partial at [views/partials/newsletter-widget.ejs](/Users/marco/marco_web/views/partials/newsletter-widget.ejs), embedded it on [views/browse.ejs](/Users/marco/marco_web/views/browse.ejs) and [views/agent-detail.ejs](/Users/marco/marco_web/views/agent-detail.ejs), converted the pricing capture on [public/pricing.html](/Users/marco/marco_web/public/pricing.html) to the newsletter flow, and added shared behavior/styles in [public/js/main.js](/Users/marco/marco_web/public/js/main.js) and [public/css/style.css](/Users/marco/marco_web/public/css/style.css). That covers:
+- newsletter signup on public pages
+- sticky bottom CTA on `/browse` and `/pricing` with “Join 2K+ operators”
+- exit-intent modal on agent detail pages
+- one-fire gating for exit intent via `localStorage`
+- newsletter counts surfaced in [views/dashboard.ejs](/Users/marco/marco_web/views/dashboard.ejs)
+
+Verified with `node --check server.js`, `node --check public/js/main.js`, `curl -I http://127.0.0.1:3000/health`, and a live POST to `/api/newsletter/subscribe`. I restarted the server and ran `bash ~/marco_web/backlog.sh complete 98 none codex`.
