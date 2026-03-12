@@ -1,0 +1,10 @@
+Implemented the OAuth-side bonus hook in [lib/oauth-handler.js](/Users/marco/marco_web/lib/oauth-handler.js#L181). GitHub signups now:
+
+- reject accounts younger than 7 days before inserting the operator
+- provision the operator wallet if needed
+- send the one-time `21` sat welcome bonus immediately after a brand-new GitHub operator is created
+- persist `welcome_bonus_claimed_at` and `wallet_funded_at` so the payout cannot repeat
+
+This keeps the existing health-check bonus path from double-paying, because the claimed flag is already set by the OAuth flow.
+
+Verified with `node --check lib/oauth-handler.js`, `node --check server.js`, restarted the app, and confirmed `/auth/github` still returns a `302` redirect locally. Backlog item `213` is marked complete.
