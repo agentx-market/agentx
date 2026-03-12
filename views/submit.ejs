@@ -3,73 +3,155 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Submit Your Agent - AgentX.Market</title>
-  <meta name="description" content="Submit your agent with a name, health check URL, and operator email. Pro operators can enable priority review with a 24 hour SLA.">
+  <title>Submit Your Agent in 60 Seconds - AgentX.Market</title>
+  <meta name="description" content="Paste your agent URL, let AgentX detect the listing details, then confirm and publish in three guided steps.">
   <style>
     :root {
-      --bg: #f4efe6;
-      --surface: rgba(255, 251, 245, 0.94);
-      --surface-strong: #fffdf9;
-      --border: #d7c8b5;
-      --text: #1f1a14;
-      --muted: #6f6357;
-      --accent: #b6532f;
-      --accent-dark: #7f3518;
-      --success: #216e39;
+      --bg: #f5efe5;
+      --paper: rgba(255, 251, 246, 0.94);
+      --paper-strong: #fffdfa;
+      --border: #d6c8b7;
+      --text: #221b15;
+      --muted: #6d6258;
+      --accent: #bd5b35;
+      --accent-dark: #8a3b1e;
+      --accent-soft: rgba(189, 91, 53, 0.12);
+      --success: #206a38;
       --danger: #a12626;
-      --shadow: 0 24px 60px rgba(50, 28, 10, 0.12);
+      --shadow: 0 24px 56px rgba(70, 37, 14, 0.12);
     }
 
     * { box-sizing: border-box; }
     body {
       margin: 0;
-      font-family: Georgia, "Times New Roman", serif;
-      color: var(--text);
-      background:
-        radial-gradient(circle at top left, rgba(182, 83, 47, 0.12), transparent 30%),
-        linear-gradient(180deg, #efe5d6 0%, var(--bg) 100%);
       min-height: 100vh;
+      color: var(--text);
+      font-family: Georgia, "Times New Roman", serif;
+      background:
+        radial-gradient(circle at 0% 0%, rgba(189, 91, 53, 0.18), transparent 28%),
+        radial-gradient(circle at 100% 10%, rgba(80, 120, 91, 0.09), transparent 24%),
+        linear-gradient(180deg, #eee2d0 0%, var(--bg) 100%);
     }
-    .wrap { max-width: 960px; margin: 0 auto; padding: 32px 20px 64px; }
-    .nav { display: flex; justify-content: space-between; align-items: center; margin-bottom: 48px; }
+    .wrap { max-width: 1040px; margin: 0 auto; padding: 28px 20px 64px; }
+    .nav { display: flex; justify-content: space-between; align-items: center; margin-bottom: 36px; }
     .brand, .nav a { color: var(--text); text-decoration: none; }
-    .brand { font-size: 1.2rem; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; }
-    .nav-links { display: flex; gap: 18px; font-size: 0.95rem; }
-    .hero { display: grid; gap: 24px; grid-template-columns: minmax(0, 1.2fr) minmax(280px, 0.8fr); align-items: start; }
-    .card { background: var(--surface); border: 1px solid var(--border); border-radius: 24px; box-shadow: var(--shadow); }
-    .hero-copy { padding: 32px; }
-    .eyebrow { display: inline-block; margin-bottom: 14px; color: var(--accent-dark); font-size: 0.85rem; letter-spacing: 0.1em; text-transform: uppercase; }
-    h1 { margin: 0 0 16px; font-size: clamp(2.5rem, 6vw, 4.7rem); line-height: 0.95; }
-    .lede, .sidebar p, .field-help, .message, .priority-label, .priority-note { font-family: "Helvetica Neue", Arial, sans-serif; }
-    .lede { margin: 0; font-size: 1.05rem; line-height: 1.7; color: var(--muted); max-width: 48ch; }
-    .sidebar { padding: 28px; background: var(--surface-strong); }
-    .sidebar h2, .form-card h2 { margin-top: 0; font-size: 1.2rem; }
-    .sidebar ul { margin: 16px 0 0; padding-left: 18px; color: var(--muted); line-height: 1.8; font-family: "Helvetica Neue", Arial, sans-serif; }
-    .form-card { margin-top: 28px; padding: 32px; }
-    form { display: grid; gap: 18px; }
-    label { display: block; margin-bottom: 8px; font-family: "Helvetica Neue", Arial, sans-serif; font-size: 0.95rem; font-weight: 700; }
-    input { width: 100%; padding: 14px 16px; border: 1px solid var(--border); border-radius: 14px; font: inherit; font-family: "Helvetica Neue", Arial, sans-serif; background: #fff; color: var(--text); }
-    input:focus { outline: 2px solid rgba(182, 83, 47, 0.18); border-color: var(--accent); }
-    .field-help { margin-top: 8px; color: var(--muted); font-size: 0.92rem; line-height: 1.5; }
-    .priority-card { padding: 16px 18px; border: 1px solid var(--border); border-radius: 16px; background: rgba(182, 83, 47, 0.07); }
-    .priority-toggle { display: flex; gap: 12px; align-items: flex-start; }
-    .priority-toggle input { width: 18px; height: 18px; margin-top: 2px; padding: 0; }
-    .priority-label { margin: 0; font-weight: 700; }
-    .priority-note { margin: 6px 0 0; color: var(--muted); line-height: 1.5; }
-    button { border: 0; border-radius: 999px; padding: 14px 20px; font: inherit; font-family: "Helvetica Neue", Arial, sans-serif; font-weight: 700; cursor: pointer; background: var(--accent); color: #fff7f2; transition: background 0.2s ease; }
+    .brand { font-size: 1.2rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; }
+    .nav-links { display: flex; gap: 18px; font-family: "Helvetica Neue", Arial, sans-serif; font-size: 0.95rem; }
+    .shell { display: grid; gap: 24px; grid-template-columns: minmax(0, 1.25fr) minmax(280px, 0.75fr); align-items: start; }
+    .card { background: var(--paper); border: 1px solid var(--border); border-radius: 28px; box-shadow: var(--shadow); }
+    .hero { padding: 34px; }
+    .eyebrow, .lede, .step-label, .step-copy, .field-help, .message, label, input, textarea, button, .summary-card, .summary-list, .secondary-link, .sidebar { font-family: "Helvetica Neue", Arial, sans-serif; }
+    .eyebrow { display: inline-block; margin-bottom: 14px; color: var(--accent-dark); font-size: 0.8rem; letter-spacing: 0.12em; text-transform: uppercase; }
+    h1 { margin: 0 0 14px; font-size: clamp(2.6rem, 5.6vw, 4.8rem); line-height: 0.95; }
+    .lede { margin: 0; max-width: 46ch; color: var(--muted); line-height: 1.7; font-size: 1.02rem; }
+    .sidebar { padding: 28px; background: var(--paper-strong); }
+    .sidebar h2, .flow-card h2 { margin: 0 0 16px; font-size: 1.18rem; }
+    .sidebar p { margin: 0 0 16px; color: var(--muted); line-height: 1.65; }
+    .sidebar ul { margin: 0; padding-left: 18px; color: var(--muted); line-height: 1.75; }
+    .secondary-link {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 18px;
+      padding: 13px 18px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,0.7);
+      color: var(--text);
+      text-decoration: none;
+      font-weight: 700;
+    }
+    .flow-card { margin-top: 26px; padding: 30px; }
+    .progress-wrap { margin-bottom: 26px; }
+    .progress-bar {
+      height: 10px;
+      border-radius: 999px;
+      background: rgba(34, 27, 21, 0.08);
+      overflow: hidden;
+    }
+    .progress-fill {
+      height: 100%;
+      width: 33.333%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, var(--accent), #d4884d);
+      transition: width 0.25s ease;
+    }
+    .progress-steps {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 14px;
+    }
+    .step-pill {
+      padding: 12px 14px;
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      background: rgba(255,255,255,0.62);
+    }
+    .step-pill.active {
+      background: var(--accent-soft);
+      border-color: rgba(189, 91, 53, 0.35);
+    }
+    .step-label { display: block; margin-bottom: 4px; font-size: 0.78rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+    .step-copy { display: block; font-size: 0.96rem; font-weight: 700; }
+    .step-panel { display: none; }
+    .step-panel.active { display: block; }
+    .step-panel > p { margin: 0 0 18px; color: var(--muted); line-height: 1.65; }
+    .field-grid { display: grid; gap: 16px; }
+    .field-grid.two-col { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    label { display: block; margin-bottom: 8px; font-size: 0.93rem; font-weight: 700; }
+    input, textarea {
+      width: 100%;
+      padding: 14px 16px;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      font: inherit;
+      background: #fff;
+      color: var(--text);
+    }
+    textarea { min-height: 118px; resize: vertical; }
+    input:focus, textarea:focus { outline: 2px solid rgba(189, 91, 53, 0.18); border-color: var(--accent); }
+    .field-help { margin: 8px 0 0; color: var(--muted); font-size: 0.9rem; line-height: 1.55; }
+    .actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 22px; }
+    button {
+      border: 0;
+      border-radius: 999px;
+      padding: 14px 20px;
+      font: inherit;
+      font-weight: 700;
+      cursor: pointer;
+      background: var(--accent);
+      color: #fff7f2;
+    }
+    button.secondary {
+      background: transparent;
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
     button:hover { background: var(--accent-dark); }
+    button.secondary:hover { background: rgba(34, 27, 21, 0.04); }
     button:disabled { opacity: 0.7; cursor: wait; }
-    .secondary-link { display: inline-flex; align-items: center; justify-content: center; margin-top: 16px; padding: 13px 18px; border-radius: 999px; border: 1px solid var(--border); font-family: "Helvetica Neue", Arial, sans-serif; font-weight: 700; color: var(--text); text-decoration: none; background: rgba(255, 255, 255, 0.72); }
-    .message { display: none; margin-top: 18px; padding: 14px 16px; border-radius: 14px; font-size: 0.96rem; line-height: 1.6; }
+    .priority-card, .summary-card {
+      padding: 18px;
+      border-radius: 18px;
+      border: 1px solid var(--border);
+      background: rgba(255, 255, 255, 0.62);
+    }
+    .priority-card label { margin: 0; display: flex; gap: 12px; align-items: flex-start; }
+    .priority-card input { width: 18px; height: 18px; margin-top: 2px; padding: 0; }
+    .priority-card p { margin: 4px 0 0; color: var(--muted); line-height: 1.55; }
+    .summary-list { display: grid; gap: 14px; margin: 0; }
+    .summary-item { display: grid; gap: 4px; }
+    .summary-item strong { font-size: 0.78rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+    .message { display: none; margin-top: 18px; padding: 14px 16px; border-radius: 14px; line-height: 1.6; }
     .message.visible { display: block; }
-    .message.success { background: rgba(33, 110, 57, 0.08); border: 1px solid rgba(33, 110, 57, 0.18); color: var(--success); }
+    .message.success { background: rgba(32, 106, 56, 0.08); border: 1px solid rgba(32, 106, 56, 0.2); color: var(--success); }
     .message.error { background: rgba(161, 38, 38, 0.08); border: 1px solid rgba(161, 38, 38, 0.18); color: var(--danger); }
 
-    @media (max-width: 780px) {
-      .hero { grid-template-columns: 1fr; }
+    @media (max-width: 820px) {
+      .shell, .field-grid.two-col, .progress-steps { grid-template-columns: 1fr; }
+      .hero, .sidebar, .flow-card { padding: 24px; }
       .wrap { padding-top: 20px; }
-      .nav { margin-bottom: 28px; }
-      .hero-copy, .sidebar, .form-card { padding: 24px; }
     }
   </style>
 </head>
@@ -83,24 +165,23 @@
       </div>
     </nav>
 
-    <section class="hero">
-      <div class="card hero-copy">
-        <span class="eyebrow"><%= isPro ? 'Pro Submission' : 'Simple Submission' %></span>
-        <h1>List your agent without OAuth.</h1>
+    <section class="shell">
+      <div class="card hero">
+        <span class="eyebrow">Submit Your Agent in 60 Seconds</span>
+        <h1>Paste the URL. We do the boring part.</h1>
         <p class="lede">
-          Submit a name, a working health check URL, and the operator email. If the health check returns
-          <strong>200 OK</strong>, AgentX creates a live community listing immediately.
-          <% if (isPro) { %> Pro operators can also flag the submission for priority review with a 24 hour SLA.<% } %>
+          Start with your agent URL, let AgentX infer the listing details, then confirm and publish.
+          The goal is a live submission in three guided steps instead of a blank form.
         </p>
       </div>
 
       <aside class="card sidebar">
-        <h2>What happens next</h2>
-        <p>If the health check passes, the listing goes live right away and we email the operator with claim and upgrade instructions.</p>
+        <h2>How this works</h2>
+        <p>We fetch the URL you paste, pull the most likely name and description, and probe common health endpoints automatically.</p>
         <ul>
-          <li>No OAuth required on first submission</li>
-          <li>No pending state if the health check fails</li>
-          <li><%= isPro ? 'Priority review moves ahead of standard 72 hour submissions' : 'Claim and richer profile setup can happen later' %></li>
+          <li>Step 1: paste the public agent URL</li>
+          <li>Step 2: review the detected fields and fix anything we missed</li>
+          <li>Step 3: confirm, publish, and queue review</li>
         </ul>
         <% if (!operatorId) { %>
           <a class="secondary-link" href="/auth/github?next=/submit">Use GitHub for full registration</a>
@@ -110,40 +191,112 @@
       </aside>
     </section>
 
-    <section class="card form-card">
-      <h2>Submit agent</h2>
-      <form id="submitForm">
-        <div>
-          <label for="agentName">Agent name</label>
-          <input id="agentName" name="agentName" type="text" maxlength="100" required placeholder="Acme Support Agent">
-        </div>
-
-        <div>
-          <label for="healthUrl">Health check URL</label>
-          <input id="healthUrl" name="healthUrl" type="url" maxlength="500" required placeholder="https://agent.example.com/health">
-          <p class="field-help">This URL must return HTTP 200 within 5 seconds. We use it for the immediate go-live check.</p>
-        </div>
-
-        <div>
-          <label for="contactEmail">Operator email</label>
-          <input id="contactEmail" name="contactEmail" type="email" maxlength="254" required placeholder="operator@example.com">
-        </div>
-
-        <% if (isPro) { %>
-          <div class="priority-card">
-            <label class="priority-toggle" for="priority_review">
-              <input id="priority_review" name="priority_review" type="checkbox">
-              <span>
-                <span class="priority-label">Priority review</span>
-                <span class="priority-note">Move this submission to the top of the review queue with a guaranteed 24 hour review window. Standard review remains 72 hours.</span>
-              </span>
-            </label>
+    <section class="card flow-card">
+      <div class="progress-wrap">
+        <div class="progress-bar"><div id="progressFill" class="progress-fill"></div></div>
+        <div class="progress-steps">
+          <div class="step-pill active" data-step-pill="1">
+            <span class="step-label">Step 1</span>
+            <span class="step-copy">Paste your URL</span>
           </div>
-        <% } %>
-
-        <div>
-          <button id="submitButton" type="submit">Run check and list agent</button>
+          <div class="step-pill" data-step-pill="2">
+            <span class="step-label">Step 2</span>
+            <span class="step-copy">Review detection</span>
+          </div>
+          <div class="step-pill" data-step-pill="3">
+            <span class="step-label">Step 3</span>
+            <span class="step-copy">Confirm and publish</span>
+          </div>
         </div>
+      </div>
+
+      <h2>Guided submission</h2>
+      <form id="submitFlow">
+        <section class="step-panel active" data-step="1">
+          <p>Paste the main public URL for your agent or product page. We will detect the listing details and look for a likely health endpoint.</p>
+          <div class="field-grid">
+            <div>
+              <label for="agentUrl">Agent URL</label>
+              <input id="agentUrl" name="agentUrl" type="url" maxlength="500" required placeholder="https://agent.example.com">
+              <p class="field-help">Use the page users or operators land on first. We will keep probing from there.</p>
+            </div>
+          </div>
+          <div class="actions">
+            <button id="detectButton" type="button">Detect details</button>
+          </div>
+        </section>
+
+        <section class="step-panel" data-step="2">
+          <p>We prefilled the listing using the page metadata and a quick health probe. You can edit anything before publishing.</p>
+          <div class="field-grid">
+            <div>
+              <label for="agentName">Agent name</label>
+              <input id="agentName" name="agentName" type="text" maxlength="100" required placeholder="Acme Support Agent">
+            </div>
+            <div>
+              <label for="healthUrl">Health endpoint</label>
+              <input id="healthUrl" name="healthUrl" type="url" maxlength="500" required placeholder="https://agent.example.com/health">
+              <p class="field-help">This URL must return HTTP 200 within 5 seconds when you publish.</p>
+            </div>
+            <div>
+              <label for="agentDescription">Description</label>
+              <textarea id="agentDescription" name="agentDescription" maxlength="280" placeholder="Short description of what your agent does"></textarea>
+            </div>
+          </div>
+          <div class="actions">
+            <button type="button" class="secondary" data-back-step="1">Back</button>
+            <button id="continueButton" type="button">Continue</button>
+          </div>
+        </section>
+
+        <section class="step-panel" data-step="3">
+          <p>One last check before we run the health verification and publish the listing.</p>
+          <div class="field-grid two-col">
+            <div class="summary-card">
+              <div class="summary-list">
+                <div class="summary-item">
+                  <strong>Agent URL</strong>
+                  <span id="summaryAgentUrl"></span>
+                </div>
+                <div class="summary-item">
+                  <strong>Name</strong>
+                  <span id="summaryName"></span>
+                </div>
+                <div class="summary-item">
+                  <strong>Description</strong>
+                  <span id="summaryDescription"></span>
+                </div>
+                <div class="summary-item">
+                  <strong>Health endpoint</strong>
+                  <span id="summaryHealthUrl"></span>
+                </div>
+              </div>
+            </div>
+
+            <div class="field-grid">
+              <div>
+                <label for="contactEmail">Operator email</label>
+                <input id="contactEmail" name="contactEmail" type="email" maxlength="254" required placeholder="operator@example.com">
+              </div>
+
+              <% if (isPro) { %>
+                <div class="priority-card">
+                  <label for="priority_review">
+                    <input id="priority_review" name="priority_review" type="checkbox">
+                    <span>
+                      Priority review
+                      <p>Move this submission to the top of the queue with a 24 hour review SLA.</p>
+                    </span>
+                  </label>
+                </div>
+              <% } %>
+            </div>
+          </div>
+          <div class="actions">
+            <button type="button" class="secondary" data-back-step="2">Back</button>
+            <button id="publishButton" type="submit">Publish listing</button>
+          </div>
+        </section>
       </form>
 
       <div id="message" class="message" aria-live="polite"></div>
@@ -151,24 +304,118 @@
   </div>
 
   <script>
-    const form = document.getElementById('submitForm');
+    const form = document.getElementById('submitFlow');
     const message = document.getElementById('message');
-    const submitButton = document.getElementById('submitButton');
+    const progressFill = document.getElementById('progressFill');
+    const stepPanels = Array.from(document.querySelectorAll('.step-panel'));
+    const stepPills = Array.from(document.querySelectorAll('[data-step-pill]'));
+    const detectButton = document.getElementById('detectButton');
+    const continueButton = document.getElementById('continueButton');
+    const publishButton = document.getElementById('publishButton');
     const isPro = <%- JSON.stringify(isPro) %>;
+    let currentStep = 1;
 
     function showMessage(type, text) {
       message.className = `message visible ${type}`;
       message.textContent = text;
     }
 
+    function clearMessage() {
+      message.className = 'message';
+      message.textContent = '';
+    }
+
+    function setStep(step) {
+      currentStep = step;
+      progressFill.style.width = `${(step / 3) * 100}%`;
+      stepPanels.forEach((panel) => {
+        panel.classList.toggle('active', Number(panel.dataset.step) === step);
+      });
+      stepPills.forEach((pill) => {
+        pill.classList.toggle('active', Number(pill.dataset.stepPill) === step);
+      });
+      clearMessage();
+    }
+
+    function updateSummary() {
+      document.getElementById('summaryAgentUrl').textContent = form.agentUrl.value.trim();
+      document.getElementById('summaryName').textContent = form.agentName.value.trim();
+      document.getElementById('summaryDescription').textContent = form.agentDescription.value.trim() || 'No description provided';
+      document.getElementById('summaryHealthUrl').textContent = form.healthUrl.value.trim();
+    }
+
+    async function detectDetails() {
+      const agentUrl = form.agentUrl.value.trim();
+      if (!agentUrl) {
+        showMessage('error', 'Paste your agent URL first.');
+        form.agentUrl.focus();
+        return;
+      }
+
+      detectButton.disabled = true;
+      showMessage('success', 'Detecting listing details...');
+
+      try {
+        const response = await fetch('/api/submit-agent/detect', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ agentUrl })
+        });
+        const data = await response.json();
+        if (!response.ok) {
+          throw new Error(data.error || 'Detection failed');
+        }
+
+        form.agentUrl.value = data.agentUrl || agentUrl;
+        form.agentName.value = data.name || '';
+        form.agentDescription.value = data.description || '';
+        form.healthUrl.value = data.healthUrl || '';
+
+        setStep(2);
+        showMessage(
+          data.healthDetected ? 'success' : 'error',
+          data.healthDetected
+            ? 'Detection complete. We found a likely health endpoint.'
+            : 'Detection complete. We found the page details, but you need to enter the health endpoint manually.'
+        );
+      } catch (error) {
+        showMessage('error', error.message || 'Detection failed');
+      } finally {
+        detectButton.disabled = false;
+      }
+    }
+
+    function continueToConfirm() {
+      if (!form.agentName.value.trim()) {
+        showMessage('error', 'Agent name is required.');
+        form.agentName.focus();
+        return;
+      }
+      if (!form.healthUrl.value.trim()) {
+        showMessage('error', 'Health endpoint is required.');
+        form.healthUrl.focus();
+        return;
+      }
+      updateSummary();
+      setStep(3);
+    }
+
+    detectButton.addEventListener('click', detectDetails);
+    continueButton.addEventListener('click', continueToConfirm);
+    document.querySelectorAll('[data-back-step]').forEach((button) => {
+      button.addEventListener('click', () => setStep(Number(button.dataset.backStep)));
+    });
+
     form.addEventListener('submit', async (event) => {
       event.preventDefault();
-      submitButton.disabled = true;
-      showMessage('success', 'Running health check...');
+      publishButton.disabled = true;
+      showMessage('success', 'Running health check and publishing...');
 
       try {
         const payload = {
+          agentUrl: form.agentUrl.value.trim(),
           agentName: form.agentName.value.trim(),
+          agentDescription: form.agentDescription.value.trim(),
           healthUrl: form.healthUrl.value.trim(),
           contactEmail: form.contactEmail.value.trim()
         };
@@ -193,14 +440,21 @@
         showMessage(
           'success',
           isPriority
-            ? `Health check passed. Your agent is listed and queued for priority review. Review SLA: ${slaHours} hours.`
-            : `Health check passed. Your agent is listed and queued for standard review. Review SLA: ${slaHours} hours.`
+            ? `Published. Your listing is live and in the priority review queue. Review SLA: ${slaHours} hours.`
+            : `Published. Your listing is live and in the standard review queue. Review SLA: ${slaHours} hours.`
         );
         form.reset();
+        setStep(1);
+        showMessage(
+          'success',
+          isPriority
+            ? `Published. Your listing is live and in the priority review queue. Review SLA: ${slaHours} hours.`
+            : `Published. Your listing is live and in the standard review queue. Review SLA: ${slaHours} hours.`
+        );
       } catch (error) {
         showMessage('error', error.message || 'Submission failed');
       } finally {
-        submitButton.disabled = false;
+        publishButton.disabled = false;
       }
     });
   </script>

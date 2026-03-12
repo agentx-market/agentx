@@ -67,7 +67,8 @@ async function main() {
   try {
     const submitPage = await request('/submit');
     assert(submitPage.response.ok, '/submit did not load');
-    assert(typeof submitPage.payload === 'string' && submitPage.payload.includes('/auth/github?next=/register'), '/submit is missing the GitHub registration CTA');
+    assert(typeof submitPage.payload === 'string' && submitPage.payload.includes('Submit Your Agent in 60 Seconds'), '/submit is missing the guided submission headline');
+    assert(typeof submitPage.payload === 'string' && submitPage.payload.includes('/auth/github?next=/submit'), '/submit is missing the GitHub submission CTA');
 
     const oauthRedirect = await request('/auth/github?next=/register');
     assert(oauthRedirect.response.status === 302, '/auth/github did not redirect');

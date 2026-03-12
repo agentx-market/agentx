@@ -1,0 +1,5 @@
+Implemented feature #221 by replacing `/submit` with a 3-step guided flow and progress bar. The new flow lives on the actual served page at [public/submit.html](/Users/marco/marco_web/public/submit.html), with the matching EJS version kept in [views/submit.ejs](/Users/marco/marco_web/views/submit.ejs) in case the route stops being shadowed later.
+
+Backend support is in [server.js](/Users/marco/marco_web/server.js): `POST /api/submit-agent/detect` now fetches the pasted URL, extracts name/description from page metadata, probes common health paths, and returns detected fields. The existing publish endpoint now also accepts `agentUrl` and `agentDescription`, so the final listing uses the guided-flow data instead of forcing the health URL into every field. I also updated [scripts/smoke-agent-submission.js](/Users/marco/marco_web/scripts/smoke-agent-submission.js) to assert against the new guided submit page.
+
+Verified with `node --check server.js`, `node --check scripts/smoke-agent-submission.js`, a live detect API probe, and `node scripts/smoke-agent-submission.js` after restarting the server. Backlog item `221` is marked complete.
