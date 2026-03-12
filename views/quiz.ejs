@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Which AI Agent Is Right for You? Quiz | AgentX</title>
+  <meta name="description" content="Answer five quick questions to find the right AI agent for your task, budget, technical skill, integrations, and preferred platform.">
+  <link rel="canonical" href="https://agentx.market/quiz">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://agentx.market/quiz">
+  <meta property="og:title" content="Which AI Agent Is Right for You? | AgentX Quiz">
+  <meta property="og:description" content="Take the five-question AgentX quiz and get three AI agent recommendations from the live registry.">
+  <meta property="og:image" content="https://agentx.market/img/og-image.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" type="image/svg+xml" href="/img/favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/browse.css">
+  <style>
+    .quiz-shell { padding: 7rem 0 5rem; }
+    .quiz-grid { display: grid; grid-template-columns: minmax(0, 0.95fr) minmax(320px, 1.05fr); gap: 1.5rem; align-items: start; }
+    .quiz-panel, .quiz-results { border: 1px solid rgba(255, 255, 255, 0.08); background: rgba(15, 23, 42, 0.8); border-radius: 28px; box-shadow: 0 24px 60px rgba(0, 0, 0, 0.28); backdrop-filter: blur(20px); }
+    .quiz-panel { padding: 2rem; position: sticky; top: 6rem; }
+    .quiz-results { padding: 1.4rem; min-height: 32rem; }
+    .quiz-kicker { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.35rem 0.7rem; border-radius: 999px; background: rgba(96, 165, 250, 0.12); color: #93c5fd; font-size: 0.78rem; letter-spacing: 0.04em; text-transform: uppercase; font-weight: 800; }
+    .quiz-title { margin: 1rem 0 0.65rem; font-size: clamp(2rem, 4vw, 3rem); line-height: 1.02; }
+    .quiz-intro { color: #9fb0c9; max-width: 56ch; }
+    .quiz-progress-row { display: flex; align-items: center; justify-content: space-between; gap: 1rem; margin: 1.4rem 0 1rem; color: #9fb0c9; font-size: 0.95rem; }
+    .quiz-progress { height: 10px; border-radius: 999px; background: rgba(255, 255, 255, 0.08); overflow: hidden; margin-bottom: 1.5rem; }
+    .quiz-progress-bar { height: 100%; width: 20%; background: linear-gradient(90deg, #60a5fa, #34d399); transition: width 180ms ease; }
+    .quiz-question { font-size: 1.45rem; margin-bottom: 1rem; }
+    .quiz-options { display: grid; gap: 0.9rem; }
+    .quiz-option { width: 100%; text-align: left; padding: 1rem 1.05rem; border-radius: 20px; border: 1px solid rgba(255, 255, 255, 0.08); background: rgba(255, 255, 255, 0.03); color: #e5eefc; cursor: pointer; transition: transform 160ms ease, border-color 160ms ease, background 160ms ease; }
+    .quiz-option:hover, .quiz-option:focus-visible { transform: translateY(-1px); border-color: rgba(96, 165, 250, 0.5); background: rgba(96, 165, 250, 0.08); outline: none; }
+    .quiz-option strong { display: block; margin-bottom: 0.3rem; font-size: 1rem; color: #f8fbff; }
+    .quiz-option span { display: block; color: #9fb0c9; font-size: 0.9rem; line-height: 1.5; }
+    .quiz-actions { display: flex; gap: 0.75rem; margin-top: 1.25rem; }
+    .quiz-status { min-height: 1.4rem; margin-top: 0.85rem; color: #9fb0c9; font-size: 0.92rem; }
+    .results-empty, .results-loading, .results-error { min-height: 29rem; display: grid; place-items: center; text-align: center; color: #9fb0c9; padding: 1.5rem; border: 1px dashed rgba(255, 255, 255, 0.12); border-radius: 22px; }
+    .results-heading { display: flex; justify-content: space-between; gap: 1rem; align-items: end; margin-bottom: 1rem; padding: 0.3rem 0.3rem 0; }
+    .results-heading h2, .results-heading p { margin: 0; }
+    .results-heading p { color: #9fb0c9; max-width: 34rem; }
+    .results-list { display: grid; gap: 1rem; }
+    .result-card { border-radius: 24px; padding: 1.25rem; background: linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.03)); border: 1px solid rgba(255, 255, 255, 0.08); }
+    .result-card-top { display: flex; justify-content: space-between; gap: 1rem; align-items: start; margin-bottom: 1rem; }
+    .result-rank { display: inline-flex; align-items: center; justify-content: center; width: 2rem; height: 2rem; border-radius: 999px; background: linear-gradient(135deg, #60a5fa, #34d399); color: #04111f; font-weight: 900; flex: 0 0 auto; }
+    .result-name { margin: 0; font-size: 1.2rem; }
+    .result-score { color: #34d399; font-weight: 800; white-space: nowrap; }
+    .result-desc { margin: 0.5rem 0 0; color: #9fb0c9; line-height: 1.6; }
+    .result-meta, .result-reasons { display: flex; flex-wrap: wrap; gap: 0.55rem; margin-top: 0.95rem; }
+    .result-pill { display: inline-flex; align-items: center; gap: 0.35rem; border-radius: 999px; padding: 0.32rem 0.7rem; background: rgba(255, 255, 255, 0.06); border: 1px solid rgba(255, 255, 255, 0.08); color: #d9e6f7; font-size: 0.82rem; }
+    .result-links { display: flex; gap: 0.8rem; flex-wrap: wrap; margin-top: 1rem; }
+    .result-links a { text-decoration: none; }
+    .results-restart { margin-top: 1.1rem; }
+    @media (max-width: 980px) { .quiz-grid { grid-template-columns: 1fr; } .quiz-panel { position: static; } }
+    @media (max-width: 640px) { .quiz-shell { padding-top: 6rem; } .quiz-panel, .quiz-results { padding: 1.1rem; border-radius: 22px; } .result-card-top, .results-heading { flex-direction: column; align-items: start; } }
+  </style>
+</head>
+<body class="noise-overlay">
+  <nav class="navbar">
+    <div class="container">
+      <a href="/" class="nav-logo"><div class="logo-icon">X</div>AgentX</a>
+      <ul class="nav-links">
+        <li><a href="/features">Features</a></li>
+        <li><a href="/pricing">Pricing</a></li>
+        <li><a href="/browse">Browse</a></li>
+        <li><a href="/quiz" aria-current="page">Quiz</a></li>
+        <li><a href="/about">About</a></li>
+        <li><a href="/contact">Contact</a></li>
+        <% if (isLoggedIn) { %>
+        <li><a href="/my-agents">Dashboard</a></li>
+        <% } else { %>
+        <li><a href="/login">Login</a></li>
+        <% } %>
+        <li class="nav-cta"><a href="/browse" class="btn btn-primary">Browse Agents</a></li>
+      </ul>
+      <button class="nav-toggle" aria-label="Menu"><span></span><span></span><span></span></button>
+    </div>
+  </nav>
+  <main class="quiz-shell">
+    <div class="container">
+      <div class="quiz-grid">
+        <section class="quiz-panel">
+          <div class="quiz-kicker">Agent Matchmaker</div>
+          <h1 class="quiz-title">Which AI Agent Is Right for You?</h1>
+          <p class="quiz-intro">Answer five quick questions. The quiz scores live marketplace listings and recommends the three strongest fits based on task, budget, technical setup, integrations, and platform preferences.</p>
+          <div class="quiz-progress-row">
+            <span id="quizProgressLabel">Question 1 of 5</span>
+            <span id="quizSelectionLabel">Pick one answer</span>
+          </div>
+          <div class="quiz-progress" aria-hidden="true"><div class="quiz-progress-bar" id="quizProgressBar"></div></div>
+          <div id="quizQuestionHost" aria-live="polite"></div>
+          <div class="quiz-actions">
+            <button type="button" class="btn btn-secondary" id="quizBackButton" disabled>Back</button>
+            <button type="button" class="btn btn-primary" id="quizRestartButton">Restart</button>
+          </div>
+          <div class="quiz-status" id="quizStatus">Loading live registry data.</div>
+        </section>
+        <section class="quiz-results" id="quizResults" aria-live="polite">
+          <div class="results-loading">Loading AI agents from the live registry.</div>
+        </section>
+      </div>
+    </div>
+  </main>
+  <script src="/js/main.js"></script>
+  <script>
+    const quizQuestions = [
+      { id: 'task', prompt: 'What do you mainly want the agent to handle?', options: [
+        { value: 'coding', label: 'Coding and development', detail: 'Writing code, shipping features, debugging, QA, CI, and engineering workflows.' },
+        { value: 'support', label: 'Customer support and chat', detail: 'Ticket handling, website chat, sales assistance, and customer operations.' },
+        { value: 'research', label: 'Research and analysis', detail: 'Research synthesis, reporting, analytics, knowledge work, and insight generation.' },
+        { value: 'operations', label: 'Ops and automation', detail: 'Internal workflows, process automation, monitoring, scheduling, and execution.' }
+      ]},
+      { id: 'budget', prompt: 'What budget range fits your current buying stage?', options: [
+        { value: 'free', label: 'Free or open-source first', detail: 'I want to start with free, self-serve, or open-source-friendly tools.' },
+        { value: 'mid', label: 'Mid-market SaaS', detail: 'A monthly paid tool is fine if setup is fast and ROI is clear.' },
+        { value: 'enterprise', label: 'Enterprise-ready', detail: 'Security, reliability, and customization matter more than lowest price.' }
+      ]},
+      { id: 'skill', prompt: 'How technical is the team that will run this?', options: [
+        { value: 'nontechnical', label: 'Mostly non-technical', detail: 'We need something with low setup friction and simple workflows.' },
+        { value: 'hybrid', label: 'Mixed team', detail: 'Some configuration is fine, but we do not want heavy engineering lift.' },
+        { value: 'technical', label: 'Highly technical', detail: 'APIs, custom tooling, code workflows, and deeper integration are all acceptable.' }
+      ]},
+      { id: 'integrations', prompt: 'What kind of integrations matter most?', options: [
+        { value: 'none', label: 'Minimal integrations', detail: 'A standalone tool is acceptable if it works out of the box.' },
+        { value: 'business', label: 'Business apps and CRM', detail: 'Slack, email, CRM, docs, support tools, and workspace apps matter.' },
+        { value: 'developer', label: 'Developer and API workflows', detail: 'Webhooks, API access, GitHub, terminal, CI, and custom pipelines are important.' }
+      ]},
+      { id: 'platform', prompt: 'Where do you want to use the agent most often?', options: [
+        { value: 'web', label: 'Browser or hosted app', detail: 'I want a web app or hosted dashboard.' },
+        { value: 'chat', label: 'Chat and team workspace', detail: 'Slack, chat surfaces, or messaging-first workflows are the best fit.' },
+        { value: 'api', label: 'API, terminal, or backend', detail: 'I want to wire the agent into existing systems or developer tooling.' }
+      ]}
+    ];
+
+    const scoringRules = {
+      task: {
+        coding: ['coding', 'developer', 'engineering', 'qa', 'test', 'testing', 'devtools', 'code', 'ci', 'software', 'security'],
+        support: ['support', 'customer', 'chat', 'sales', 'assistant', 'help desk', 'service', 'crm'],
+        research: ['research', 'analysis', 'analytics', 'data', 'knowledge', 'reporting', 'intelligence', 'insight'],
+        operations: ['operations', 'automation', 'workflow', 'monitoring', 'scheduling', 'orchestration', 'process', 'productivity']
+      },
+      integrations: {
+        none: [],
+        business: ['slack', 'hubspot', 'notion', 'zendesk', 'salesforce', 'crm', 'email', 'workspace', 'google', 'microsoft'],
+        developer: ['api', 'webhook', 'github', 'git', 'terminal', 'cli', 'sdk', 'ci', 'deployment', 'code']
+      },
+      platform: {
+        web: ['app', 'dashboard', 'browser', 'web', 'hosted', 'portal'],
+        chat: ['chat', 'slack', 'teams', 'discord', 'assistant', 'messaging'],
+        api: ['api', 'terminal', 'cli', 'sdk', 'webhook', 'backend', 'endpoint']
+      }
+    };
+
+    const quizState = { agents: [], answers: {}, index: 0, completionTracked: false };
+    const questionHost = document.getElementById('quizQuestionHost');
+    const progressLabel = document.getElementById('quizProgressLabel');
+    const selectionLabel = document.getElementById('quizSelectionLabel');
+    const progressBar = document.getElementById('quizProgressBar');
+    const statusEl = document.getElementById('quizStatus');
+    const resultsEl = document.getElementById('quizResults');
+    const backButton = document.getElementById('quizBackButton');
+    const restartButton = document.getElementById('quizRestartButton');
+
+    function normalizeText(value) { return String(value || '').toLowerCase(); }
+    function normalizePricingBucket(pricing) {
+      const value = normalizeText(pricing);
+      if (!value) return 'unknown';
+      if (value.includes('free') || value.includes('open source') || value.includes('opensource') || value.includes('$0')) return 'free';
+      if (value.includes('enterprise') || value.includes('custom') || value.includes('contact') || value.includes('quote')) return 'enterprise';
+      return 'mid';
+    }
+    function inferSkillLevel(agent) {
+      const text = normalizeText([agent.description, agent.capabilities, agent.endpoint_url, agent.pricing].join(' '));
+      if (/(api|sdk|terminal|cli|github|ci|deploy|code)/.test(text)) return 'technical';
+      if (/(no-code|easy|simple|dashboard|workspace|chat)/.test(text)) return 'nontechnical';
+      return 'hybrid';
+    }
+    function extractSignals(agent) {
+      const haystack = normalizeText([
+        agent.name,
+        agent.description,
+        agent.pricing,
+        agent.endpoint_url,
+        ...(Array.isArray(agent.categories) ? agent.categories : []),
+        ...(Array.isArray(agent.capabilities) ? agent.capabilities : [])
+      ].join(' '));
+      return { haystack, pricingBucket: normalizePricingBucket(agent.pricing), skillLevel: inferSkillLevel(agent) };
+    }
+    function scoreAgent(agent, answers) {
+      const signals = extractSignals(agent);
+      let score = 0;
+      const reasons = [];
+      const taskTerms = scoringRules.task[answers.task] || [];
+      const taskHits = taskTerms.filter((term) => signals.haystack.includes(term));
+      if (taskHits.length) {
+        score += Math.min(36, taskHits.length * 9);
+        reasons.push(`Strong for ${answers.task} workflows`);
+      }
+      const integrationTerms = scoringRules.integrations[answers.integrations] || [];
+      const integrationHits = integrationTerms.filter((term) => signals.haystack.includes(term));
+      if (answers.integrations === 'none') {
+        score += 8;
+        reasons.push('Works without a complex integration footprint');
+      } else if (integrationHits.length) {
+        score += Math.min(22, integrationHits.length * 6);
+        reasons.push(`Matches ${answers.integrations === 'business' ? 'business app' : 'developer'} integration needs`);
+      }
+      const platformTerms = scoringRules.platform[answers.platform] || [];
+      const platformHits = platformTerms.filter((term) => signals.haystack.includes(term));
+      if (platformHits.length) {
+        score += Math.min(18, platformHits.length * 5);
+        reasons.push(`Feels aligned to a ${answers.platform} workflow`);
+      }
+      if (signals.pricingBucket === answers.budget) {
+        score += 16;
+        reasons.push(`Pricing looks aligned with a ${answers.budget} budget`);
+      } else if (answers.budget === 'mid' && signals.pricingBucket !== 'unknown') {
+        score += 8;
+      }
+      if (signals.skillLevel === answers.skill) {
+        score += 14;
+        reasons.push(`Setup complexity fits a ${answers.skill} team`);
+      } else if (answers.skill === 'hybrid') {
+        score += 7;
+      }
+      if (agent.verifiedBadge) score += 4;
+      if (agent.featured) score += 2;
+      if (typeof agent.rating === 'number') score += Math.min(6, agent.rating);
+      if (typeof agent.uptime_percent === 'number' && agent.uptime_percent > 0) score += Math.min(6, agent.uptime_percent / 20);
+      return { ...agent, score: Math.round(score), reasons: reasons.slice(0, 3) };
+    }
+    function resultMeta(agent) {
+      const meta = [];
+      meta.push(agent.pricing ? `Pricing: ${agent.pricing}` : 'Pricing: Not listed');
+      meta.push(agent.categories && agent.categories.length ? `Categories: ${agent.categories.slice(0, 3).join(', ')}` : 'Categories: General purpose');
+      if (typeof agent.rating === 'number') meta.push(`Rating: ${agent.rating.toFixed(1)} / 5`);
+      if (typeof agent.uptime_percent === 'number' && agent.uptime_percent > 0) meta.push(`Uptime: ${agent.uptime_percent.toFixed(1)}%`);
+      return meta.slice(0, 4);
+    }
+    function renderQuestion() {
+      const question = quizQuestions[quizState.index];
+      const currentValue = quizState.answers[question.id] || '';
+      progressLabel.textContent = `Question ${quizState.index + 1} of ${quizQuestions.length}`;
+      selectionLabel.textContent = currentValue ? 'Answer selected' : 'Pick one answer';
+      progressBar.style.width = `${((quizState.index + 1) / quizQuestions.length) * 100}%`;
+      backButton.disabled = quizState.index === 0;
+      questionHost.innerHTML = `<div><h2 class="quiz-question">${question.prompt}</h2><div class="quiz-options" role="list">${question.options.map((option) => `<button type="button" class="quiz-option" data-option-value="${option.value}" aria-pressed="${currentValue === option.value ? 'true' : 'false'}"><strong>${option.label}</strong><span>${option.detail}</span></button>`).join('')}</div></div>`;
+      questionHost.querySelectorAll('.quiz-option').forEach((button) => {
+        if (button.dataset.optionValue === currentValue) {
+          button.style.borderColor = 'rgba(52, 211, 153, 0.6)';
+          button.style.background = 'rgba(52, 211, 153, 0.08)';
+        }
+        button.addEventListener('click', () => {
+          quizState.answers[question.id] = button.dataset.optionValue;
+          if (quizState.index < quizQuestions.length - 1) {
+            quizState.index += 1;
+            renderQuestion();
+            renderResultsPlaceholder();
+            return;
+          }
+          renderQuestion();
+          renderResults();
+        });
+      });
+      statusEl.textContent = quizState.agents.length ? 'Live marketplace listings are loaded. Finish the quiz to generate recommendations.' : 'Loading live registry data.';
+    }
+    function renderResultsPlaceholder() {
+      if (Object.keys(quizState.answers).length < quizQuestions.length) {
+        resultsEl.innerHTML = '<div class="results-empty">Answer all five questions to see your top three AI agent matches.</div>';
+      }
+    }
+    function renderResults() {
+      if (Object.keys(quizState.answers).length < quizQuestions.length) {
+        renderResultsPlaceholder();
+        return;
+      }
+      const ranked = quizState.agents.map((agent) => scoreAgent(agent, quizState.answers)).sort((a, b) => b.score - a.score || (b.rating || 0) - (a.rating || 0) || (b.uptime_percent || 0) - (a.uptime_percent || 0)).slice(0, 3);
+      if (!ranked.length) {
+        resultsEl.innerHTML = '<div class="results-error">No live marketplace matches are available right now.</div>';
+        return;
+      }
+      resultsEl.innerHTML = `<div class="results-heading"><div><h2>Your Top AI Agent Matches</h2><p>Ranked against live AgentX registry listings using your quiz answers.</p></div><a href="/browse" class="btn btn-secondary">Browse full registry</a></div><div class="results-list">${ranked.map((agent, index) => `<article class="result-card"><div class="result-card-top"><div style="display:flex; gap:0.85rem; align-items:flex-start;"><div class="result-rank">${index + 1}</div><div><h3 class="result-name">${agent.name}</h3><p class="result-desc">${agent.description || 'No description provided yet.'}</p></div></div><div class="result-score">${agent.score} match</div></div><div class="result-reasons">${agent.reasons.map((reason) => `<span class="result-pill">${reason}</span>`).join('')}</div><div class="result-meta">${resultMeta(agent).map((item) => `<span class="result-pill">${item}</span>`).join('')}</div><div class="result-links"><a href="/agents/${agent.slug}" class="btn btn-primary">View agent details</a><a href="/browse?search=${encodeURIComponent(agent.name)}" class="btn btn-secondary">Compare in browse</a></div></article>`).join('')}</div><div class="results-restart"><button type="button" class="btn btn-secondary" id="resultsRestartButton">Retake quiz</button></div>`;
+      const restartResultsButton = document.getElementById('resultsRestartButton');
+      if (restartResultsButton) restartResultsButton.addEventListener('click', resetQuiz);
+      statusEl.textContent = `Finished. Recommended ${ranked.length} marketplace agents from ${quizState.agents.length} live listings.`;
+      trackCompletion(ranked);
+    }
+    function resetQuiz() {
+      quizState.answers = {};
+      quizState.index = 0;
+      quizState.completionTracked = false;
+      renderQuestion();
+      renderResultsPlaceholder();
+      statusEl.textContent = quizState.agents.length ? 'Quiz reset. Pick your first answer.' : 'Loading live registry data.';
+    }
+    async function trackCompletion(ranked) {
+      if (quizState.completionTracked || !ranked.length) return;
+      quizState.completionTracked = true;
+      const params = new URLSearchParams(window.location.search);
+      const payload = {
+        agentId: ranked[0].id,
+        eventType: 'quiz_completion',
+        utm_source: params.get('utm_source') || null,
+        utm_medium: params.get('utm_medium') || null,
+        utm_campaign: params.get('utm_campaign') || null,
+        utm_content: 'homepage_quiz',
+        metadata: { answers: quizState.answers, recommendedAgentIds: ranked.map((agent) => agent.id) }
+      };
+      try {
+        if (navigator.sendBeacon) {
+          const body = new Blob([JSON.stringify(payload)], { type: 'application/json' });
+          navigator.sendBeacon('/api/analytics/agent-event', body);
+          return;
+        }
+        await fetch('/api/analytics/agent-event', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+      } catch (error) {
+        console.error('Failed to track quiz completion:', error);
+      }
+    }
+    async function loadAgents() {
+      try {
+        const response = await fetch('/api/browse?mode=marketplace', { headers: { Accept: 'application/json' } });
+        if (!response.ok) throw new Error('Failed to load marketplace agents');
+        const payload = await response.json();
+        quizState.agents = (Array.isArray(payload.agents) ? payload.agents : []).filter((agent) => agent && agent.id && agent.slug);
+        if (!quizState.agents.length) {
+          resultsEl.innerHTML = '<div class="results-error">The marketplace is reachable, but there are no agents to rank yet.</div>';
+          statusEl.textContent = 'No marketplace agents available.';
+          return;
+        }
+        renderQuestion();
+        renderResultsPlaceholder();
+      } catch (error) {
+        resultsEl.innerHTML = '<div class="results-error">Live registry data could not be loaded right now. Try again shortly.</div>';
+        statusEl.textContent = 'Quiz unavailable until the registry API responds.';
+        console.error(error);
+      }
+    }
+    backButton.addEventListener('click', () => {
+      if (quizState.index === 0) return;
+      quizState.index -= 1;
+      renderQuestion();
+      renderResultsPlaceholder();
+    });
+    restartButton.addEventListener('click', resetQuiz);
+    loadAgents();
+  </script>
+</body>
+</html>

@@ -1,0 +1,7 @@
+Implemented the homepage quiz flow for feature `#110`.
+
+The new `/quiz` route is wired in at [server.js](/Users/marco/marco_web/server.js#L2507), and the quiz itself lives in [views/quiz.ejs](/Users/marco/marco_web/views/quiz.ejs#L1). It runs a 5-question client-side flow, fetches live marketplace agents from `/api/browse`, scores them against task, budget, skill, integration, and platform answers, and renders the top 3 recommendation cards with deep links to `/agents/:slug` at [views/quiz.ejs](/Users/marco/marco_web/views/quiz.ejs#L275). Quiz completion is tracked as a conversion event via `quiz_completion` at [views/quiz.ejs](/Users/marco/marco_web/views/quiz.ejs#L299) and accepted server-side at [server.js](/Users/marco/marco_web/server.js#L3135).
+
+To support scoring, `/api/browse` now includes `capabilities` and `pricing` in its response at [server.js](/Users/marco/marco_web/server.js#L2353). The homepage hero now links into the quiz at [public/index.html](/Users/marco/marco_web/public/index.html#L1103).
+
+Verification: `node --check server.js`, EJS render smoke test for `views/quiz.ejs`, `curl -I http://127.0.0.1:3000/quiz` returned `200`, `/api/browse?mode=marketplace` returned pricing/capabilities, and a POST to `/api/analytics/agent-event` with `quiz_completion` returned `204`. I restarted the local server and marked backlog item `110` complete.
