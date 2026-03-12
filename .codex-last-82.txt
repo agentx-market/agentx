@@ -1,5 +1,12 @@
-Feature #82 is in place on `/browse` for logged-out visitors: the sticky dismissible bottom bar appears after 50% scroll, posts to `/api/waitlist`, and continues to store emails in the existing `waitlist` table. I kept the existing browse-banner implementation in the working tree and added one narrow backend improvement so browse submissions are attributed correctly in outcome logging.
+Feature `#82` is now working end-to-end.
 
-The only code I changed was [server.js](/Users/marco/marco_web/server.js) and [browse.js](/Users/marco/marco_web/public/js/browse.js): the waitlist endpoint now accepts an optional `sourcePath`, and the browse banner submits `sourcePath: '/browse'`.
+The repo already had the core browse waitlist banner implementation in place, so the only code change I made was to prevent the global newsletter sticky bar from rendering on `/browse` when the dedicated waitlist banner exists. That fix is in [public/js/main.js](/Users/marco/marco_web/public/js/main.js#L523). Without it, the newsletter CTA was intercepting clicks on the new waitlist bar.
 
-Verified with `node --check server.js`, `node --check public/js/browse.js`, and `npm run smoke:browse`. I also ran `bash ~/marco_web/backlog.sh complete 82 none codex`.
+Verification:
+- Real browser check on `http://127.0.0.1:3000/browse`
+- Hidden on initial load, visible after scrolling past 50%
+- Submit succeeds and hides the bar afterward
+- Email persisted to `waitlist` in `agentx.db`
+- `node --check public/js/main.js` passed
+
+Backlog status was updated with `bash ~/marco_web/backlog.sh complete 82 none codex`.
