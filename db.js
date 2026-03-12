@@ -53,6 +53,33 @@ try {
   console.log('[db] Newsletter subscribers table may already exist:', err.message);
 }
 
+// Create newsletter sponsorship bookings for weekly issue placements
+try {
+  db.exec(`
+    CREATE TABLE IF NOT EXISTS newsletter_sponsor_bookings (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      operator_id TEXT NOT NULL,
+      week_start TEXT NOT NULL,
+      slot_position INTEGER NOT NULL,
+      sponsor_name TEXT NOT NULL,
+      sponsor_url TEXT NOT NULL,
+      logo_url TEXT NOT NULL,
+      blurb TEXT NOT NULL,
+      price_usd_cents INTEGER NOT NULL DEFAULT 5000,
+      invoice_id INTEGER,
+      status TEXT NOT NULL DEFAULT 'booked',
+      created_at INTEGER NOT NULL,
+      updated_at INTEGER NOT NULL,
+      FOREIGN KEY (operator_id) REFERENCES operators(id) ON DELETE CASCADE,
+      FOREIGN KEY (invoice_id) REFERENCES invoices(id) ON DELETE SET NULL,
+      UNIQUE(week_start, slot_position)
+    )
+  `);
+  console.log('[db] Newsletter sponsor bookings table created');
+} catch (err) {
+  console.log('[db] Newsletter sponsor bookings table may already exist:', err.message);
+}
+
 // Create operators table if it doesn't exist
 try {
   db.exec(`

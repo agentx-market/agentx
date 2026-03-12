@@ -1,0 +1,25 @@
+Implemented the narrow newsletter sponsorship flow.
+
+Changes:
+- Added sponsor booking storage in [db.js](/Users/marco/marco_web/db.js).
+- Added a self-contained router in [routes/newsletter-sponsors.js](/Users/marco/marco_web/routes/newsletter-sponsors.js) for:
+  - `GET /api/newsletter/slots`
+  - `POST /api/newsletter/book`
+  - `GET /admin/newsletter`
+- Mounted the router in [server.js](/Users/marco/marco_web/server.js#L1341).
+- Created the admin dashboard view in [views/admin-newsletter.ejs](/Users/marco/marco_web/views/admin-newsletter.ejs).
+
+Behavior:
+- Admin can assign weekly sponsor slots for `$50`.
+- Booking creates a linked `invoices` row with status `issued`.
+- Subscriber-facing preview renders sponsor blocks with a visible `Sponsored` label, logo, blurb, and CTA.
+
+Verification:
+- `node --check server.js`
+- `node --check routes/newsletter-sponsors.js`
+- Live HTTP check: `GET http://127.0.0.1:3000/api/newsletter/slots`
+- Direct route invocation with mocked admin session confirmed booking inserts both `newsletter_sponsor_bookings` and `invoices`, then cleaned the test rows.
+- Marked complete with `bash ~/marco_web/backlog.sh complete 143 none codex`
+
+Note:
+- Admin access is gated by `NEWSLETTER_ADMIN_IDS` and defaults to `marco-seed-operator` if the env var is unset.
