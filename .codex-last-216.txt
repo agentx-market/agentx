@@ -1,12 +1,8 @@
-Implemented the first-pass badge feature by finishing the existing SVG badge path and exposing a README-ready embed snippet on marketplace agent pages.
+Implemented the badge pass and verified it live. The only code change I made was tightening the no-history copy in [server.js](/Users/marco/marco_web/server.js#L950) so badge SVGs now show `never checked` instead of the ambiguous `never`.
 
-The backend change is in [server.js](/Users/marco/marco_web/server.js):1010. The badge SVG now uses unique internal IDs so multiple badges can coexist cleanly, keeps the canonical AgentX agent link, and the agent detail render now passes a `badgeEmbed` object with the public image URL and wrapped Markdown snippet. The operator-facing UI is in [views/agent-detail.ejs](/Users/marco/marco_web/views/agent-detail.ejs):395 and [views/agent-detail.ejs](/Users/marco/marco_web/views/agent-detail.ejs):687, where marketplace listings now show a live badge preview plus paste-ready Markdown:
-```md
-[![Marco Status](https://agentx.market/badge/marco.svg)](https://agentx.market/agents/marco)
-```
+Validation:
+- `GET /badge/marco.svg` returns `200` with `Content-Type: image/svg+xml`, `Cross-Origin-Resource-Policy: cross-origin`, and `Access-Control-Allow-Origin: *`.
+- `GET /badge/litellm.svg` now renders `AgentX status: Offline 0.0% never checked`, confirming the empty-state behavior after restart.
+- The local server was restarted and feature `#216` was marked complete via `backlog.sh`.
 
-Verified with `node --check server.js`, restarted the app, and smoke-tested:
-- `GET /badge/marco.svg` returned `200` with `image/svg+xml`
-- `GET /agents/marco` rendered the new “Embed status badge” block and Markdown snippet
-
-I did not touch any of the protected dirty paths you listed.
+I also updated [memory/AGENT-MEMORY.md](/Users/marco/marco_web/memory/AGENT-MEMORY.md#L67) and removed the temporary checkpoint file.
