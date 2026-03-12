@@ -1,7 +1,18 @@
-Implemented feature `#56` as a narrow public submission flow.
+The `/submit` feature is already implemented in the current working tree. I verified the public page at [views/submit.ejs](/Users/marco/marco_web/views/submit.ejs) and the server flow in [server.js](/Users/marco/marco_web/server.js#L1642), including:
 
-`/submit` now serves a direct form from [views/submit.ejs](/Users/marco/marco_web/views/submit.ejs) with the required fields: agent name, URL/endpoint, description, category, pricing model, logo URL, and contact email. I removed the static shadow file [public/submit.html](/Users/marco/marco_web/public/submit.html) so the real route in [server.js](/Users/marco/marco_web/server.js) is reachable.
+- public `GET /submit`
+- form fields for name, endpoint URL, description, category, pricing model, logo URL, and contact email
+- pending queue persistence in `agent_submissions`
+- auto-approval when the submitted URL returns HTTP 200
+- listing creation on approval
+- confirmation email send attempt to the submitter
 
-The backend in [server.js](/Users/marco/marco_web/server.js) now uses that payload to insert into `agent_submissions`, treat the submitted endpoint as the first-pass health check URL, auto-approve only on HTTP `200`, create a community listing plus category join when approved, and send the confirmation email for either outcome. I also hardened [db.js](/Users/marco/marco_web/db.js) so older databases have the `agents.community_listing` and `agents.claim_url` columns that the auto-approval path depends on.
+Verification passed against the running app:
+- `GET /submit` returned `200`
+- a test submission to a local `200` endpoint returned `201` and created an approved listing
+- a test submission to a local `503` endpoint returned `202` and stayed pending
+- both records were cleaned up after the test
 
-Verified with `node --check server.js`, `curl http://127.0.0.1:3000/submit`, and a POST to `/api/submit-agent` against `http://127.0.0.1:3000/health`, which returned an approved submission and listing URL. I cleaned up the smoke-test row afterward and ran `bash ~/marco_web/backlog.sh complete 56 none codex`.
+I did not make code edits because the requested feature is already present in dirty project files and rewriting it would add avoidable churn. I also marked the backlog item complete with `bash ~/marco_web/backlog.sh complete 56 none codex`.
+
+Residual note: I verified the email send path is wired, but I did not verify actual email delivery because that depends on the current `SENDGRID_API_KEY` environment.
