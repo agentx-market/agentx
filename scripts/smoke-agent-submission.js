@@ -139,19 +139,34 @@ async function main() {
     assert(match, 'Registered agent did not appear in marketplace browse results');
     assert(Boolean(match.last_health_check), 'Browse result is missing the health badge signal');
 
+    const dashboard = await request('/my-agents', {
+      headers: {
+        'Cookie': sessionCookie,
+      },
+    });
+    assert(dashboard.response.ok, '/my-agents did not load for the authenticated operator');
+    assert(typeof dashboard.payload === 'string' && dashboard.payload.includes(agentName), 'Operator dashboard is missing the newly registered agent');
+
+    const healthHistory = db.prepare(
+      'SELECT status, response_ms FROM agents_health_history WHERE agent_id = ? ORDER BY id DESC LIMIT 1'
+    ).get(createdAgentId);
+    assert(healthHistory && healthHistory.status !== 'offline', 'Health check did not persist a successful health history entry');
+
     console.log(`Smoke submission passed for agent ${agentName} (${createdAgentId})`);
   } finally {
     if (healthServer) {
       await new Promise((resolve) => healthServer.close(resolve));
     }
+    db.exec('PRAGMA foreign_keys = OFF');
     if (createdAgentId) {
-      db.pragma('foreign_keys = OFF');
-      db.prepare('DELETE FROM rate_limits WHERE api_key_hash IN (SELECT key_hash FROM api_keys WHERE agent_id = ?)').run(createdAgentId);
       db.prepare('DELETE FROM api_keys WHERE agent_id = ?').run(createdAgentId);
+      db.prepare('DELETE FROM agents_health_history WHERE agent_id = ?').run(createdAgentId);
       db.prepare('DELETE FROM agent_categories WHERE agent_id = ?').run(createdAgentId);
       db.prepare('DELETE FROM agents WHERE id = ?').run(createdAgentId);
-      db.pragma('foreign_keys = ON');
     }
+    db.prepare('DELETE FROM operator_limits WHERE operator_id = ?').run(operatorId);
+    db.prepare('DELETE FROM operators WHERE id = ?').run(operatorId);
+    db.exec('PRAGMA foreign_keys = ON');
   }
 }
 
