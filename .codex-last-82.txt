@@ -1,12 +1,3 @@
-Feature `#82` is now working end-to-end.
+Feature `#82` is in place on `/browse` for logged-out users: the sticky bottom email banner renders only for anonymous visitors, the existing client logic reveals it after 50% scroll, supports dismiss, and posts to the existing `waitlist` flow. I made the narrow code change in [views/browse.ejs](/Users/marco/marco_web/views/browse.ejs#L224) so the form now always includes `sourcePath=/browse` and an explicit email label, which preserves the correct waitlist source even if JS is unavailable.
 
-The repo already had the core browse waitlist banner implementation in place, so the only code change I made was to prevent the global newsletter sticky bar from rendering on `/browse` when the dedicated waitlist banner exists. That fix is in [public/js/main.js](/Users/marco/marco_web/public/js/main.js#L523). Without it, the newsletter CTA was intercepting clicks on the new waitlist bar.
-
-Verification:
-- Real browser check on `http://127.0.0.1:3000/browse`
-- Hidden on initial load, visible after scrolling past 50%
-- Submit succeeds and hides the bar afterward
-- Email persisted to `waitlist` in `agentx.db`
-- `node --check public/js/main.js` passed
-
-Backlog status was updated with `bash ~/marco_web/backlog.sh complete 82 none codex`.
+Verified with `node --check server.js` and a local `curl http://127.0.0.1:3000/browse` render check after restarting the server; the rendered HTML includes the banner copy and hidden `sourcePath` field. I did not submit a live waitlist signup during verification because that endpoint sends welcome-email/notification side effects. I also updated [memory/AGENT-MEMORY.md](/Users/marco/marco_web/memory/AGENT-MEMORY.md#L24) and ran `bash ~/marco_web/backlog.sh complete 82 none codex`.
