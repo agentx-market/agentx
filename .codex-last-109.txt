@@ -1,0 +1,19 @@
+Implemented the narrow first pass for feature `#109`.
+
+Twitter/X auto-posting now has:
+- OAuth2 connect flow via `POST /api/agents/twitter-connect` and `GET /auth/twitter/callback`
+- a new operator page at [views/social-connect.ejs](/Users/marco/marco_web/views/social-connect.ejs)
+- per-agent auto-post toggles and posting history in that page
+- hourly release polling from `agent_changelog_entries` with Twitter API v2 posting in [jobs/twitter-release-cron.js](/Users/marco/marco_web/jobs/twitter-release-cron.js)
+- persisted connection/settings/history tables added in [db.js](/Users/marco/marco_web/db.js)
+- a dashboard entry point added in [views/dashboard.ejs](/Users/marco/marco_web/views/dashboard.ejs)
+
+Server wiring is in [server.js](/Users/marco/marco_web/server.js) and Twitter OAuth/API handling is in [lib/twitter-client.js](/Users/marco/marco_web/lib/twitter-client.js). The hourly worker posts only changelog entries created after auto-post is enabled for that agent, and history records both posted and failed attempts.
+
+Verification:
+- `node --check server.js`
+- `node -e "require('./db'); console.log('db ok')"`
+- restarted server and confirmed `/dashboard/social-connect` is live and auth-protected
+- confirmed `POST /api/agents/twitter-connect` is registered and returns `401` without auth as expected
+
+Not fully exercised against live Twitter because `TWITTER_CLIENT_ID` / `TWITTER_CLIENT_SECRET` were not configured in this environment.

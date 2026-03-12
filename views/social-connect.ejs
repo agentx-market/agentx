@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Social Auto-Posting - AgentX</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <style>
+    .social-shell { padding: 2rem 0 4rem; }
+    .social-grid { display: grid; gap: 1.5rem; }
+    .social-card { background: #1a1a2e; border: 1px solid #2a2a4a; border-radius: 14px; padding: 1.35rem; }
+    .social-card h2, .social-card h3 { margin-top: 0; color: #eef2ff; }
+    .social-subtle { color: #8f95b2; }
+    .social-header { display: flex; justify-content: space-between; gap: 1rem; align-items: center; flex-wrap: wrap; }
+    .status-pill { display: inline-flex; align-items: center; gap: 0.45rem; border-radius: 999px; padding: 0.35rem 0.75rem; font-size: 0.8rem; font-weight: 700; }
+    .status-pill.connected { background: rgba(0, 210, 106, 0.12); color: #7ff0ae; }
+    .status-pill.disconnected { background: rgba(255, 165, 2, 0.12); color: #ffd88c; }
+    .agent-list { display: grid; gap: 0.9rem; }
+    .agent-row { display: flex; justify-content: space-between; gap: 1rem; align-items: center; padding: 1rem; border: 1px solid #2a2a4a; border-radius: 12px; background: rgba(255,255,255,0.02); flex-wrap: wrap; }
+    .agent-row strong { color: #eef2ff; }
+    .agent-row p { margin: 0.35rem 0 0; color: #8f95b2; font-size: 0.9rem; }
+    .toggle-wrap { display: inline-flex; align-items: center; gap: 0.65rem; color: #d7dcff; font-weight: 600; }
+    .toggle-wrap input { width: 18px; height: 18px; }
+    .history-table { width: 100%; border-collapse: collapse; }
+    .history-table th, .history-table td { padding: 0.85rem; text-align: left; border-top: 1px solid #2a2a4a; }
+    .history-table th { color: #eef2ff; font-size: 0.86rem; }
+    .history-table td { color: #c7cef1; vertical-align: top; }
+    .history-table tr:first-child th, .history-table tr:first-child td { border-top: 0; }
+    .history-status { font-weight: 700; text-transform: uppercase; font-size: 0.75rem; letter-spacing: 0.08em; }
+    .history-status.posted { color: #7ff0ae; }
+    .history-status.failed { color: #ff98a1; }
+    .history-empty { color: #8f95b2; }
+    .btn[disabled] { opacity: 0.6; cursor: not-allowed; }
+    @media (max-width: 768px) {
+      .history-table, .history-table tbody, .history-table tr, .history-table td, .history-table th { display: block; width: 100%; }
+      .history-table thead { display: none; }
+      .history-table td { border-top: 1px solid #2a2a4a; padding: 0.75rem 0; }
+    }
+  </style>
+</head>
+<body class="dashboard-page">
+  <nav class="navbar">
+    <div class="container">
+      <a href="/" class="nav-logo">
+        <div class="logo-icon">X</div>
+        AgentX
+      </a>
+      <ul class="nav-links">
+        <li><a href="/features">Features</a></li>
+        <li><a href="/pricing">Pricing</a></li>
+        <li><a href="/browse">Browse</a></li>
+        <li><a href="/my-agents">My Agents</a></li>
+      </ul>
+      <button class="nav-toggle" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <section class="dashboard-hero">
+    <div class="bg-grid"></div>
+    <div class="container">
+      <div class="section-header fade-in">
+        <div class="badge badge-shimmer"><span class="dot"></span> Social Distribution</div>
+        <h1>X auto-posting</h1>
+        <p>Connect an operator X account, enable release posting per agent, and review posting history.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="social-shell">
+    <div class="container social-grid">
+      <div class="social-card">
+        <div class="social-header">
+          <div>
+            <h2>X account</h2>
+            <p class="social-subtle">OAuth 2.0 with Twitter API v2. New release posts are checked hourly.</p>
+          </div>
+          <span class="status-pill <%= twitterConnection ? 'connected' : 'disconnected' %>">
+            <span>●</span>
+            <span><%= twitterConnection ? `Connected as @${twitterConnection.social_username}` : 'Not connected' %></span>
+          </span>
+        </div>
+        <% if (twitterConnection) { %>
+          <p class="social-subtle">
+            <%= twitterConnection.display_name || twitterConnection.social_username %>
+            <% if (twitterConnection.last_error) { %>
+              · Last error: <%= twitterConnection.last_error %>
+            <% } %>
+          </p>
+        <% } else { %>
+          <button
+            id="twitterConnectButton"
+            class="btn btn-primary"
+            data-twitter-configured="<%= twitterConfigured ? 'true' : 'false' %>"
+            <%= twitterConfigured ? '' : 'disabled' %>
+          >
+            Connect X account
+          </button>
+          <% if (!twitterConfigured) { %>
+            <p class="social-subtle">Set `TWITTER_CLIENT_ID` and `TWITTER_CLIENT_SECRET` to enable OAuth.</p>
+          <% } %>
+        <% } %>
+      </div>
+
+      <div class="social-card">
+        <h3>Auto-post agents</h3>
+        <p class="social-subtle">Only changelog entries created after a toggle is enabled are eligible for automatic release tweets.</p>
+        <div class="agent-list">
+          <% if (!agents.length) { %>
+            <div class="history-empty">No agents available yet.</div>
+          <% } %>
+          <% agents.forEach((agent) => { %>
+            <div class="agent-row">
+              <div>
+                <strong><%= agent.name %></strong>
+                <p>
+                  <%= agent.twitter_auto_post_enabled ? 'Auto-posting enabled' : 'Auto-posting disabled' %>
+                  <% if (agent.last_posted_at) { %>
+                    · Last post <%= new Date(agent.last_posted_at).toLocaleString() %>
+                  <% } %>
+                </p>
+              </div>
+              <label class="toggle-wrap">
+                <input
+                  type="checkbox"
+                  data-agent-toggle
+                  data-agent-id="<%= agent.id %>"
+                  <%= agent.twitter_auto_post_enabled ? 'checked' : '' %>
+                  <%= twitterConnection ? '' : 'disabled' %>
+                >
+                <span>Enable</span>
+              </label>
+            </div>
+          <% }); %>
+        </div>
+      </div>
+
+      <div class="social-card">
+        <h3>Posting history</h3>
+        <% if (!history.length) { %>
+          <div class="history-empty">No X posts recorded yet.</div>
+        <% } else { %>
+          <table class="history-table">
+            <thead>
+              <tr>
+                <th>Agent</th>
+                <th>Version</th>
+                <th>Status</th>
+                <th>Time</th>
+                <th>Link</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% history.forEach((item) => { %>
+                <tr>
+                  <td><%= item.agent_name %></td>
+                  <td><%= item.version_label || 'new release' %></td>
+                  <td>
+                    <span class="history-status <%= item.status %>"><%= item.status %></span>
+                    <% if (item.error_message) { %>
+                      <div class="social-subtle"><%= item.error_message %></div>
+                    <% } %>
+                  </td>
+                  <td><%= new Date(item.created_at).toLocaleString() %></td>
+                  <td>
+                    <% if (item.post_url) { %>
+                      <a href="<%= item.post_url %>" target="_blank" rel="noopener">Open</a>
+                    <% } else { %>
+                      <span class="social-subtle">Unavailable</span>
+                    <% } %>
+                  </td>
+                </tr>
+              <% }); %>
+            </tbody>
+          </table>
+        <% } %>
+      </div>
+    </div>
+  </section>
+
+  <script src="/js/main.js"></script>
+  <script>
+    async function beginTwitterConnect() {
+      const response = await fetch('/api/agents/twitter-connect', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'begin' }),
+      });
+
+      const payload = await response.json();
+      if (!response.ok) {
+        throw new Error(payload.error || 'Failed to start X OAuth');
+      }
+
+      window.location.href = payload.authUrl;
+    }
+
+    async function updateToggle(agentId, enabled) {
+      const response = await fetch('/api/agents/twitter-connect', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'toggle', agent_id: agentId, enabled }),
+      });
+
+      const payload = await response.json();
+      if (!response.ok) {
+        throw new Error(payload.error || 'Failed to update auto-post setting');
+      }
+    }
+
+    const connectButton = document.getElementById('twitterConnectButton');
+    if (connectButton) {
+      connectButton.addEventListener('click', async () => {
+        connectButton.disabled = true;
+        try {
+          await beginTwitterConnect();
+        } catch (err) {
+          alert(err.message);
+          connectButton.disabled = false;
+        }
+      });
+    }
+
+    document.querySelectorAll('[data-agent-toggle]').forEach((toggle) => {
+      toggle.addEventListener('change', async (event) => {
+        const checkbox = event.currentTarget;
+        checkbox.disabled = true;
+        try {
+          await updateToggle(Number(checkbox.dataset.agentId), checkbox.checked);
+        } catch (err) {
+          checkbox.checked = !checkbox.checked;
+          alert(err.message);
+        } finally {
+          checkbox.disabled = false;
+        }
+      });
+    });
+  </script>
+</body>
+</html>

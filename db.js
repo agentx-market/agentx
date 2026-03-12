@@ -153,6 +153,49 @@ try {
   console.log('[db] Operators columns may already exist:', err.message);
 }
 
+try {
+  db.exec(`
+    CREATE TABLE IF NOT EXISTS operator_social_connections (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      operator_id TEXT NOT NULL,
+      provider TEXT NOT NULL,
+      social_user_id TEXT,
+      social_username TEXT,
+      display_name TEXT,
+      access_token TEXT,
+      refresh_token TEXT,
+      token_expires_at INTEGER,
+      scopes TEXT DEFAULT '[]',
+      last_error TEXT,
+      created_at INTEGER NOT NULL,
+      updated_at INTEGER NOT NULL,
+      UNIQUE(operator_id, provider),
+      FOREIGN KEY (operator_id) REFERENCES operators(id) ON DELETE CASCADE
+    )
+  `);
+  db.exec('CREATE INDEX IF NOT EXISTS idx_operator_social_connections_operator_provider ON operator_social_connections(operator_id, provider)');
+  console.log('[db] Operator social connections table created');
+} catch (err) {
+  console.log('[db] Operator social connections table may already exist:', err.message);
+}
+
+try {
+  ensureTableColumns('operator_social_connections', [
+    ['social_user_id', 'TEXT'],
+    ['social_username', 'TEXT'],
+    ['display_name', 'TEXT'],
+    ['access_token', 'TEXT'],
+    ['refresh_token', 'TEXT'],
+    ['token_expires_at', 'INTEGER'],
+    ['scopes', "TEXT DEFAULT '[]'"],
+    ['last_error', 'TEXT'],
+    ['created_at', 'INTEGER'],
+    ['updated_at', 'INTEGER'],
+  ]);
+} catch (err) {
+  console.log('[db] Operator social connection columns may already exist:', err.message);
+}
+
 // Create agents table with health check fields (if it doesn't exist)
 try {
   db.exec(`
@@ -215,6 +258,81 @@ try {
   ]);
 } catch (err) {
   console.log('[db] Featured request columns may already exist:', err.message);
+}
+
+try {
+  db.exec(`
+    CREATE TABLE IF NOT EXISTS agent_social_autopost_settings (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      agent_id INTEGER NOT NULL,
+      provider TEXT NOT NULL,
+      auto_post_enabled INTEGER NOT NULL DEFAULT 0,
+      auto_post_enabled_at INTEGER,
+      created_at INTEGER NOT NULL,
+      updated_at INTEGER NOT NULL,
+      UNIQUE(agent_id, provider),
+      FOREIGN KEY (agent_id) REFERENCES agents(id) ON DELETE CASCADE
+    )
+  `);
+  db.exec('CREATE INDEX IF NOT EXISTS idx_agent_social_autopost_agent_provider ON agent_social_autopost_settings(agent_id, provider)');
+  console.log('[db] Agent social autopost settings table created');
+} catch (err) {
+  console.log('[db] Agent social autopost settings table may already exist:', err.message);
+}
+
+try {
+  ensureTableColumns('agent_social_autopost_settings', [
+    ['auto_post_enabled', 'INTEGER NOT NULL DEFAULT 0'],
+    ['auto_post_enabled_at', 'INTEGER'],
+    ['created_at', 'INTEGER'],
+    ['updated_at', 'INTEGER'],
+  ]);
+} catch (err) {
+  console.log('[db] Agent social autopost settings columns may already exist:', err.message);
+}
+
+try {
+  db.exec(`
+    CREATE TABLE IF NOT EXISTS social_post_history (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      operator_id TEXT NOT NULL,
+      agent_id INTEGER NOT NULL,
+      provider TEXT NOT NULL,
+      changelog_entry_id INTEGER,
+      version_label TEXT,
+      post_text TEXT,
+      post_url TEXT,
+      external_post_id TEXT,
+      status TEXT NOT NULL,
+      error_message TEXT,
+      created_at INTEGER NOT NULL,
+      updated_at INTEGER NOT NULL,
+      FOREIGN KEY (operator_id) REFERENCES operators(id) ON DELETE CASCADE,
+      FOREIGN KEY (agent_id) REFERENCES agents(id) ON DELETE CASCADE,
+      FOREIGN KEY (changelog_entry_id) REFERENCES agent_changelog_entries(id) ON DELETE SET NULL
+    )
+  `);
+  db.exec('CREATE INDEX IF NOT EXISTS idx_social_post_history_operator_created_at ON social_post_history(operator_id, created_at DESC)');
+  db.exec('CREATE INDEX IF NOT EXISTS idx_social_post_history_entry_provider_status ON social_post_history(changelog_entry_id, provider, status)');
+  console.log('[db] Social post history table created');
+} catch (err) {
+  console.log('[db] Social post history table may already exist:', err.message);
+}
+
+try {
+  ensureTableColumns('social_post_history', [
+    ['changelog_entry_id', 'INTEGER'],
+    ['version_label', 'TEXT'],
+    ['post_text', 'TEXT'],
+    ['post_url', 'TEXT'],
+    ['external_post_id', 'TEXT'],
+    ['status', 'TEXT NOT NULL'],
+    ['error_message', 'TEXT'],
+    ['created_at', 'INTEGER'],
+    ['updated_at', 'INTEGER'],
+  ]);
+} catch (err) {
+  console.log('[db] Social post history columns may already exist:', err.message);
 }
 
 try {
