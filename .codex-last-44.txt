@@ -1,0 +1,5 @@
+Implemented `GET /success` in [server.js](/Users/marco/marco_web/server.js) and added [success.ejs](/Users/marco/marco_web/views/success.ejs).
+
+The new page is a narrow post-Stripe success screen with the required green checkmark, “Thank you for upgrading to Pro”, “Your subscription is now active”, and a link to `/my-agents`. It uses the requested dark palette and reuses the same navbar/footer structure from `browse.ejs`. The view is 57 lines, so it stays under the 80-line limit.
+
+Verified with `node -c server.js`. Marked complete via `bash ~/marco_web/backlog.sh complete 44 none codex`.
