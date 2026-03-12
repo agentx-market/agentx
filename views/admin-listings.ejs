@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Featured Listings - AgentX</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <style>
+    .admin-listings-page { background: #0a0a1a; min-height: 100vh; }
+    .admin-listings-main { padding: 7rem 0 4rem; }
+    .listings-shell { display: grid; gap: 1.25rem; }
+    .listings-intro, .listing-card, .empty-card, .notice-card {
+      background: #121428;
+      border: 1px solid #2a2a4a;
+      border-radius: 16px;
+      padding: 1.4rem;
+    }
+    .listings-intro h1, .listing-card h2, .empty-card h2 { margin: 0 0 0.5rem; color: #e0e0ff; }
+    .listings-intro p, .listing-card p, .empty-card p { color: #9ca3c9; }
+    .price-pill, .status-pill {
+      display: inline-flex;
+      align-items: center;
+      border-radius: 999px;
+      padding: 0.35rem 0.75rem;
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+    .price-pill { background: rgba(108, 92, 231, 0.14); color: #c7bfff; }
+    .status-pill.active { background: rgba(0, 210, 106, 0.14); color: #7ff0ae; }
+    .status-pill.inactive { background: rgba(143, 149, 178, 0.16); color: #cbd2f5; }
+    .status-pill.pending { background: rgba(255, 165, 2, 0.14); color: #ffd27d; }
+    .listing-card-header, .listing-card-meta { display: flex; justify-content: space-between; gap: 1rem; flex-wrap: wrap; }
+    .listing-card-meta { margin: 1rem 0 1.25rem; }
+    .meta-block { min-width: 150px; }
+    .meta-label { display: block; color: #8f95b2; font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 0.25rem; }
+    .meta-value { color: #eef2ff; font-weight: 600; }
+    .listing-actions { display: flex; gap: 0.75rem; flex-wrap: wrap; align-items: center; }
+    .btn-featured {
+      border: 0;
+      border-radius: 999px;
+      padding: 0.8rem 1.1rem;
+      background: linear-gradient(135deg, #6c5ce7, #3b82f6);
+      color: #fff;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .btn-featured[disabled] { opacity: 0.55; cursor: not-allowed; }
+    .notice-card { color: #dbe4ff; }
+    .notice-card.success { border-color: rgba(0, 210, 106, 0.3); }
+    .notice-card.error { border-color: rgba(255, 71, 87, 0.3); }
+    @media (max-width: 720px) {
+      .admin-listings-main { padding-top: 6rem; }
+    }
+  </style>
+</head>
+<body class="admin-listings-page">
+  <nav class="navbar">
+    <div class="container">
+      <a href="/" class="nav-logo">
+        <div class="logo-icon">X</div>
+        AgentX
+      </a>
+      <ul class="nav-links">
+        <li><a href="/browse">Browse</a></li>
+        <li><a href="/my-agents">Dashboard</a></li>
+        <li class="nav-cta"><a href="/dashboard/billing" class="btn btn-primary">Billing</a></li>
+      </ul>
+      <button class="nav-toggle" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <main class="admin-listings-main">
+    <div class="container">
+      <div class="listings-shell">
+        <section class="listings-intro">
+          <span class="price-pill">$<%= (featuredListingPriceCents / 100).toFixed(0) %>/month featured placement</span>
+          <h1>Featured listings</h1>
+          <p>Turn on homepage carousel placement, a browse sidebar slot, and top-ranked marketplace visibility for one operator-backed listing at a time.</p>
+          <p><a href="/dashboard/billing" class="btn btn-secondary" style="margin-top: 1rem;">Manage billing in Stripe</a></p>
+        </section>
+
+        <% if (checkoutState === 'success') { %>
+          <div class="notice-card success">Checkout completed. Stripe will activate the listing as soon as the webhook confirms the subscription.</div>
+        <% } %>
+
+        <% if (checkoutState === 'cancel') { %>
+          <div class="notice-card error">Checkout was canceled. Your listing status was not changed.</div>
+        <% } %>
+
+        <% if (!listings.length) { %>
+          <section class="empty-card">
+            <h2>No operator listings yet</h2>
+            <p>Create your first listing before purchasing featured placement.</p>
+            <a href="/register" class="btn btn-primary">Register agent</a>
+          </section>
+        <% } %>
+
+        <% listings.forEach((listing) => { %>
+          <section class="listing-card">
+            <div class="listing-card-header">
+              <div>
+                <h2><%= listing.name %></h2>
+                <p><%= listing.description || 'No description added yet.' %></p>
+              </div>
+              <span class="status-pill <%= listing.featured_active ? 'active' : listing.featured_status === 'past_due' ? 'pending' : 'inactive' %>">
+                <%= listing.featured_active ? 'Featured' : (listing.featured_status || 'Not featured') %>
+              </span>
+            </div>
+
+            <div class="listing-card-meta">
+              <div class="meta-block">
+                <span class="meta-label">Listing status</span>
+                <span class="meta-value"><%= listing.status %></span>
+              </div>
+              <div class="meta-block">
+                <span class="meta-label">Featured until</span>
+                <span class="meta-value"><%= listing.featured_until ? new Date(listing.featured_until).toLocaleDateString() : 'Inactive' %></span>
+              </div>
+              <div class="meta-block">
+                <span class="meta-label">Subscription</span>
+                <span class="meta-value"><%= listing.subscription_id || 'Not started' %></span>
+              </div>
+            </div>
+
+            <div class="listing-actions">
+              <button
+                type="button"
+                class="btn-featured"
+                data-agent-id="<%= listing.id %>"
+                <%= listing.featured_active ? 'disabled' : '' %>
+              >
+                <%= listing.featured_active ? 'Already featured' : 'Become Featured' %>
+              </button>
+              <a href="/agents/<%= listing.name.toLowerCase().replace(/ /g, '-') %>" class="btn btn-secondary">View listing</a>
+            </div>
+          </section>
+        <% }) %>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    document.querySelectorAll('[data-agent-id]').forEach((button) => {
+      button.addEventListener('click', async () => {
+        if (button.disabled) return;
+        const originalLabel = button.textContent;
+        button.disabled = true;
+        button.textContent = 'Redirecting...';
+
+        try {
+          const response = await fetch('/api/featured-listings/checkout', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ agentId: Number(button.dataset.agentId) })
+          });
+
+          const payload = await response.json();
+          if (!response.ok || !payload.url) {
+            throw new Error(payload.error || 'Failed to start checkout');
+          }
+
+          window.location.href = payload.url;
+        } catch (error) {
+          button.disabled = false;
+          button.textContent = originalLabel;
+          window.alert(error.message);
+        }
+      });
+    });
+  </script>
+  <script src="/js/main.js"></script>
+</body>
+</html>
