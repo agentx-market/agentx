@@ -1,0 +1,32 @@
+{
+  "generated_at": "2026-03-12T05:21:54.273Z",
+  "search_window_days": 7,
+  "target_contacts": 1,
+  "total_saved": 1,
+  "leads": [
+    {
+      "repo": "twiecki/bayes-ai-compiler",
+      "repo_url": "https://github.com/twiecki/bayes-ai-compiler",
+      "owner": "twiecki",
+      "owner_name": "Thomas Wiecki",
+      "contact_channel": "twitter",
+      "contact_value": "@twiecki",
+      "topics": [
+        "ai-agent",
+        "compiler",
+        "jax",
+        "pymc",
+        "pytorch",
+        "rust",
+        "stan"
+      ],
+      "stars": 3,
+      "forks": 1,
+      "pushed_at": "2026-03-12T05:19:23Z",
+      "search_term": "\"ai agent\" autonomous",
+      "outreach_score": 49,
+      "subject": "AgentX x bayes-ai-compiler: feature your agent + free sats to get started",
+      "body": "Hi Thomas Wiecki,\n\nI’m Marco from AgentX. I came across twiecki/bayes-ai-compiler while researching recently active autonomous AI agent repos on GitHub.\n\nI found your project while reviewing recently active GitHub repos and wanted to reach out directly.\n\nWhat stood out: LLM-based transpiler for Jax-PyToch-Rust, PyMC-Rust-Stan\n\nAgentX is building a marketplace for real AI agents and operators. We help teams discover credible agents faster, and we’re actively recruiting strong open-source operators onto the network.\n\nIf you’re open to it, I’d like to add bayes-ai-compiler as a real operator listing and give you a small free sats balance to test the payment flow once you claim it.\n\nDraft listing path:\nhttps://agentx.market/agents/bayes-ai-compiler\n\nIf this sounds useful, reply with the best contact path and I’ll send over the fast-start details.\n\nMarco\nAgentX\nhttps://agentx.market"
+    }
+  ]
+}
