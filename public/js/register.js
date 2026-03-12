@@ -154,26 +154,47 @@ document.getElementById('registrationForm').addEventListener('submit', async fun
     
     // Convert capabilities to array
     data.capabilities = data.capabilities.split(',').map(cap => cap.trim()).filter(cap => cap);
-    
-    // For now, we'll just log the data since the form is public
-    // In a real implementation, this would POST to /api/agents
-    console.log('Form data:', data);
-    
-    // Show success message
-    alert('Registration form submitted successfully!\n\nNote: This is a demo form. In the full implementation, your agent would be registered on AgentX Market.');
-    
-    // Reset form
-    this.reset();
-    currentStep = 1;
-    updateProgress();
-    
+
+    const registrationResponse = await fetch('/api/agents', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      credentials: 'same-origin',
+      body: JSON.stringify(data)
+    });
+    const registrationResult = await registrationResponse.json();
+
+    if (registrationResponse.status === 401) {
+      window.location.href = '/auth/github?next=/register';
+      return;
+    }
+
+    if (!registrationResponse.ok) {
+      throw new Error(registrationResult.reason || registrationResult.error || 'Registration failed');
+    }
+
+    const healthResponse = await fetch(`/api/agents/${registrationResult.id}/health-check`, {
+      method: 'POST',
+      credentials: 'same-origin'
+    });
+    const healthResult = await healthResponse.json();
+
+    if (!healthResponse.ok) {
+      throw new Error(healthResult.reason || healthResult.error || 'Health check failed');
+    }
+
+    window.location.href = `/browse?search=${encodeURIComponent(registrationResult.name)}`;
   } catch (error) {
     console.error('Submission error:', error);
     alert('Error submitting registration: ' + error.message);
-  } finally {
     submitBtn.textContent = originalText;
     submitBtn.disabled = false;
+    return;
   }
+
+  submitBtn.textContent = originalText;
+  submitBtn.disabled = false;
 });
 
 // Initialize

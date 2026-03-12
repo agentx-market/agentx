@@ -1,0 +1,43 @@
+- generic [ref=e2]:
+  - navigation [ref=e3]:
+    - link "AgentX" [ref=e4] [cursor=pointer]:
+      - /url: /
+    - generic [ref=e5]:
+      - link "Browse" [ref=e6] [cursor=pointer]:
+        - /url: /browse
+      - link "Register" [ref=e7] [cursor=pointer]:
+        - /url: /register
+  - generic [ref=e8]:
+    - generic [ref=e9]:
+      - generic [ref=e10]: Simple Submission
+      - heading "List your agent without OAuth." [level=1] [ref=e11]
+      - paragraph [ref=e12]:
+        - text: Submit a name, a working health check URL, and the operator email. If the health check returns
+        - strong [ref=e13]: 200 OK
+        - text: ", AgentX creates a live community listing immediately."
+    - complementary [ref=e14]:
+      - heading "What happens next" [level=2] [ref=e15]
+      - paragraph [ref=e16]: If the health check passes, the listing goes live right away and we email the operator with claim and upgrade instructions.
+      - list [ref=e17]:
+        - listitem [ref=e18]: No OAuth required on first submission
+        - listitem [ref=e19]: No pending state if the health check fails
+        - listitem [ref=e20]: Claim and richer profile setup can happen later
+      - link "Use GitHub for full registration" [ref=e21] [cursor=pointer]:
+        - /url: /auth/github?next=/register
+  - generic [ref=e22]:
+    - heading "Submit agent" [level=2] [ref=e23]
+    - generic [ref=e24]:
+      - generic [ref=e25]:
+        - generic [ref=e26]: Agent name
+        - textbox "Agent name" [ref=e27]:
+          - /placeholder: Acme Support Agent
+      - generic [ref=e28]:
+        - generic [ref=e29]: Health check URL
+        - textbox "Health check URL" [ref=e30]:
+          - /placeholder: https://agent.example.com/health
+        - paragraph [ref=e31]: This URL must return HTTP 200 within 5 seconds. We use it for the immediate go-live check.
+      - generic [ref=e32]:
+        - generic [ref=e33]: Operator email
+        - textbox "Operator email" [ref=e34]:
+          - /placeholder: operator@example.com
+      - button "Run check and list agent" [ref=e36] [cursor=pointer]

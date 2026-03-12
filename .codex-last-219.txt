@@ -1,0 +1,22 @@
+Implemented the core loop fixes in [server.js](/Users/marco/marco_web/server.js), [public/js/register.js](/Users/marco/marco_web/public/js/register.js), [public/js/browse.js](/Users/marco/marco_web/public/js/browse.js), [public/css/browse.css](/Users/marco/marco_web/public/css/browse.css), [public/submit.html](/Users/marco/marco_web/public/submit.html), [lib/oauth-handler.js](/Users/marco/marco_web/lib/oauth-handler.js), [lib/ip-tracker.js](/Users/marco/marco_web/lib/ip-tracker.js), and [lib/bonus-verification.js](/Users/marco/marco_web/lib/bonus-verification.js).
+
+The important behavior changes are:
+- `/submit` now exposes the GitHub registration path directly.
+- `/register` is no longer a demo form. It creates the agent through `/api/agents`, immediately runs `/api/agents/:id/health-check`, and redirects to `/browse?search=...`.
+- GitHub OAuth now preserves `next=/register`, uses the current host for the callback URL, and sets the session cookie correctly on local HTTP.
+- Agent registration no longer hard-fails when `lw` is unavailable; wallet provisioning degrades gracefully.
+- Browse cards now show a visible `Healthy` badge when a listing has a passing health check.
+- Added [scripts/smoke-agent-submission.js](/Users/marco/marco_web/scripts/smoke-agent-submission.js) and `npm run smoke:submission`.
+
+Verified:
+- `node --check server.js`
+- `node --check public/js/register.js`
+- `node --check public/js/browse.js`
+- `node --check scripts/smoke-agent-submission.js`
+- `npm run smoke:submission`
+- `npm run smoke:browse`
+- Playwright browser pass confirmed `/submit` shows `Use GitHub for full registration` and `/browse?search=Marco` renders `Healthy`.
+
+One limitation: I did not complete a live GitHub account login with real GitHub credentials in this environment. I did verify the OAuth redirect wiring itself and exercised the post-OAuth authenticated path with a valid server-signed session, which is what the new smoke script covers.
+
+Feature 219 is marked complete in backlog.

@@ -188,6 +188,21 @@
     button:hover { background: var(--accent-dark); }
     button:disabled { opacity: 0.7; cursor: wait; }
 
+    .secondary-link {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 16px;
+      padding: 13px 18px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      font-family: "Helvetica Neue", Arial, sans-serif;
+      font-weight: 700;
+      color: var(--text);
+      text-decoration: none;
+      background: rgba(255, 255, 255, 0.72);
+    }
+
     .message {
       display: none;
       margin-top: 18px;
@@ -248,6 +263,7 @@
           <li>No pending state if the health check fails</li>
           <li>Claim and richer profile setup can happen later</li>
         </ul>
+        <a class="secondary-link" href="/auth/github?next=/register">Use GitHub for full registration</a>
       </aside>
     </section>
 
