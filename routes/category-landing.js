@@ -6,6 +6,7 @@ const router = express.Router();
 // Targets searches like 'AI coding agent', 'AI research agent'
 router.get('/agents/:categorySlug', async (req, res) => {
   const { categorySlug } = req.params;
+  const now = Date.now();
 
   try {
     // Fetch category
@@ -20,25 +21,34 @@ router.get('/agents/:categorySlug', async (req, res) => {
 
     // Fetch agents in this category with their capabilities
     const agents = await db.all(
-      `SELECT a.*, 
-       GROUP_CONCAT(ac.name, ', ') as capabilities,
-       c2.name as categoryName,
-       c2.slug as categorySlug
+      `SELECT
+         a.*,
+         GROUP_CONCAT(DISTINCT c.name) as capabilities,
+         c2.name as categoryName,
+         c2.slug as categorySlug
        FROM agents a
-       JOIN agent_categories ac ON a.id = ac.agent_id
-       JOIN categories c2 ON ac.category_id = c2.id
-       WHERE c2.slug = ? AND a.status = 'approved'
+       JOIN agent_categories ac2 ON a.id = ac2.agent_id
+       JOIN categories c2 ON ac2.category_id = c2.id
+       LEFT JOIN agent_categories ac ON a.id = ac.agent_id
+       LEFT JOIN categories c ON ac.category_id = c.id
+       WHERE c2.slug = ?
+         AND a.operator_id IS NOT NULL
        GROUP BY a.id
-       ORDER BY a.created_at DESC`,
-      [categorySlug]
+       ORDER BY
+         CASE WHEN a.featured = 1 AND (a.featured_until IS NULL OR a.featured_until > ?) THEN 0 ELSE 1 END,
+         a.sponsorship_amount_cents DESC,
+         a.featured_until DESC,
+         a.created_at DESC`,
+      [categorySlug, now]
     );
 
     // Fetch related categories for internal linking
     const relatedCategories = await db.all(
-      `SELECT c.*, COUNT(ac.agent_id) as agent_count 
+      `SELECT c.*, COUNT(a.id) as agent_count
        FROM categories c
        LEFT JOIN agent_categories ac ON c.id = ac.category_id
-       WHERE c.slug != ? AND a.status = 'approved'
+       LEFT JOIN agents a ON a.id = ac.agent_id AND a.operator_id IS NOT NULL
+       WHERE c.slug != ?
        GROUP BY c.id
        ORDER BY agent_count DESC
        LIMIT 5`,
@@ -57,7 +67,7 @@ router.get('/agents/:categorySlug', async (req, res) => {
         "itemListElement": agents.map((agent, index) => ({
           "@type": "ListItem",
           "position": index + 1,
-          "url": `https://agentx.market/agents/${agent.slug}`,
+          "url": `https://agentx.market/agents/${(agent.slug || agent.name.toLowerCase().replace(/ /g, '-'))}`,
           "name": agent.name
         }))
       }

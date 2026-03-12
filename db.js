@@ -256,9 +256,57 @@ try {
     ['verification_badge_status', "TEXT DEFAULT 'none'"],
     ['verification_badge_reason', 'TEXT'],
     ['verification_badge_approved_at', 'INTEGER'],
+    ['sponsorship_label', "TEXT DEFAULT 'Sponsored'"],
+    ['sponsorship_accent_color', "TEXT DEFAULT '#f59e0b'"],
+    ['sponsorship_amount_cents', 'INTEGER DEFAULT 0'],
+    ['sponsorship_updated_at', 'INTEGER'],
   ]);
 } catch (err) {
   console.log('[db] Featured request columns may already exist:', err.message);
+}
+
+try {
+  db.exec(`
+    CREATE TABLE IF NOT EXISTS sponsorship_payments (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      operator_id TEXT NOT NULL,
+      agent_id INTEGER NOT NULL,
+      checkout_session_id TEXT,
+      stripe_subscription_id TEXT,
+      stripe_invoice_id TEXT,
+      stripe_payment_intent_id TEXT,
+      stripe_event_type TEXT NOT NULL,
+      amount_cents INTEGER NOT NULL DEFAULT 0,
+      currency TEXT NOT NULL DEFAULT 'usd',
+      status TEXT NOT NULL DEFAULT 'pending',
+      created_at INTEGER NOT NULL,
+      updated_at INTEGER NOT NULL,
+      FOREIGN KEY (operator_id) REFERENCES operators(id) ON DELETE CASCADE,
+      FOREIGN KEY (agent_id) REFERENCES agents(id) ON DELETE CASCADE
+    )
+  `);
+  db.exec('CREATE INDEX IF NOT EXISTS idx_sponsorship_payments_operator_created ON sponsorship_payments(operator_id, created_at DESC)');
+  db.exec('CREATE INDEX IF NOT EXISTS idx_sponsorship_payments_subscription ON sponsorship_payments(stripe_subscription_id)');
+  console.log('[db] Sponsorship payments table created');
+} catch (err) {
+  console.log('[db] Sponsorship payments table may already exist:', err.message);
+}
+
+try {
+  ensureTableColumns('sponsorship_payments', [
+    ['checkout_session_id', 'TEXT'],
+    ['stripe_subscription_id', 'TEXT'],
+    ['stripe_invoice_id', 'TEXT'],
+    ['stripe_payment_intent_id', 'TEXT'],
+    ['stripe_event_type', 'TEXT NOT NULL DEFAULT "unknown"'],
+    ['amount_cents', 'INTEGER NOT NULL DEFAULT 0'],
+    ['currency', 'TEXT NOT NULL DEFAULT "usd"'],
+    ['status', 'TEXT NOT NULL DEFAULT "pending"'],
+    ['created_at', 'INTEGER NOT NULL DEFAULT 0'],
+    ['updated_at', 'INTEGER NOT NULL DEFAULT 0'],
+  ]);
+} catch (err) {
+  console.log('[db] Sponsorship payment columns may already exist:', err.message);
 }
 
 try {

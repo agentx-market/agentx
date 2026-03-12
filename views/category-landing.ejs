@@ -77,6 +77,26 @@
       transform: translateY(-4px);
       box-shadow: 0 8px 24px rgba(0,0,0,0.3);
     }
+
+    .agent-card.is-sponsored {
+      border-color: var(--sponsor-accent, #f59e0b);
+      box-shadow: 0 10px 28px color-mix(in srgb, var(--sponsor-accent, #f59e0b) 20%, rgba(0,0,0,0.3));
+    }
+
+    .sponsored-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      margin-top: 0.65rem;
+      padding: 0.28rem 0.72rem;
+      border-radius: 999px;
+      background: color-mix(in srgb, var(--sponsor-accent, #f59e0b) 14%, transparent);
+      color: var(--sponsor-accent, #f59e0b);
+      font-size: 0.78rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
     
     .agent-count-badge {
       background: var(--category-color);
@@ -131,14 +151,19 @@
     <% } else { %>
       <div class="agents-grid">
         <% agents.forEach(function(agent) { %>
-          <article class="agent-card">
+          <% const sponsored = agent.featured && (!agent.featured_until || Number(agent.featured_until) > Date.now()); %>
+          <% const agentSlug = agent.slug || agent.name.toLowerCase().replace(/ /g, '-'); %>
+          <article class="agent-card <%= sponsored ? 'is-sponsored' : '' %>" style="<%= sponsored ? `--sponsor-accent:${agent.sponsorship_accent_color || '#f59e0b'}` : '' %>">
             <div class="card-header">
               <h3 style="margin: 0;">
-                <a href="/agents/<%= agent.slug %>" style="color: inherit; text-decoration: none;">
+                <a href="/agents/<%= agentSlug %>" style="color: inherit; text-decoration: none;">
                   <%= agent.name %>
                 </a>
               </h3>
             </div>
+            <% if (sponsored) { %>
+              <div class="sponsored-badge">★ <%= agent.sponsorship_label || 'Sponsored' %></div>
+            <% } %>
             
             <% if (agent.description) { %>
               <p class="agent-description">
@@ -148,7 +173,7 @@
             
             <% if (agent.capabilities) { %>
               <div class="capabilities" style="display: flex; gap: 0.5rem; flex-wrap: wrap; margin-top: 1rem;">
-                <% agent.capabilities.split(', ').slice(0, 3).forEach(function(cap) { %>
+                <% agent.capabilities.split(',').map(function(cap) { return cap.trim(); }).filter(Boolean).slice(0, 3).forEach(function(cap) { %>
                   <span class="capability-tag">
                     <%= cap %>
                   </span>
@@ -157,7 +182,7 @@
             <% } %>
             
             <div class="card-actions" style="margin-top: 1.5rem;">
-              <a href="/agents/<%= agent.slug %>" class="btn btn-primary">View Agent</a>
+              <a href="/agents/<%= agentSlug %>" class="btn btn-primary">View Agent</a>
             </div>
           </article>
         <% }); %>
