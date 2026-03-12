@@ -1,0 +1,11 @@
+Implemented feature `#95` with a narrow server-rendered path: `/best/:category` now supports exact-keyword URLs like `/best/chatbot-ai-agents`, and a second route serves `/:useCase-ai-agents` like `/automation-ai-agents` and `/data-analysis-ai-agents`. The route logic in [server.js](/Users/marco/marco_web/server.js) resolves curated high-value categories, generates ~300 words of intro copy, selects 6 matching agents from the database, emits FAQ + item-list schema, and adds both URL variants into `/sitemap.xml` from the same config so sitemap entries stay automatic.
+
+The new page template in [views/seo-landing.ejs](/Users/marco/marco_web/views/seo-landing.ejs) includes exact-match title tags, unique H1s, a mobile-responsive 6-card grid, per-card `SoftwareApplication` microdata, FAQ schema, and related internal links. I kept it static/SSR-only with cache headers to keep load overhead low.
+
+Verified with `node --check server.js`, then restarted the app and confirmed:
+`/automation-ai-agents` -> `200`
+`/best/chatbot-ai-agents` -> `200`
+`/data-analysis-ai-agents` -> `200`
+`/sitemap.xml` contains the new landing-page URLs.
+
+Also ran `bash ~/marco_web/backlog.sh complete 95 none codex`.
