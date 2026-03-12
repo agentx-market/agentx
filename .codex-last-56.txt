@@ -1,18 +1,10 @@
-The `/submit` feature is already implemented in the current working tree. I verified the public page at [views/submit.ejs](/Users/marco/marco_web/views/submit.ejs) and the server flow in [server.js](/Users/marco/marco_web/server.js#L1642), including:
+Implemented the missing deployment-safe piece for feature `#56` in [db.js](/Users/marco/marco_web/db.js): the app now bootstraps the `agent_submissions` review queue table and its indexes on startup, so the existing `/submit` page and `/api/submit-agent` flow work on fresh environments instead of depending on migration `068` having been run manually.
 
-- public `GET /submit`
-- form fields for name, endpoint URL, description, category, pricing model, logo URL, and contact email
-- pending queue persistence in `agent_submissions`
-- auto-approval when the submitted URL returns HTTP 200
-- listing creation on approval
-- confirmation email send attempt to the submitter
+Verified:
+- `node --check server.js` passed.
+- `GET /submit` returned `200`.
+- End-to-end smoke submission against `POST /api/submit-agent` returned an auto-approved response when the temporary health endpoint returned `200`, created the queue row, and linked the created agent. I cleaned up the smoke records afterward.
 
-Verification passed against the running app:
-- `GET /submit` returned `200`
-- a test submission to a local `200` endpoint returned `201` and created an approved listing
-- a test submission to a local `503` endpoint returned `202` and stayed pending
-- both records were cleaned up after the test
+Recorded completion with `bash ~/marco_web/backlog.sh complete 56 none codex`.
 
-I did not make code edits because the requested feature is already present in dirty project files and rewriting it would add avoidable churn. I also marked the backlog item complete with `bash ~/marco_web/backlog.sh complete 56 none codex`.
-
-Residual note: I verified the email send path is wired, but I did not verify actual email delivery because that depends on the current `SENDGRID_API_KEY` environment.
+Residual note: `db.js` already has pre-existing SQLite compatibility warnings around `ALTER TABLE ... ADD COLUMN IF NOT EXISTS`; I did not change that because it’s outside this feature and did not block the submit flow.
