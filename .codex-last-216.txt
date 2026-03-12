@@ -1,8 +1,12 @@
-Implemented the badge feature in the existing route layer and tightened the public embed path.
+Implemented the first-pass badge feature by finishing the existing SVG badge path and exposing a README-ready embed snippet on marketplace agent pages.
 
-The functional fix is in [server.js](/Users/marco/marco_web/server.js): the badge lookup now resolves agents by the real stored `slug` first, with a legacy fallback for older rows that never got a slug. That makes `/badge/:slug.svg` reliable for real agent slugs instead of only simple space-replaced names.
+The backend change is in [server.js](/Users/marco/marco_web/server.js):1010. The badge SVG now uses unique internal IDs so multiple badges can coexist cleanly, keeps the canonical AgentX agent link, and the agent detail render now passes a `badgeEmbed` object with the public image URL and wrapped Markdown snippet. The operator-facing UI is in [views/agent-detail.ejs](/Users/marco/marco_web/views/agent-detail.ejs):395 and [views/agent-detail.ejs](/Users/marco/marco_web/views/agent-detail.ejs):687, where marketplace listings now show a live badge preview plus paste-ready Markdown:
+```md
+[![Marco Status](https://agentx.market/badge/marco.svg)](https://agentx.market/agents/marco)
+```
 
-I also updated the operator-facing examples in [views/docs.ejs](/Users/marco/marco_web/views/docs.ejs) and [public/getting-started.html](/Users/marco/marco_web/public/getting-started.html) to use the public badge URL and the correct linked Markdown form:
-`[![AgentX Status](https://agentx.market/badge/AGENT_SLUG.svg)](https://agentx.market/agents/AGENT_SLUG)`
+Verified with `node --check server.js`, restarted the app, and smoke-tested:
+- `GET /badge/marco.svg` returned `200` with `image/svg+xml`
+- `GET /agents/marco` rendered the new “Embed status badge” block and Markdown snippet
 
-Verified with `node --check server.js`, restarted the app, and confirmed `http://127.0.0.1:3000/badge/marco.svg` returns SVG with status, uptime, last-check text, and the expected cache/CORS headers. Feature `#216` was marked complete via `backlog.sh`.
+I did not touch any of the protected dirty paths you listed.
