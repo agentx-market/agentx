@@ -1,0 +1,7 @@
+Implemented feature `#91` as a narrow first pass.
+
+The app now stores operator-posted agent updates in SQLite, serves a public changelog page at [`/Users/marco/marco_web/server.js`]( /Users/marco/marco_web/server.js ) and [`/Users/marco/marco_web/views/changelog.ejs`]( /Users/marco/marco_web/views/changelog.ejs ), exposes an RSS feed via [`/Users/marco/marco_web/lib/changelog-feed.js`]( /Users/marco/marco_web/lib/changelog-feed.js ), and adds the backing migration in [`/Users/marco/marco_web/migrations/066_agent_changelog.sql`]( /Users/marco/marco_web/migrations/066_agent_changelog.sql ).
+
+The new API is `POST /api/changelog`. It requires existing auth, validates `agent_id`, `title`, and `content`, and enforces that the authenticated operator owns the agent before inserting an entry.
+
+Verification: `node --check server.js` passed. On an isolated port (`3456`), `GET /changelog` returned `200`, `GET /changelog.xml` returned `200`, and unauthenticated `POST /api/changelog` returned `401` as expected. I used an isolated port because `:3000` appears to have an unrelated existing process in this environment. Feature completion was recorded with `backlog.sh complete 91 none codex`.

@@ -4,7 +4,9 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Changelog — AgentX</title>
-  <meta name="description" content="Recent features and updates to AgentX Market. See what we've been building.">
+  <meta name="description" content="Recent operator-posted updates from agents on AgentX.">
+  <link rel="canonical" href="https://agentx.market/changelog">
+  <link rel="alternate" type="application/rss+xml" title="AgentX Agent Changelog RSS Feed" href="https://agentx.market/changelog.xml">
 
   <!-- Favicon -->
   <link rel="icon" type="image/svg+xml" href="/img/favicon.svg">
@@ -15,7 +17,7 @@
     "@context": "https://schema.org",
     "@type": "SoftwareApplication",
     "name": "AgentX Registry",
-    "description": "Recent features and updates to AgentX Market",
+    "description": "Recent operator-posted updates from agents on AgentX.",
     "applicationCategory": "AIApplication",
     "operatingSystem": "Cloud",
     "offers": {
@@ -36,6 +38,75 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 
   <link rel="stylesheet" href="/css/style.css">
+  <style>
+    .changelog-shell {
+      max-width: 860px;
+      margin: 0 auto 5rem;
+      padding: 0 1.5rem;
+    }
+    .page-header-copy {
+      max-width: 720px;
+    }
+    .page-header-copy p {
+      color: #a7abd1;
+      margin-top: 1rem;
+      line-height: 1.7;
+    }
+    .feed-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-top: 1.25rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.9rem;
+      color: #7db3ff;
+      text-decoration: none;
+    }
+    .timeline {
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+    }
+    .timeline-item {
+      background: rgba(26, 26, 46, 0.92);
+      border: 1px solid #2a2a4a;
+      border-radius: 16px;
+      padding: 1.5rem;
+      box-shadow: 0 18px 50px rgba(0, 0, 0, 0.18);
+    }
+    .timeline-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      align-items: center;
+      margin-bottom: 0.9rem;
+      font-size: 0.9rem;
+      color: #8888aa;
+    }
+    .timeline-agent {
+      color: #7db3ff;
+      text-decoration: none;
+      font-weight: 600;
+    }
+    .timeline-title {
+      margin: 0 0 0.75rem;
+      font-size: 1.35rem;
+      color: #f4f6ff;
+    }
+    .timeline-content {
+      color: #d6dafc;
+      line-height: 1.7;
+      white-space: pre-wrap;
+      margin: 0;
+    }
+    .timeline-empty {
+      background: rgba(26, 26, 46, 0.72);
+      border: 1px dashed #2a2a4a;
+      border-radius: 16px;
+      padding: 1.5rem;
+      color: #a7abd1;
+    }
+  </style>
 </head>
 <body class="noise-overlay">
   <!-- Navbar -->
@@ -64,21 +135,29 @@
 
   <!-- Page Header -->
   <section class="page-header">
-    <div class="container">
-      <h1 class="page-title">What we have been building</h1>
+    <div class="container page-header-copy">
+      <h1 class="page-title">Agent changelog</h1>
+      <p>Recent shipping notes posted by operators for their live agents.</p>
+      <a class="feed-link" href="/changelog.xml">RSS: /changelog.xml</a>
     </div>
   </section>
 
   <!-- Changelog Timeline -->
-  <section class="container">
+  <section class="changelog-shell">
     <div class="timeline">
-      <% features.forEach((f) => { %>
+      <% if (!entries.length) { %>
+        <div class="timeline-empty">No operator updates have been posted yet.</div>
+      <% } %>
+      <% entries.forEach((entry) => { %>
         <div class="timeline-item">
-          <div class="timeline-marker"></div>
-          <div class="timeline-content">
-            <h3 class="timeline-title"><%= f.title %></h3>
-            <p class="timeline-date"><%= f.completed_at ? new Date(f.completed_at).toLocaleDateString() : 'Recent' %></p>
-            <% if (f.built_by) { %><p class="timeline-builder">Built by <%= f.built_by %></p><% } %>
+          <div class="timeline-meta">
+            <a class="timeline-agent" href="/agents/<%= entry.agent_slug %>"><%= entry.agent_name %></a>
+            <span><%= new Date(entry.created_at).toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' }) %></span>
+            <span>by <%= entry.operator_display_name %></span>
+          </div>
+          <div>
+            <h3 class="timeline-title" id="entry-<%= entry.id %>"><%= entry.title %></h3>
+            <p class="timeline-content"><%= entry.content %></p>
           </div>
         </div>
       <% }); %>
