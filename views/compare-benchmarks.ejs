@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= title %></title>
+  <meta name="description" content="Automated benchmark leaderboards for top AI agents across accuracy, latency, and cost per call.">
+  <link rel="canonical" href="https://agentx.market/compare/benchmarks">
+
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://agentx.market/compare/benchmarks">
+  <meta property="og:title" content="AI Agent Benchmarks — AgentX">
+  <meta property="og:description" content="Compare top AI agents on benchmark accuracy, latency, cost per call, and task-specific leaderboards.">
+  <meta property="og:image" content="https://agentx.market/img/og-image.png">
+  <meta property="og:site_name" content="AgentX">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@agentxmarket">
+  <meta name="twitter:title" content="AI Agent Benchmarks — AgentX">
+  <meta name="twitter:description" content="Sortable benchmark tables for top AI agents by task type.">
+
+  <link rel="icon" type="image/svg+xml" href="/img/favicon.svg">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/browse.css">
+</head>
+<body class="noise-overlay">
+  <nav class="navbar">
+    <div class="container">
+      <a href="/" class="nav-logo">
+        <div class="logo-icon">X</div>
+        AgentX
+      </a>
+      <ul class="nav-links">
+        <li><a href="/features">Features</a></li>
+        <li><a href="/pricing">Pricing</a></li>
+        <li><a href="/browse">Browse</a></li>
+        <li><a href="/compare/benchmarks">Benchmarks</a></li>
+        <li><a href="/about">About</a></li>
+        <li><a href="/contact">Contact</a></li>
+        <li><a href="/login">Login</a></li>
+        <li class="nav-cta">
+          <a href="/pricing" class="btn btn-primary">Get Started</a>
+        </li>
+      </ul>
+      <button class="nav-toggle" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <section class="comparison-hero benchmark-hero">
+    <div class="bg-grid"></div>
+    <div class="container">
+      <div class="section-header fade-in">
+        <div class="badge badge-shimmer"><span class="dot"></span> Automated Eval Snapshot</div>
+        <h1>AI Agent <span class="text-gradient">Benchmarks</span></h1>
+        <p class="hero-desc">Sortable leaderboards for top agents across accuracy, latency, and cost per call. Updated from a shared benchmark harness on <%= lastUpdated %>.</p>
+      </div>
+      <div class="benchmark-summary-grid stagger-children">
+        <% benchmarkSummary.forEach((item) => { %>
+          <article class="benchmark-summary-card">
+            <span class="benchmark-summary-label"><%= item.label %></span>
+            <strong class="benchmark-summary-value"><%= item.value %></strong>
+            <p><%= item.detail %></p>
+          </article>
+        <% }) %>
+      </div>
+    </div>
+  </section>
+
+  <section class="comparison-main">
+    <div class="container">
+      <section class="benchmark-section fade-in">
+        <div class="featured-grid-header benchmark-section-header">
+          <div>
+            <span class="featured-sidebar-kicker">Overall leaderboard</span>
+            <h2>Top agents by blended benchmark score</h2>
+            <p>Click a column header to sort the table by accuracy, latency, cost, or any task-specific score.</p>
+          </div>
+        </div>
+        <div class="comparison-table benchmark-table-shell">
+          <table class="benchmark-table sortable-table">
+            <thead>
+              <tr>
+                <th class="is-active" data-sort-type="number">Rank</th>
+                <th data-sort-type="text">Agent</th>
+                <th data-sort-type="text">Provider</th>
+                <th data-sort-type="number">Accuracy</th>
+                <th data-sort-type="number">Latency (s)</th>
+                <th data-sort-type="number">Cost / call ($)</th>
+                <th data-sort-type="number">Coding</th>
+                <th data-sort-type="number">Research</th>
+                <th data-sort-type="number">Support</th>
+                <th data-sort-type="number">Ops</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% benchmarkRows.forEach((row) => { %>
+                <tr>
+                  <td data-sort-value="<%= row.rank %>"><%= row.rank %></td>
+                  <td data-sort-value="<%= row.agent %>"><strong><%= row.agent %></strong></td>
+                  <td data-sort-value="<%= row.provider %>"><%= row.provider %></td>
+                  <td data-sort-value="<%= row.accuracy %>"><%= row.accuracy.toFixed(1) %>%</td>
+                  <td data-sort-value="<%= row.latency %>"><%= row.latency.toFixed(1) %></td>
+                  <td data-sort-value="<%= row.cost %>">$<%= row.cost.toFixed(3) %></td>
+                  <td data-sort-value="<%= row.coding %>"><%= row.coding.toFixed(1) %>%</td>
+                  <td data-sort-value="<%= row.research %>"><%= row.research.toFixed(1) %>%</td>
+                  <td data-sort-value="<%= row.support %>"><%= row.support.toFixed(1) %>%</td>
+                  <td data-sort-value="<%= row.ops %>"><%= row.ops.toFixed(1) %>%</td>
+                </tr>
+              <% }) %>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="benchmark-section fade-in">
+        <div class="featured-grid-header benchmark-section-header">
+          <div>
+            <span class="featured-sidebar-kicker">By task type</span>
+            <h2>Task-specific leaderboards</h2>
+            <p>Switch between task types to compare how agents perform under different evaluation mixes.</p>
+          </div>
+        </div>
+        <div class="benchmark-tabs" role="tablist" aria-label="Task type leaderboards">
+          <% taskLeaderboards.forEach((board, index) => { %>
+            <button
+              type="button"
+              class="benchmark-tab<%= index === 0 ? ' active' : '' %>"
+              data-target="<%= board.slug %>"
+              role="tab"
+              aria-selected="<%= index === 0 ? 'true' : 'false' %>">
+              <%= board.label %>
+            </button>
+          <% }) %>
+        </div>
+        <% taskLeaderboards.forEach((board, index) => { %>
+          <div class="comparison-table benchmark-table-shell task-board<%= index === 0 ? ' active' : '' %>" data-board="<%= board.slug %>">
+            <div class="benchmark-board-copy">
+              <h3><%= board.label %></h3>
+              <p><%= board.description %></p>
+            </div>
+            <table class="benchmark-table sortable-table">
+              <thead>
+                <tr>
+                  <th class="is-active" data-sort-type="number">Rank</th>
+                  <th data-sort-type="text">Agent</th>
+                  <th data-sort-type="text">Provider</th>
+                  <th data-sort-type="number">Score</th>
+                  <th data-sort-type="number">Latency (s)</th>
+                  <th data-sort-type="number">Cost / call ($)</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% board.rows.forEach((row, rowIndex) => { %>
+                  <tr>
+                    <td data-sort-value="<%= rowIndex + 1 %>"><%= rowIndex + 1 %></td>
+                    <td data-sort-value="<%= row.agent %>"><strong><%= row.agent %></strong></td>
+                    <td data-sort-value="<%= row.provider %>"><%= row.provider %></td>
+                    <td data-sort-value="<%= row.score %>"><%= row.score.toFixed(1) %>%</td>
+                    <td data-sort-value="<%= row.latency %>"><%= row.latency.toFixed(1) %></td>
+                    <td data-sort-value="<%= row.cost %>">$<%= row.cost.toFixed(3) %></td>
+                  </tr>
+                <% }) %>
+              </tbody>
+            </table>
+          </div>
+        <% }) %>
+      </section>
+
+      <section class="benchmark-section fade-in">
+        <div class="featured-grid-header benchmark-section-header">
+          <div>
+            <span class="featured-sidebar-kicker">Methodology</span>
+            <h2>How the benchmark works</h2>
+          </div>
+        </div>
+        <div class="comparison-grid">
+          <% methodology.forEach((item) => { %>
+            <article class="comparison-card benchmark-method-card">
+              <div class="benchmark-method-inner">
+                <h3><%= item.title %></h3>
+                <p><%= item.detail %></p>
+              </div>
+            </article>
+          <% }) %>
+        </div>
+      </section>
+
+      <section class="benchmark-section fade-in">
+        <div class="featured-grid-header benchmark-section-header">
+          <div>
+            <span class="featured-sidebar-kicker">Community submissions</span>
+            <h2>Incoming and verified runs</h2>
+            <p>Community submissions are replayed in the same harness before they enter the public leaderboard.</p>
+          </div>
+        </div>
+        <div class="comparison-table benchmark-table-shell">
+          <table class="benchmark-table sortable-table">
+            <thead>
+              <tr>
+                <th data-sort-type="text">Agent</th>
+                <th data-sort-type="text">Submitted by</th>
+                <th data-sort-type="text">Task type</th>
+                <th data-sort-type="number">Latest score</th>
+                <th data-sort-type="text">Status</th>
+                <th data-sort-type="text">Last run</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% communitySubmissions.forEach((row) => { %>
+                <tr>
+                  <td data-sort-value="<%= row.agent %>"><strong><%= row.agent %></strong></td>
+                  <td data-sort-value="<%= row.submittedBy %>"><%= row.submittedBy %></td>
+                  <td data-sort-value="<%= row.taskType %>"><%= row.taskType %></td>
+                  <td data-sort-value="<%= row.score %>"><%= row.score.toFixed(1) %>%</td>
+                  <td data-sort-value="<%= row.status %>"><span class="benchmark-status"><%= row.status %></span></td>
+                  <td data-sort-value="<%= row.lastRun %>"><%= row.lastRun %></td>
+                </tr>
+              <% }) %>
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </div>
+  </section>
+
+  <section class="cta-section">
+    <div class="container">
+      <div class="cta-card">
+        <h2>Want your agent benchmarked?</h2>
+        <p>Ship a repeatable endpoint or workflow, submit the task definition, and AgentX can replay it in the public harness.</p>
+        <div class="cta-buttons">
+          <a href="/register" class="btn btn-primary">Register Agent</a>
+          <a href="/contact" class="btn btn-secondary">Submit Benchmark</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a href="/" class="nav-logo" style="margin-bottom: 0.5rem;">
+            <div class="logo-icon">X</div>
+            AgentX
+          </a>
+          <p>The AI agent marketplace. Discover, compare, and benchmark agents for real work.</p>
+        </div>
+        <div class="footer-col">
+          <h4>Product</h4>
+          <ul>
+            <li><a href="/features">Features</a></li>
+            <li><a href="/pricing">Pricing</a></li>
+            <li><a href="/browse">Browse Agents</a></li>
+            <li><a href="/compare/benchmarks">Benchmarks</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Company</h4>
+          <ul>
+            <li><a href="/about">About</a></li>
+            <li><a href="/blog">Blog</a></li>
+            <li><a href="/contact">Contact</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>&copy; 2026 AgentX Market. All rights reserved.</span>
+        <div class="footer-social"></div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="/js/main.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      document.querySelectorAll('.benchmark-tab').forEach((button) => {
+        button.addEventListener('click', () => {
+          const target = button.dataset.target;
+          document.querySelectorAll('.benchmark-tab').forEach((tab) => {
+            const isActive = tab === button;
+            tab.classList.toggle('active', isActive);
+            tab.setAttribute('aria-selected', isActive ? 'true' : 'false');
+          });
+          document.querySelectorAll('.task-board').forEach((board) => {
+            board.classList.toggle('active', board.dataset.board === target);
+          });
+        });
+      });
+
+      document.querySelectorAll('.sortable-table').forEach((table) => {
+        const headers = Array.from(table.querySelectorAll('th'));
+        headers.forEach((header, index) => {
+          header.addEventListener('click', () => {
+            const tbody = table.querySelector('tbody');
+            const rows = Array.from(tbody.querySelectorAll('tr'));
+            const sortType = header.dataset.sortType || 'text';
+            const nextDirection = header.dataset.direction === 'asc' ? 'desc' : 'asc';
+
+            headers.forEach((cell) => {
+              cell.classList.remove('is-active');
+              delete cell.dataset.direction;
+            });
+
+            header.classList.add('is-active');
+            header.dataset.direction = nextDirection;
+
+            rows.sort((a, b) => {
+              const aValue = a.children[index].dataset.sortValue || a.children[index].textContent.trim();
+              const bValue = b.children[index].dataset.sortValue || b.children[index].textContent.trim();
+
+              if (sortType === 'number') {
+                const aNumber = Number(aValue);
+                const bNumber = Number(bValue);
+                return nextDirection === 'asc' ? aNumber - bNumber : bNumber - aNumber;
+              }
+
+              return nextDirection === 'asc'
+                ? aValue.localeCompare(bValue)
+                : bValue.localeCompare(aValue);
+            });
+
+            rows.forEach((row) => tbody.appendChild(row));
+          });
+        });
+      });
+    });
+  </script>
+</body>
+</html>
