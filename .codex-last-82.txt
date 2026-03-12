@@ -1,8 +1,19 @@
-Implemented the `/browse` guest lead-capture pass without touching the protected dirty paths. The banner remains logged-out-only, sticky at the bottom, dismissible, and tied to the existing `waitlist` insert path; I tightened it by moving the scroll threshold and source path into the banner markup so the client no longer hardcodes those values in [views/browse.ejs](/Users/marco/marco_web/views/browse.ejs) and [public/js/browse.js](/Users/marco/marco_web/public/js/browse.js).
+Implemented the narrow version of feature `#82`.
 
-Verified locally by:
-- loading `http://127.0.0.1:3000/browse` and confirming the guest banner shell renders with `data-scroll-threshold="0.5"` and `data-source-path="/browse"`
-- exercising the real browser scroll reveal path
-- posting to `POST /api/waitlist` with `sourcePath=/browse` and receiving `{"status":"ok","message":"Added to waitlist"}`
+On `/browse`, the sticky email capture bar now only exists for logged-out visitors, reveals after 50% page scroll, stays dismissible, and submits to the existing `/api/waitlist` flow that writes into `waitlist`. I also blocked the generic fallback newsletter bar from appearing on `/browse`, which would otherwise have shown for logged-in users and conflicted with the acceptance criteria.
 
-I restarted the local server and ran `bash ~/marco_web/backlog.sh complete 82 none codex`.
+Changed files:
+- [server.js](/Users/marco/marco_web/server.js)
+- [views/browse.ejs](/Users/marco/marco_web/views/browse.ejs)
+- [public/js/main.js](/Users/marco/marco_web/public/js/main.js)
+- [public/css/browse.css](/Users/marco/marco_web/public/css/browse.css)
+
+Verification:
+- `node --check server.js`
+- `node --check public/js/browse.js`
+- `node --check public/js/main.js`
+
+Backlog updated:
+- `bash ~/marco_web/backlog.sh complete 82 none codex`
+
+Residual risk: I did not run a browser smoke test, so the remaining validation is visual behavior on `/browse` at 50% scroll in a real session.
