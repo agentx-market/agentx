@@ -2,7 +2,7 @@ const { checkAllAgentsHealth } = require('../lib/health-monitor');
 
 /**
  * Cron job: Check all agent health endpoints
- * Called every 5 minutes
+ * Called every hour
  */
 async function runHealthMonitor() {
   try {
