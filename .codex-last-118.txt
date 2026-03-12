@@ -1,0 +1,7 @@
+Implemented feature `#118` with a narrow pass across the agent detail flow.
+
+Dynamic OG images now render per agent at [server.js](/Users/marco/marco_web/server.js) via [lib/agent-og-image.js](/Users/marco/marco_web/lib/agent-og-image.js) and share stats are centralized in [lib/agent-social.js](/Users/marco/marco_web/lib/agent-social.js). The agent page metadata in [views/agent-detail.ejs](/Users/marco/marco_web/views/agent-detail.ejs) now points `og:image` and `twitter:image` at the generated image, includes alt text, and uses a hash-based `?v=` cache-buster tied to live stats and update timestamps.
+
+The detail page also has a `Tweet this agent` button in [views/agent-detail.ejs](/Users/marco/marco_web/views/agent-detail.ejs) that pre-fills X/Twitter with API calls, uptime, and rating when available. Social attribution is tracked through page views, share clicks, CTA clicks, and contact-form conversions using the extended `analytics_events` schema in [db.js](/Users/marco/marco_web/db.js); the static contact page now preserves and submits `utm_*`, `agentSlug`, and intent fields from query params in [public/contact.html](/Users/marco/marco_web/public/contact.html).
+
+Verified with `node --check server.js`, direct OG image generation in Node, `curl` against `http://127.0.0.1:3000/og/agents/marco.png`, page HTML checks for OG/Twitter tags, and a live POST smoke test to `/api/analytics/agent-event` returning `204` and writing attribution data.

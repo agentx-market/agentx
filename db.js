@@ -431,6 +431,20 @@ function runMigrations() {
 // Run migrations on startup
 runMigrations();
 
+try {
+  if (db.prepare("SELECT name FROM sqlite_master WHERE type = 'table' AND name = 'analytics_events'").get()) {
+    ensureTableColumns('analytics_events', [
+      ['attribution_source', 'TEXT'],
+      ['attribution_medium', 'TEXT'],
+      ['attribution_campaign', 'TEXT'],
+      ['attribution_content', 'TEXT'],
+      ['metadata', 'TEXT'],
+    ]);
+  }
+} catch (err) {
+  console.log('[db] Analytics events attribution columns may already exist:', err.message);
+}
+
 // ============ Query Helpers ============
 module.exports = {
   // Low-level database access (singleton connection)
