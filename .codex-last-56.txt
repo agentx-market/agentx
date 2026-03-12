@@ -1,19 +1,7 @@
-Implemented the public submit flow for feature `#56`.
+Implemented feature `#56` as a narrow public submission flow.
 
-The shipped path is the static page at [public/submit.html](/Users/marco/marco_web/public/submit.html). It now exposes the requested public form fields, loads category options from `GET /api/categories?mode=all`, and shows one of two outcomes after submit: queued for review or auto-approved.
+`/submit` now serves a direct form from [views/submit.ejs](/Users/marco/marco_web/views/submit.ejs) with the required fields: agent name, URL/endpoint, description, category, pricing model, logo URL, and contact email. I removed the static shadow file [public/submit.html](/Users/marco/marco_web/public/submit.html) so the real route in [server.js](/Users/marco/marco_web/server.js) is reachable.
 
-Backend behavior lives in [server.js](/Users/marco/marco_web/server.js). `POST /api/submit-agent` now:
-- validates `agentName`, `endpointUrl`, `description`, `category`, `pricingModel`, `logoUrl`, and `contactEmail`
-- writes every submission into a pending review queue in [migrations/068_agent_submissions.sql](/Users/marco/marco_web/migrations/068_agent_submissions.sql)
-- auto-approves only when the submitted endpoint returns HTTP `200`
-- creates the community listing and category join on auto-approval
-- sends a confirmation email for both the approved and pending paths
+The backend in [server.js](/Users/marco/marco_web/server.js) now uses that payload to insert into `agent_submissions`, treat the submitted endpoint as the first-pass health check URL, auto-approve only on HTTP `200`, create a community listing plus category join when approved, and send the confirmation email for either outcome. I also hardened [db.js](/Users/marco/marco_web/db.js) so older databases have the `agents.community_listing` and `agents.claim_url` columns that the auto-approval path depends on.
 
-Verified locally with:
-- `node --check server.js`
-- `curl http://127.0.0.1:3000/submit`
-- live submit test against `http://127.0.0.1:3000/health` returning `201` with `autoApproved: true`
-- pending submit test against a `404` endpoint returning `202` with `autoApproved: false`
-- confirmation emails were actually sent in both cases
-
-Bookkeeping is done too: backlog item `56` was marked complete.
+Verified with `node --check server.js`, `curl http://127.0.0.1:3000/submit`, and a POST to `/api/submit-agent` against `http://127.0.0.1:3000/health`, which returned an approved submission and listing URL. I cleaned up the smoke-test row afterward and ran `bash ~/marco_web/backlog.sh complete 56 none codex`.

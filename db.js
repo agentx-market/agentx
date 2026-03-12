@@ -282,6 +282,8 @@ try {
   ensureTableColumns('agents', [
     ['featured_requested_at', 'INTEGER'],
     ['submission_priority', "TEXT DEFAULT 'normal'"],
+    ['community_listing', 'INTEGER NOT NULL DEFAULT 0'],
+    ['claim_url', 'TEXT'],
     ['verification_badge_status', "TEXT DEFAULT 'none'"],
     ['verification_badge_reason', 'TEXT'],
     ['verification_badge_approved_at', 'INTEGER'],
