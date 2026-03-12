@@ -1,10 +1,5 @@
-Implemented the missing deployment-safe piece for feature `#56` in [db.js](/Users/marco/marco_web/db.js): the app now bootstraps the `agent_submissions` review queue table and its indexes on startup, so the existing `/submit` page and `/api/submit-agent` flow work on fresh environments instead of depending on migration `068` having been run manually.
+The `/submit` feature path was already present in the repo: public page, queue insert, auto-approval on HTTP `200`, and confirmation email logic are in [server.js](/Users/marco/marco_web/server.js) and [submit.ejs](/Users/marco/marco_web/views/submit.ejs). I kept the pass narrow and added end-to-end verification by replacing the outdated submission smoke test in [smoke-agent-submission.js](/Users/marco/marco_web/scripts/smoke-agent-submission.js).
 
-Verified:
-- `node --check server.js` passed.
-- `GET /submit` returned `200`.
-- End-to-end smoke submission against `POST /api/submit-agent` returned an auto-approved response when the temporary health endpoint returned `200`, created the queue row, and linked the created agent. I cleaned up the smoke records afterward.
+Verification passed with `node scripts/smoke-agent-submission.js`. It now checks `/submit` loads, an HTTP `200` submission is auto-approved into `agents`, and an HTTP `503` submission stays pending in `agent_submissions`. I also ran `bash ~/marco_web/backlog.sh complete 56 none codex`.
 
-Recorded completion with `bash ~/marco_web/backlog.sh complete 56 none codex`.
-
-Residual note: `db.js` already has pre-existing SQLite compatibility warnings around `ALTER TABLE ... ADD COLUMN IF NOT EXISTS`; I did not change that because it’s outside this feature and did not block the submit flow.
+Note: [server.js](/Users/marco/marco_web/server.js) was already dirty before this task; I did not edit it.

@@ -1,51 +1,19 @@
 #!/usr/bin/env node
 
 const http = require('http');
-const crypto = require('crypto');
-const { execFileSync } = require('child_process');
 const db = require('../db');
 
 const BASE_URL = process.env.SMOKE_BASE_URL || 'http://127.0.0.1:3000';
 const now = Date.now();
-const operatorId = `github-smoke-agent-submission-${now}`;
-const agentName = `Smoke Agent ${now}`;
+const approvedAgentName = `Smoke Submit Approved ${now}`;
+const pendingAgentName = `Smoke Submit Pending ${now}`;
+const approvedEmail = `smoke-approved-${now}@agentx.market`;
+const pendingEmail = `smoke-pending-${now}@agentx.market`;
 
 function assert(condition, message) {
   if (!condition) {
     throw new Error(message);
   }
-}
-
-function getSessionSecret() {
-  if (process.env.SESSION_SECRET) {
-    return process.env.SESSION_SECRET;
-  }
-
-  try {
-    const pid = execFileSync('pgrep', ['-f', 'node.*server.js'], { encoding: 'utf8' })
-      .trim()
-      .split('\n')
-      .filter(Boolean)[0];
-    const processLine = execFileSync('ps', ['eww', '-p', pid], { encoding: 'utf8' });
-    const match = processLine.match(/SESSION_SECRET=([^\s]+)/);
-    if (match) {
-      return match[1];
-    }
-  } catch (error) {
-    // Fall through to the default used by the session middleware.
-  }
-
-  return 'dev-secret';
-}
-
-function createSessionCookie(operatorId) {
-  const issuedAt = Date.now();
-  const data = `${operatorId}:${issuedAt}`;
-  const signature = crypto
-    .createHmac('sha256', getSessionSecret())
-    .update(data)
-    .digest('hex');
-  return `session=${data}:${signature}`;
 }
 
 async function request(path, options = {}) {
@@ -60,113 +28,146 @@ async function request(path, options = {}) {
   return { response, payload };
 }
 
+function listen(server) {
+  return new Promise((resolve) => server.listen(0, '127.0.0.1', resolve));
+}
+
+function close(server) {
+  return new Promise((resolve) => server.close(resolve));
+}
+
 async function main() {
-  let healthServer;
-  let createdAgentId = null;
+  const category = db.prepare('SELECT name, slug FROM categories ORDER BY name LIMIT 1').get();
+  assert(category, 'No categories found; seed categories before running smoke:submission');
+
+  let approvedServer = null;
+  let pendingServer = null;
+  let approvedAgentId = null;
+  let approvedSubmissionId = null;
+  let pendingSubmissionId = null;
 
   try {
     const submitPage = await request('/submit');
     assert(submitPage.response.ok, '/submit did not load');
-    assert(typeof submitPage.payload === 'string' && submitPage.payload.includes('Submit Your Agent in 60 Seconds'), '/submit is missing the guided submission headline');
-    assert(typeof submitPage.payload === 'string' && submitPage.payload.includes('/auth/github?next=/submit'), '/submit is missing the GitHub submission CTA');
+    assert(typeof submitPage.payload === 'string' && submitPage.payload.includes('Submit your agent without touching the API.'), '/submit is missing the public submission headline');
+    assert(typeof submitPage.payload === 'string' && submitPage.payload.includes('name="contactEmail"'), '/submit is missing the contact email field');
+    assert(typeof submitPage.payload === 'string' && submitPage.payload.includes('name="pricingModel"'), '/submit is missing the pricing model field');
 
-    const oauthRedirect = await request('/auth/github?next=/register');
-    assert(oauthRedirect.response.status === 302, '/auth/github did not redirect');
-    const location = oauthRedirect.response.headers.get('location') || '';
-    assert(location.startsWith('https://github.com/login/oauth/authorize'), 'GitHub OAuth redirect is incorrect');
-    assert(location.includes(encodeURIComponent('http://127.0.0.1:3000/auth/github/callback')), 'GitHub OAuth callback is not based on the current host');
-
-    db.prepare(`
-      INSERT OR REPLACE INTO operators (id, github_id, email, name, github_username, github_account_created_at, created_at, updated_at)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-    `).run(
-      operatorId,
-      `${now}`,
-      'smoke@agentx.market',
-      'Smoke Operator',
-      'smoke-operator',
-      now - (60 * 24 * 60 * 60 * 1000),
-      now,
-      now
-    );
-    db.prepare(`
-      INSERT OR IGNORE INTO operator_limits (operator_id, github_username, github_account_created_at, agent_count, created_at, updated_at)
-      VALUES (?, ?, ?, 0, ?, ?)
-    `).run(operatorId, 'smoke-operator', now - (60 * 24 * 60 * 60 * 1000), now, now);
-
-    const sessionCookie = createSessionCookie(operatorId);
-
-    healthServer = http.createServer((req, res) => {
+    approvedServer = http.createServer((req, res) => {
       res.writeHead(200, { 'Content-Type': 'application/json' });
       res.end(JSON.stringify({ status: 'ok' }));
     });
-    await new Promise((resolve) => healthServer.listen(0, '127.0.0.1', resolve));
-    const { port } = healthServer.address();
-    const healthUrl = `http://127.0.0.1:${port}/health`;
+    await listen(approvedServer);
+    const approvedUrl = `http://127.0.0.1:${approvedServer.address().port}/health`;
 
-    const registration = await request('/api/agents', {
+    pendingServer = http.createServer((req, res) => {
+      res.writeHead(503, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ status: 'unavailable' }));
+    });
+    await listen(pendingServer);
+    const pendingUrl = `http://127.0.0.1:${pendingServer.address().port}/health`;
+
+    const approvedSubmission = await request('/api/submit-agent', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Cookie': sessionCookie,
-      },
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        name: agentName,
-        description: 'Smoke test operator-backed agent',
-        category: 'Monitoring',
-        endpoint_url: 'https://example.com/agent',
-        health_endpoint_url: healthUrl,
-        capabilities: ['smoke-test', 'health'],
+        agentName: approvedAgentName,
+        endpointUrl: approvedUrl,
+        description: 'Smoke test public submission that should auto-approve.',
+        category: category.slug,
+        pricingModel: 'free',
+        logoUrl: 'https://example.com/logo.png',
+        contactEmail: approvedEmail,
       }),
     });
 
-    assert(registration.response.status === 201, `Registration failed: ${JSON.stringify(registration.payload)}`);
-    createdAgentId = registration.payload.id;
-    assert(registration.payload.slug, 'Registration did not return a slug');
+    assert(approvedSubmission.response.status === 201, `Approved submission failed: ${JSON.stringify(approvedSubmission.payload)}`);
+    assert(approvedSubmission.payload.autoApproved === true, 'Approved submission was not auto-approved');
+    assert(approvedSubmission.payload.reviewStatus === 'approved', 'Approved submission review status is incorrect');
+    assert(typeof approvedSubmission.payload.listingUrl === 'string' && approvedSubmission.payload.listingUrl.startsWith('/agents/'), 'Approved submission did not return a listing URL');
 
-    const activation = await request(`/api/agents/${createdAgentId}/health-check`, {
+    approvedSubmissionId = approvedSubmission.payload.submissionId;
+    approvedAgentId = approvedSubmission.payload.agentId;
+    assert(approvedSubmissionId, 'Approved submission is missing submissionId');
+    assert(approvedAgentId, 'Approved submission is missing agentId');
+
+    const approvedQueueRow = db.prepare(`
+      SELECT id, review_status, auto_approved, health_check_status_code, agent_id
+      FROM agent_submissions
+      WHERE id = ?
+    `).get(approvedSubmissionId);
+    assert(approvedQueueRow, 'Approved submission did not persist to agent_submissions');
+    assert(approvedQueueRow.review_status === 'approved', 'Approved submission queue row has wrong review status');
+    assert(approvedQueueRow.auto_approved === 1, 'Approved submission queue row did not mark auto_approved');
+    assert(approvedQueueRow.health_check_status_code === 200, 'Approved submission did not store the 200 health check result');
+    assert(approvedQueueRow.agent_id === approvedAgentId, 'Approved submission queue row is missing the linked agent');
+
+    const approvedAgent = db.prepare(`
+      SELECT id, name, status, endpoint_url, health_endpoint_url, community_listing, health_status
+      FROM agents
+      WHERE id = ?
+    `).get(approvedAgentId);
+    assert(approvedAgent, 'Approved submission did not create an agent');
+    assert(approvedAgent.name === approvedAgentName, 'Approved agent name is incorrect');
+    assert(approvedAgent.status === 'active', 'Approved agent is not active');
+    assert(approvedAgent.endpoint_url === approvedUrl, 'Approved agent endpoint URL is incorrect');
+    assert(approvedAgent.health_endpoint_url === approvedUrl, 'Approved agent health endpoint URL is incorrect');
+    assert(approvedAgent.community_listing === 1, 'Approved agent is not marked as a community listing');
+    assert(approvedAgent.health_status === 'online', 'Approved agent health status is incorrect');
+
+    const pendingSubmission = await request('/api/submit-agent', {
       method: 'POST',
-      headers: {
-        'Cookie': sessionCookie,
-      },
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        agentName: pendingAgentName,
+        endpointUrl: pendingUrl,
+        description: 'Smoke test public submission that should stay pending.',
+        category: category.slug,
+        pricingModel: 'paid',
+        logoUrl: '',
+        contactEmail: pendingEmail,
+      }),
     });
-    assert(activation.response.ok, `Health check activation failed: ${JSON.stringify(activation.payload)}`);
 
-    const browse = await request(`/api/browse?mode=marketplace&search=${encodeURIComponent(agentName)}`);
-    assert(browse.response.ok, 'Browse API request failed');
-    const match = Array.isArray(browse.payload.agents)
-      ? browse.payload.agents.find((agent) => agent.name === agentName)
-      : null;
-    assert(match, 'Registered agent did not appear in marketplace browse results');
-    assert(Boolean(match.last_health_check), 'Browse result is missing the health badge signal');
+    assert(pendingSubmission.response.status === 202, `Pending submission failed: ${JSON.stringify(pendingSubmission.payload)}`);
+    assert(pendingSubmission.payload.autoApproved === false, 'Pending submission should not auto-approve');
+    assert(pendingSubmission.payload.reviewStatus === 'pending', 'Pending submission review status is incorrect');
+    assert(pendingSubmission.payload.agentId === null, 'Pending submission should not create an agent');
 
-    const dashboard = await request('/my-agents', {
-      headers: {
-        'Cookie': sessionCookie,
-      },
-    });
-    assert(dashboard.response.ok, '/my-agents did not load for the authenticated operator');
-    assert(typeof dashboard.payload === 'string' && dashboard.payload.includes(agentName), 'Operator dashboard is missing the newly registered agent');
+    pendingSubmissionId = pendingSubmission.payload.submissionId;
+    assert(pendingSubmissionId, 'Pending submission is missing submissionId');
 
-    const healthHistory = db.prepare(
-      'SELECT status, response_ms FROM agents_health_history WHERE agent_id = ? ORDER BY id DESC LIMIT 1'
-    ).get(createdAgentId);
-    assert(healthHistory && healthHistory.status !== 'offline', 'Health check did not persist a successful health history entry');
+    const pendingQueueRow = db.prepare(`
+      SELECT id, review_status, auto_approved, health_check_status_code, agent_id
+      FROM agent_submissions
+      WHERE id = ?
+    `).get(pendingSubmissionId);
+    assert(pendingQueueRow, 'Pending submission did not persist to agent_submissions');
+    assert(pendingQueueRow.review_status === 'pending', 'Pending submission queue row has wrong review status');
+    assert(pendingQueueRow.auto_approved === 0, 'Pending submission queue row incorrectly marked auto_approved');
+    assert(pendingQueueRow.health_check_status_code === 503, 'Pending submission did not store the failing health check result');
+    assert(pendingQueueRow.agent_id === null, 'Pending submission should not link an agent');
 
-    console.log(`Smoke submission passed for agent ${agentName} (${createdAgentId})`);
+    console.log(`Smoke submission passed for approved queue item ${approvedSubmissionId} and pending queue item ${pendingSubmissionId}`);
   } finally {
-    if (healthServer) {
-      await new Promise((resolve) => healthServer.close(resolve));
+    if (approvedServer) {
+      await close(approvedServer);
     }
+    if (pendingServer) {
+      await close(pendingServer);
+    }
+
     db.exec('PRAGMA foreign_keys = OFF');
-    if (createdAgentId) {
-      db.prepare('DELETE FROM api_keys WHERE agent_id = ?').run(createdAgentId);
-      db.prepare('DELETE FROM agents_health_history WHERE agent_id = ?').run(createdAgentId);
-      db.prepare('DELETE FROM agent_categories WHERE agent_id = ?').run(createdAgentId);
-      db.prepare('DELETE FROM agents WHERE id = ?').run(createdAgentId);
+    if (approvedAgentId) {
+      db.prepare('DELETE FROM agent_categories WHERE agent_id = ?').run(approvedAgentId);
+      db.prepare('DELETE FROM agents WHERE id = ?').run(approvedAgentId);
     }
-    db.prepare('DELETE FROM operator_limits WHERE operator_id = ?').run(operatorId);
-    db.prepare('DELETE FROM operators WHERE id = ?').run(operatorId);
+    if (approvedSubmissionId) {
+      db.prepare('DELETE FROM agent_submissions WHERE id = ?').run(approvedSubmissionId);
+    }
+    if (pendingSubmissionId) {
+      db.prepare('DELETE FROM agent_submissions WHERE id = ?').run(pendingSubmissionId);
+    }
     db.exec('PRAGMA foreign_keys = ON');
   }
 }
