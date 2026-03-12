@@ -1,0 +1,12 @@
+Implemented the weekly editorial featured rotation with the smallest viable end-to-end path.
+
+The backend now has a dedicated weekly schedule/history table in [067_agent_of_week.sql](/Users/marco/marco_web/migrations/067_agent_of_week.sql), rotation/impact logic in [agent-of-week.js](/Users/marco/marco_web/lib/agent-of-week.js), and a cron-style job in [agent-of-week-cron.js](/Users/marco/marco_web/jobs/agent-of-week-cron.js). In [server.js](/Users/marco/marco_web/server.js) I added:
+- `GET /api/featured-hero` for the homepage hero payload
+- `GET /admin/agent-of-week` for Paul/admin control
+- `POST /admin/agent-of-week/select` for weekly selection
+- `POST /admin/agent-of-week/emergency` for live emergency replacement
+- a 15-minute rotation timer plus startup activation
+
+The UI side is wired in [admin-agent-of-week.ejs](/Users/marco/marco_web/views/admin-agent-of-week.ejs), [main.js](/Users/marco/marco_web/public/js/main.js), and [index.html](/Users/marco/marco_web/public/index.html). The homepage hero now pulls the scheduled “Agent of the Week,” tracks `featured_impression` and `featured_click` with homepage attribution, and passes UTM parameters through to agent pages so existing `contact_conversion` tracking can attribute conversions back to the featured hero. The admin page shows current state, weekly selection, emergency override, and impact metrics including traffic spike, hero CTR, and conversions.
+
+Verification: `node --check server.js` passed, the server restarted cleanly, `GET /api/featured-hero` returns `200`, and unauthenticated `GET /admin/agent-of-week` redirects to `/auth/github` as expected. There is no active schedule yet, so the hero endpoint currently returns `{"hero":null}` until Paul saves the first weekly selection.

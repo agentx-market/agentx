@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Agent of the Week - AgentX</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <style>
+    .editorial-page { background: #0a0a1a; min-height: 100vh; }
+    .editorial-main { padding: 7rem 0 4rem; }
+    .editorial-shell { display: grid; gap: 1.25rem; }
+    .editorial-grid { display: grid; gap: 1.25rem; grid-template-columns: minmax(0, 1.15fr) minmax(320px, 0.85fr); }
+    .card-shell, .status-card, .metric-card, .schedule-table-wrap, .notice-card {
+      background: #121428;
+      border: 1px solid #2a2a4a;
+      border-radius: 16px;
+      padding: 1.35rem;
+    }
+    .card-shell h1, .card-shell h2, .status-card h2, .schedule-table-wrap h2 { margin-top: 0; color: #e0e0ff; }
+    .card-shell p, .status-card p, .metric-card p, .schedule-table-wrap p, label, td { color: #9ca3c9; }
+    .hero-agent {
+      display: flex;
+      justify-content: space-between;
+      gap: 1rem;
+      flex-wrap: wrap;
+      padding: 1rem;
+      border-radius: 14px;
+      background: linear-gradient(135deg, rgba(245, 158, 11, 0.15), rgba(59, 130, 246, 0.16));
+      border: 1px solid rgba(245, 158, 11, 0.28);
+    }
+    .hero-agent strong, .metric-value { color: #eef2ff; }
+    .hero-kicker, .pill {
+      display: inline-flex;
+      align-items: center;
+      border-radius: 999px;
+      padding: 0.35rem 0.75rem;
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+    .hero-kicker { background: rgba(255,255,255,0.08); color: #fff4cf; }
+    .pill { background: rgba(108, 92, 231, 0.15); color: #d6d0ff; }
+    .form-grid { display: grid; gap: 1rem; }
+    .field { display: grid; gap: 0.45rem; }
+    .field input, .field select, .field textarea {
+      width: 100%;
+      border-radius: 12px;
+      border: 1px solid #2a2a4a;
+      background: #0f1120;
+      color: #eef2ff;
+      padding: 0.85rem 0.95rem;
+    }
+    .field textarea { min-height: 96px; resize: vertical; }
+    .actions { display: flex; gap: 0.75rem; flex-wrap: wrap; align-items: center; }
+    .metrics-grid { display: grid; gap: 1rem; grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .metric-card { border-radius: 14px; }
+    .metric-label { display: block; color: #8f95b2; font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 0.35rem; }
+    .metric-value { display: block; font-size: 1.7rem; font-weight: 800; }
+    table { width: 100%; border-collapse: collapse; }
+    th, td { padding: 0.85rem 0.5rem; text-align: left; border-top: 1px solid #2a2a4a; }
+    th { color: #e0e0ff; font-size: 0.82rem; text-transform: uppercase; letter-spacing: 0.08em; }
+    .notice-card.success { border-color: rgba(0, 210, 106, 0.3); color: #d9ffea; }
+    .notice-card.error { border-color: rgba(255, 71, 87, 0.3); color: #ffd7dc; }
+    @media (max-width: 920px) {
+      .editorial-grid, .metrics-grid { grid-template-columns: 1fr; }
+      .editorial-main { padding-top: 6rem; }
+    }
+  </style>
+</head>
+<body class="editorial-page">
+  <nav class="navbar">
+    <div class="container">
+      <a href="/" class="nav-logo">
+        <div class="logo-icon">X</div>
+        AgentX
+      </a>
+      <ul class="nav-links">
+        <li><a href="/browse">Browse</a></li>
+        <li><a href="/admin/listings">Listings</a></li>
+        <li class="nav-cta"><a href="/admin/agent-of-week" class="btn btn-primary">Agent of the Week</a></li>
+      </ul>
+      <button class="nav-toggle" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <main class="editorial-main">
+    <div class="container">
+      <div class="editorial-shell">
+        <% if (actionState === 'saved') { %>
+          <div class="notice-card success">Weekly selection saved. The cron worker will keep the homepage hero aligned with this schedule.</div>
+        <% } %>
+        <% if (actionState === 'override') { %>
+          <div class="notice-card success">Emergency replacement is live now.</div>
+        <% } %>
+        <% if (errorState) { %>
+          <div class="notice-card error">Action failed: <%= errorState %>.</div>
+        <% } %>
+
+        <section class="card-shell">
+          <span class="pill">Editorial control for <%= operator.name || operator.email %></span>
+          <h1>Agent of the Week</h1>
+          <p>Pick one operator-backed agent per seven-day window, let the scheduled rotation promote it automatically, and keep an emergency override ready if the current hero needs to change immediately.</p>
+          <div class="hero-agent">
+            <div>
+              <span class="hero-kicker">Live homepage hero</span>
+              <% if (currentHero && currentHero.agent) { %>
+                <p><strong><%= currentHero.agent.name %></strong> is featured until <%= new Date(currentHero.weekEnd).toLocaleDateString() %>.</p>
+                <p><%= currentHero.emergencyOverride ? 'Emergency replacement active.' : 'Scheduled weekly selection active.' %></p>
+              <% } else { %>
+                <p><strong>No agent is scheduled for the current week.</strong></p>
+                <p>Create the first weekly slot below.</p>
+              <% } %>
+            </div>
+            <div>
+              <span class="pill">Week of <%= new Date(currentWeek.weekStart).toLocaleDateString() %></span>
+            </div>
+          </div>
+        </section>
+
+        <div class="editorial-grid">
+          <section class="card-shell">
+            <h2>Schedule weekly rotation</h2>
+            <form method="post" action="/admin/agent-of-week/select" class="form-grid">
+              <div class="field">
+                <label for="weekStart">Week start</label>
+                <select id="weekStart" name="weekStart">
+                  <option value="<%= currentWeek.weekStart %>" <%= Number(targetWeekStart) === Number(currentWeek.weekStart) ? 'selected' : '' %>>Current week</option>
+                  <option value="<%= currentWeek.weekStart + (7 * 24 * 60 * 60 * 1000) %>">Next week</option>
+                </select>
+              </div>
+              <div class="field">
+                <label for="agentId">Featured agent</label>
+                <select id="agentId" name="agentId" required>
+                  <% candidates.forEach((candidate) => { %>
+                    <option value="<%= candidate.id %>" <%= currentSchedule && Number(currentSchedule.selected_agent_id) === Number(candidate.id) ? 'selected' : '' %>>
+                      <%= candidate.name %> · <%= candidate.uptimePercent === null ? 'No uptime yet' : `${candidate.uptimePercent.toFixed(1)}% uptime` %>
+                    </option>
+                  <% }) %>
+                </select>
+              </div>
+              <div class="actions">
+                <button type="submit" class="btn btn-primary">Save weekly selection</button>
+              </div>
+            </form>
+          </section>
+
+          <section class="status-card">
+            <h2>Emergency replacement</h2>
+            <p>Override the current hero in real time. Selecting the originally scheduled agent clears the emergency flag while keeping the week intact.</p>
+            <% if (currentSchedule) { %>
+              <form method="post" action="/admin/agent-of-week/emergency" class="form-grid">
+                <input type="hidden" name="scheduleId" value="<%= currentSchedule.id %>">
+                <div class="field">
+                  <label for="replacementAgentId">Replacement agent</label>
+                  <select id="replacementAgentId" name="replacementAgentId" required>
+                    <% candidates.forEach((candidate) => { %>
+                      <option value="<%= candidate.id %>" <%= Number((currentSchedule.active_agent_id || currentSchedule.selected_agent_id)) === Number(candidate.id) ? 'selected' : '' %>>
+                        <%= candidate.name %>
+                      </option>
+                    <% }) %>
+                  </select>
+                </div>
+                <div class="field">
+                  <label for="emergencyNote">Reason</label>
+                  <textarea id="emergencyNote" name="emergencyNote" placeholder="Optional note for why the hero changed."><%= currentSchedule.emergency_note || '' %></textarea>
+                </div>
+                <div class="actions">
+                  <button type="submit" class="btn btn-secondary">Apply live override</button>
+                </div>
+              </form>
+            <% } else { %>
+              <p>No active week exists yet. Save a weekly selection first.</p>
+            <% } %>
+          </section>
+        </div>
+
+        <% if (impact) { %>
+          <section class="card-shell">
+            <h2>Impact metrics</h2>
+            <div class="metrics-grid">
+              <div class="metric-card">
+                <span class="metric-label">Traffic spike</span>
+                <span class="metric-value"><%= impact.trafficSpikePercent %>%</span>
+                <p><%= impact.pageViews %> page views this week vs <%= impact.baselinePageViews %> in the previous seven days.</p>
+              </div>
+              <div class="metric-card">
+                <span class="metric-label">Hero engagement</span>
+                <span class="metric-value"><%= impact.heroCtrPercent %>%</span>
+                <p><%= impact.heroClicks %> hero clicks from <%= impact.heroImpressions %> tracked impressions.</p>
+              </div>
+              <div class="metric-card">
+                <span class="metric-label">Conversions</span>
+                <span class="metric-value"><%= impact.conversions %></span>
+                <p><%= impact.conversionRatePercent %>% of hero clicks led to a contact conversion with attribution.</p>
+              </div>
+            </div>
+          </section>
+        <% } %>
+
+        <section class="schedule-table-wrap">
+          <h2>Recent schedule history</h2>
+          <p>Each row keeps the editorial pick, the live agent if an emergency override was used, and the resulting traffic delta.</p>
+          <table>
+            <thead>
+              <tr>
+                <th>Week</th>
+                <th>Selected</th>
+                <th>Live hero</th>
+                <th>Status</th>
+                <th>Traffic spike</th>
+                <th>Conversions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% schedule.forEach((item) => { %>
+                <tr>
+                  <td><%= new Date(item.week_start).toLocaleDateString() %></td>
+                  <td><%= item.selected_agent_name %></td>
+                  <td><%= item.active_agent_name || item.selected_agent_name %></td>
+                  <td><%= item.emergency_override ? 'override live' : item.status %></td>
+                  <td><%= item.impact ? `${item.impact.trafficSpikePercent}%` : '0%' %></td>
+                  <td><%= item.impact ? item.impact.conversions : 0 %></td>
+                </tr>
+              <% }) %>
+            </tbody>
+          </table>
+        </section>
+      </div>
+    </div>
+  </main>
+  <script src="/js/main.js"></script>
+</body>
+</html>
