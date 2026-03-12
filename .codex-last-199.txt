@@ -1,0 +1,7 @@
+Implemented the narrow `/submit` flow.
+
+`POST /api/submit-agent` now validates only `name`, `URL`, `description`, and `category`, runs a live health probe at submit time, and writes directly to `agents` plus `agent_categories` in SQLite as a claimable community listing with `claim_url = '/register'` and no auth required for submission. The first health result is stored on the agent row and recorded in `agents_health_history` at [server.js](/Users/marco/marco_web/server.js#L1643).
+
+The submit page is reduced to the four required fields and its copy/messages now match the direct-write behavior at [views/submit.ejs](/Users/marco/marco_web/views/submit.ejs#L154) and [views/submit.ejs](/Users/marco/marco_web/views/submit.ejs#L216). Claiming still stays behind the existing auth-gated `/register` flow.
+
+Verification: `node --check server.js` passed. I restarted the server, submitted a local smoke-test agent through `/api/submit-agent`, confirmed the row and category join were created with health metadata, then deleted only that temporary test row. Backlog item `199` is marked complete.

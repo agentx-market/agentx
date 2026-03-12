@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Submit an Agent - AgentX.Market</title>
-  <meta name="description" content="List your agent on AgentX without an API integration. Submit the basics, trigger an automated health check, and enter the review queue.">
+  <meta name="description" content="Submit an agent to AgentX with name, URL, description, and category. AgentX runs a health check and creates a claimable community listing.">
   <style>
     :root {
       --bg: #111827;
@@ -155,14 +155,14 @@
       <div class="card hero-main">
         <span class="eyebrow">Public Submission</span>
         <h1>Submit your agent without touching the API.</h1>
-        <p class="lede">Add the basics, we run a live check against the submitted endpoint, and the listing either goes live immediately or lands in the pending review queue.</p>
+        <p class="lede">Add the basics, we run a live health check against the submitted URL, and create a claimable community listing in one pass.</p>
       </div>
       <aside class="card hero-side">
         <h2>What happens next</h2>
         <ul>
-          <li>If the submitted endpoint returns HTTP 200, the listing is auto-approved.</li>
-          <li>If not, the submission stays in the pending review queue for manual review.</li>
-          <li>We email a confirmation either way so the submitter knows the outcome.</li>
+          <li>The submitted URL is checked live during submission.</li>
+          <li>The agent is written directly to the marketplace database as a claimable community listing.</li>
+          <li>Claiming still requires login through the existing register flow.</li>
         </ul>
         <p><a href="/register">Need full operator controls instead?</a></p>
       </aside>
@@ -193,23 +193,6 @@
                 <option value="<%= category.slug %>"><%= category.name %></option>
               <% }) %>
             </select>
-          </div>
-          <div class="field">
-            <label for="pricingModel">Pricing model</label>
-            <select id="pricingModel" name="pricingModel" required>
-              <option value="">Select pricing</option>
-              <option value="free">Free</option>
-              <option value="paid">Paid</option>
-              <option value="freemium">Freemium</option>
-            </select>
-          </div>
-          <div class="field">
-            <label for="logoUrl">Logo URL</label>
-            <input id="logoUrl" name="logoUrl" type="url" maxlength="500" placeholder="https://agent.example.com/logo.png">
-          </div>
-          <div class="field">
-            <label for="contactEmail">Contact email</label>
-            <input id="contactEmail" name="contactEmail" type="email" maxlength="254" required placeholder="operator@example.com">
           </div>
         </div>
         <div class="actions">
@@ -243,10 +226,7 @@
             agentName: form.agentName.value.trim(),
             endpointUrl: form.endpointUrl.value.trim(),
             description: form.description.value.trim(),
-            category: form.category.value,
-            pricingModel: form.pricingModel.value,
-            logoUrl: form.logoUrl.value.trim(),
-            contactEmail: form.contactEmail.value.trim()
+            category: form.category.value
           })
         });
 
@@ -255,11 +235,10 @@
           throw new Error(data.error || 'Submission failed');
         }
 
-        if (data.autoApproved && data.listingUrl) {
-          showMessage('success', `Approved. Your listing is live at ${data.listingUrl}. We also sent a confirmation email.`);
-        } else {
-          showMessage('success', `Submitted. Queue reference #${data.submissionId}. We sent a confirmation email and the listing is pending review.`);
-        }
+        const healthSummary = data.healthCheckPassed
+          ? `Health check passed at ${data.healthCheckUrl}.`
+          : `Health check did not pass${data.healthCheckUrl ? ` at ${data.healthCheckUrl}` : ''}.`;
+        showMessage('success', `Created. Your listing is live at ${data.listingUrl}. ${healthSummary} Claiming still requires login.`);
         form.reset();
       } catch (error) {
         showMessage('error', error.message || 'Submission failed');
