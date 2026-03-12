@@ -1,0 +1,7 @@
+Implemented feature `#90` with a narrow pass.
+
+Webhook delivery attempts are now stored in [`db.js`]/Users/marco/marco_web/db.js#L231 via a new `webhook_logs` table, and the active invoke path records `sent` or `failed` outcomes with response code, retry count, and timestamp in [`server.js`]/Users/marco/marco_web/server.js#L74 and [`server.js`]/Users/marco/marco_web/server.js#L763. The operator dashboard now loads the latest 25 rows and renders a compact delivery log table in [`server.js`]/Users/marco/marco_web/server.js#L1993 and [`views/dashboard.ejs`]/Users/marco/marco_web/views/dashboard.ejs#L245.
+
+Verification: `node --check server.js`, `node -e "require('./db')"` passed, the server was restarted, and `bash ~/marco_web/backlog.sh complete 90 none codex` was run.
+
+One limitation remains by design for this first pass: `retry_count` is stored and shown, but it stays `0` because there is no retry mechanism in the current delivery flow.

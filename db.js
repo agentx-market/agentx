@@ -226,6 +226,38 @@ try {
   console.log('[db] Agent health history table may already exist:', err.message);
 }
 
+try {
+  db.exec(`
+    CREATE TABLE IF NOT EXISTS webhook_logs (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      agent_id INTEGER NOT NULL,
+      operator_id TEXT NOT NULL,
+      status TEXT NOT NULL,
+      response_code INTEGER,
+      retry_count INTEGER NOT NULL DEFAULT 0,
+      error_message TEXT,
+      created_at INTEGER NOT NULL,
+      FOREIGN KEY (agent_id) REFERENCES agents(id) ON DELETE CASCADE,
+      FOREIGN KEY (operator_id) REFERENCES operators(id) ON DELETE CASCADE
+    )
+  `);
+  console.log('[db] Webhook logs table created');
+} catch (err) {
+  console.log('[db] Webhook logs table may already exist:', err.message);
+}
+
+try {
+  ensureTableColumns('webhook_logs', [
+    ['response_code', 'INTEGER'],
+    ['retry_count', 'INTEGER NOT NULL DEFAULT 0'],
+    ['error_message', 'TEXT'],
+  ]);
+  db.exec('CREATE INDEX IF NOT EXISTS idx_webhook_logs_operator_created_at ON webhook_logs(operator_id, created_at DESC)');
+  db.exec('CREATE INDEX IF NOT EXISTS idx_webhook_logs_agent_created_at ON webhook_logs(agent_id, created_at DESC)');
+} catch (err) {
+  console.log('[db] Webhook logs columns may already exist:', err.message);
+}
+
 // Add reliability_score column to agents table if needed
 try {
   db.exec(`ALTER TABLE agents ADD COLUMN IF NOT EXISTS reliability_score INTEGER DEFAULT 0`);
