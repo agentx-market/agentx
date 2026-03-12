@@ -1,0 +1,7 @@
+Implemented feature `#107` with a narrow pass.
+
+The backend now has `POST /api/featured/request` and `GET /api/featured/stats` in [server.js](/Users/marco/marco_web/server.js), backed by new featured helpers in [lib/featured-listings.js](/Users/marco/marco_web/lib/featured-listings.js) and a new `agents.featured_requested_at` column ensured in [db.js](/Users/marco/marco_web/db.js). Featured listings now rotate automatically in groups of 3, and browse impressions/clicks are tracked as `featured_impression` and `featured_click`.
+
+On the UI side, the browse page now renders a featured grid instead of the old sidebar in [views/browse.ejs](/Users/marco/marco_web/views/browse.ejs), with client tracking and rotation rendering in [public/js/browse.js](/Users/marco/marco_web/public/js/browse.js) and styling in [public/css/browse.css](/Users/marco/marco_web/public/css/browse.css). Operators can enable/disable featured placement from the dashboard in [views/dashboard.ejs](/Users/marco/marco_web/views/dashboard.ejs), and featured impression/click counts are shown in the analytics table there. The pricing comparison now includes a live featured-count badge in [public/pricing.html](/Users/marco/marco_web/public/pricing.html).
+
+Verified with `node --check server.js`, `node --check public/js/browse.js`, `node --check lib/featured-listings.js`, and confirmed the new DB column is present. I did not run a browser-based end-to-end smoke test.

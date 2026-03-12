@@ -179,7 +179,8 @@ try {
       response_time_ms INTEGER,
       uptime_percent REAL DEFAULT 0,
       featured INTEGER DEFAULT 0,
-      featured_until INTEGER
+      featured_until INTEGER,
+      featured_requested_at INTEGER
     )
   `);
   console.log('[db] Agents table created with all required fields');
@@ -203,6 +204,14 @@ try {
   console.log('[db] Added all missing columns to agents table');
 } catch (err) {
   console.log('[db] Agents table columns may already exist:', err.message);
+}
+
+try {
+  ensureTableColumns('agents', [
+    ['featured_requested_at', 'INTEGER'],
+  ]);
+} catch (err) {
+  console.log('[db] Featured request columns may already exist:', err.message);
 }
 
 // Create agent_health_history table for daily health snapshots
@@ -472,6 +481,7 @@ try {
       ['attribution_content', 'TEXT'],
       ['metadata', 'TEXT'],
     ]);
+    db.exec('CREATE INDEX IF NOT EXISTS idx_analytics_agent_event ON analytics_events(agent_id, event_type)');
   }
 } catch (err) {
   console.log('[db] Analytics events attribution columns may already exist:', err.message);
