@@ -1,10 +1,8 @@
-Implemented feature `#216` in [server.js](/Users/marco/marco_web/server.js).
+Implemented the badge feature in the existing route layer and tightened the public embed path.
 
-The badge endpoints now return an embeddable shields-style SVG that shows health status, uptime %, and last-check recency, and links back to the agent page. The new ticket URL form works at `/badge/:slug.svg`, and the existing `/badge/:slug` plus `/api/agents/:slug/badge` routes still work.
+The functional fix is in [server.js](/Users/marco/marco_web/server.js): the badge lookup now resolves agents by the real stored `slug` first, with a legacy fallback for older rows that never got a slug. That makes `/badge/:slug.svg` reliable for real agent slugs instead of only simple space-replaced names.
 
-Verified locally with:
-- `node --check server.js`
-- `curl http://127.0.0.1:3000/badge/litellm.svg`
-- `curl -I http://127.0.0.1:3000/badge/litellm.svg`
+I also updated the operator-facing examples in [views/docs.ejs](/Users/marco/marco_web/views/docs.ejs) and [public/getting-started.html](/Users/marco/marco_web/public/getting-started.html) to use the public badge URL and the correct linked Markdown form:
+`[![AgentX Status](https://agentx.market/badge/AGENT_SLUG.svg)](https://agentx.market/agents/AGENT_SLUG)`
 
-The response now includes `Content-Type: image/svg+xml`, `Cross-Origin-Resource-Policy: cross-origin`, and `Access-Control-Allow-Origin: *`, which is necessary for README embeds. The protected dirty paths were not edited. Backlog item `216` was marked complete.
+Verified with `node --check server.js`, restarted the app, and confirmed `http://127.0.0.1:3000/badge/marco.svg` returns SVG with status, uptime, last-check text, and the expected cache/CORS headers. Feature `#216` was marked complete via `backlog.sh`.
