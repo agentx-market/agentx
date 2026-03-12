@@ -209,9 +209,56 @@ try {
 try {
   ensureTableColumns('agents', [
     ['featured_requested_at', 'INTEGER'],
+    ['verification_badge_status', "TEXT DEFAULT 'none'"],
+    ['verification_badge_reason', 'TEXT'],
+    ['verification_badge_approved_at', 'INTEGER'],
   ]);
 } catch (err) {
   console.log('[db] Featured request columns may already exist:', err.message);
+}
+
+try {
+  db.exec(`
+    CREATE TABLE IF NOT EXISTS verification_requests (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      agent_id INTEGER,
+      agent_url TEXT NOT NULL,
+      agent_slug TEXT,
+      operator_email TEXT NOT NULL,
+      business_website TEXT NOT NULL,
+      use_case_description TEXT NOT NULL,
+      github_url TEXT,
+      production_url TEXT,
+      testimonials_url TEXT,
+      status TEXT NOT NULL DEFAULT 'pending',
+      rejection_reason TEXT,
+      reviewed_by TEXT,
+      reviewed_at INTEGER,
+      created_at INTEGER NOT NULL,
+      updated_at INTEGER NOT NULL,
+      FOREIGN KEY (agent_id) REFERENCES agents(id) ON DELETE SET NULL
+    )
+  `);
+  console.log('[db] Verification requests table created');
+} catch (err) {
+  console.log('[db] Verification requests table may already exist:', err.message);
+}
+
+try {
+  ensureTableColumns('verification_requests', [
+    ['agent_id', 'INTEGER'],
+    ['agent_slug', 'TEXT'],
+    ['github_url', 'TEXT'],
+    ['production_url', 'TEXT'],
+    ['testimonials_url', 'TEXT'],
+    ['status', "TEXT NOT NULL DEFAULT 'pending'"],
+    ['rejection_reason', 'TEXT'],
+    ['reviewed_by', 'TEXT'],
+    ['reviewed_at', 'INTEGER'],
+    ['updated_at', 'INTEGER'],
+  ]);
+} catch (err) {
+  console.log('[db] Verification request columns may already exist:', err.message);
 }
 
 // Create agent_health_history table for daily health snapshots

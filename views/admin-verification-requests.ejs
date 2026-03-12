@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Verification Requests - AgentX</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <style>
+    .admin-verify-page { background: #0a0a1a; min-height: 100vh; }
+    .admin-verify-main { padding: 7rem 0 4rem; }
+    .admin-verify-shell { display: grid; gap: 1.25rem; }
+    .admin-card, .request-card, .notice-card {
+      background: #121428;
+      border: 1px solid #2a2a4a;
+      border-radius: 18px;
+      padding: 1.4rem;
+      color: #e0e0ff;
+    }
+    .admin-card p, .request-card p, .request-card li { color: #9ca3c9; }
+    .request-meta, .request-links, .request-actions { display: flex; gap: 0.8rem; flex-wrap: wrap; }
+    .status-pill {
+      display: inline-flex;
+      align-items: center;
+      border-radius: 999px;
+      padding: 0.35rem 0.75rem;
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      font-weight: 700;
+    }
+    .status-pill.pending { background: rgba(251,191,36,0.16); color: #ffd978; }
+    .status-pill.approved { background: rgba(34,197,94,0.16); color: #89f0b2; }
+    .status-pill.rejected { background: rgba(248,113,113,0.16); color: #ffb2b2; }
+    .meta-chip, .request-links a {
+      display: inline-flex;
+      align-items: center;
+      border-radius: 999px;
+      padding: 0.35rem 0.75rem;
+      background: rgba(255,255,255,0.05);
+      color: #dbe4ff;
+      text-decoration: none;
+    }
+    .request-card h2 { margin: 0.6rem 0 0.4rem; color: #fff; }
+    .reason-box, textarea {
+      width: 100%;
+      border-radius: 14px;
+      border: 1px solid #34385f;
+      background: #0f1224;
+      color: #f8faff;
+      padding: 0.85rem 1rem;
+      font: inherit;
+    }
+    textarea { min-height: 110px; resize: vertical; }
+    .request-actions { margin-top: 1rem; align-items: flex-start; }
+    .reject-form { flex: 1 1 320px; display: grid; gap: 0.6rem; }
+    .approve-form { flex: 0 0 auto; }
+    .notice-card { color: #dbe4ff; }
+    @media (max-width: 720px) {
+      .admin-verify-main { padding-top: 6rem; }
+      .request-actions { flex-direction: column; }
+      .approve-form { width: 100%; }
+      .approve-form .btn { width: 100%; }
+    }
+  </style>
+</head>
+<body class="admin-verify-page">
+  <nav class="navbar">
+    <div class="container">
+      <a href="/" class="nav-logo">
+        <div class="logo-icon">X</div>
+        AgentX
+      </a>
+      <ul class="nav-links">
+        <li><a href="/browse">Browse</a></li>
+        <li><a href="/my-agents">Dashboard</a></li>
+        <li><a href="/admin/listings">Listings</a></li>
+        <li class="nav-cta"><a href="/admin/verification-requests" class="btn btn-primary">Verification Queue</a></li>
+      </ul>
+      <button class="nav-toggle" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <main class="admin-verify-main">
+    <div class="container">
+      <div class="admin-verify-shell">
+        <section class="admin-card">
+          <h1>Verification requests</h1>
+          <p>Manual queue for approving or rejecting public badge applications. Logged in as <strong><%= operator.email %></strong>.</p>
+        </section>
+
+        <% if (actionState === 'approved') { %>
+          <section class="notice-card">The verification request was approved and the approval email was sent.</section>
+        <% } %>
+
+        <% if (actionState === 'rejected') { %>
+          <section class="notice-card">The verification request was rejected and the rejection email was sent.</section>
+        <% } %>
+
+        <% if (!requests.length) { %>
+          <section class="request-card">
+            <h2>No verification requests</h2>
+            <p>The queue is empty.</p>
+          </section>
+        <% } %>
+
+        <% requests.forEach((request) => { %>
+          <section class="request-card">
+            <div class="request-meta">
+              <span class="status-pill <%= request.status %>"><%= request.status %></span>
+              <span class="meta-chip">Request #<%= request.id %></span>
+              <span class="meta-chip"><%= new Date(request.created_at).toLocaleString() %></span>
+              <% if (request.agent_name) { %>
+                <span class="meta-chip"><%= request.agent_name %></span>
+              <% } %>
+            </div>
+
+            <h2><%= request.agent_name || request.agent_slug || 'Unknown agent' %></h2>
+            <p><strong>Agent URL:</strong> <a href="<%= request.agent_url %>" target="_blank" rel="noopener noreferrer"><%= request.agent_url %></a></p>
+            <p><strong>Operator email:</strong> <%= request.operator_email %></p>
+            <p><strong>Business website:</strong> <a href="<%= request.business_website %>" target="_blank" rel="noopener noreferrer"><%= request.business_website %></a></p>
+            <p><strong>Use case:</strong> <%= request.use_case_description %></p>
+
+            <div class="request-links">
+              <% if (request.github_url) { %>
+                <a href="<%= request.github_url %>" target="_blank" rel="noopener noreferrer">GitHub evidence</a>
+              <% } %>
+              <% if (request.production_url) { %>
+                <a href="<%= request.production_url %>" target="_blank" rel="noopener noreferrer">Production evidence</a>
+              <% } %>
+              <% if (request.testimonials_url) { %>
+                <a href="<%= request.testimonials_url %>" target="_blank" rel="noopener noreferrer">Testimonials evidence</a>
+              <% } %>
+            </div>
+
+            <% if (request.status === 'rejected' && request.rejection_reason) { %>
+              <div class="reason-box" style="margin-top:1rem;"><strong>Rejection reason:</strong> <%= request.rejection_reason %></div>
+            <% } %>
+
+            <% if (request.status !== 'pending') { %>
+              <p style="margin-top:1rem;">Reviewed by <strong><%= request.reviewed_by || 'unknown' %></strong> on <strong><%= request.reviewed_at ? new Date(request.reviewed_at).toLocaleString() : 'unknown date' %></strong>.</p>
+            <% } %>
+
+            <% if (request.status === 'pending') { %>
+              <div class="request-actions">
+                <form method="post" action="/admin/verification-requests/<%= request.id %>/approve" class="approve-form">
+                  <button type="submit" class="btn btn-primary">Approve and grant badge</button>
+                </form>
+                <form method="post" action="/admin/verification-requests/<%= request.id %>/reject" class="reject-form">
+                  <label for="reason-<%= request.id %>">Rejection reason</label>
+                  <textarea id="reason-<%= request.id %>" name="reason" required placeholder="Explain why the verification badge is being rejected."></textarea>
+                  <button type="submit" class="btn btn-secondary">Reject and email reason</button>
+                </form>
+              </div>
+            <% } %>
+          </section>
+        <% }) %>
+      </div>
+    </div>
+  </main>
+
+  <script src="/js/main.js"></script>
+</body>
+</html>

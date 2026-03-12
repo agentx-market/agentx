@@ -1,0 +1,16 @@
+Implemented the verification badge flow end to end.
+
+Public flow is live at [server.js](/Users/marco/marco_web/server.js) and [verify-apply.ejs](/Users/marco/marco_web/views/verify-apply.ejs): `GET /verify/apply` renders the landing page, FAQ, progress tracker, and form; `POST /verify/apply` validates the listing URL and evidence links, stores the request in the new `verification_requests` table from [db.js](/Users/marco/marco_web/db.js), marks the agent as pending, and sends the confirmation email through the existing SendGrid helper in [email.js](/Users/marco/marco_web/email.js). I also added the homepage hero CTA in [index.html](/Users/marco/marco_web/public/index.html).
+
+Admin review is wired at `GET /admin/verification-requests` with approve/reject actions in [server.js](/Users/marco/marco_web/server.js) and the queue UI in [admin-verification-requests.ejs](/Users/marco/marco_web/views/admin-verification-requests.ejs). Approval grants the badge, updates operator verification, and sends an approval email; rejection stores the reason and sends the rejection email template. Admin access is gated by logged-in operator email via `VERIFICATION_ADMIN_EMAILS` or `VERIFICATION_ADMIN_EMAIL`, defaulting to `marco@agentx.market`.
+
+Approved badge rendering is now prominent on agent pages via [agent-detail.ejs](/Users/marco/marco_web/views/agent-detail.ejs) and the badge state is exposed from [agent-queries.js](/Users/marco/marco_web/lib/agent-queries.js).
+
+Verification:
+- `node --check /Users/marco/marco_web/server.js`
+- Restarted the app
+- Smoked `GET /verify/apply`
+- Smoked `POST /verify/apply` and confirmed a pending row was written to `agentx.db`
+- Confirmed `/admin/verification-requests` enforces auth with a redirect when unauthenticated
+
+`backlog.sh complete 96 none codex` was run successfully.

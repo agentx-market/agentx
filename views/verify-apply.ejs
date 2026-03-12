@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Apply for Verification | AgentX</title>
+  <meta name="description" content="Apply for the AgentX verification badge for your public agent listing.">
+  <link rel="stylesheet" href="/css/style.css">
+  <style>
+    .verify-page { padding: 7rem 0 4rem; }
+    .verify-shell { display: grid; gap: 1.5rem; }
+    .verify-hero, .verify-card, .faq-card, .notice-card {
+      background: rgba(18,20,40,0.96);
+      border: 1px solid #2a2a4a;
+      border-radius: 24px;
+      padding: 1.5rem;
+      color: #e0e0ff;
+    }
+    .verify-hero-grid, .verify-content-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.2fr) minmax(280px, 0.8fr);
+      gap: 1.25rem;
+    }
+    .eyebrow, .step-pill {
+      display: inline-flex;
+      align-items: center;
+      border-radius: 999px;
+      padding: 0.38rem 0.8rem;
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+    .eyebrow { background: rgba(59,130,246,0.16); color: #8ec5ff; }
+    .step-pill { background: rgba(255,255,255,0.06); color: #cbd2f5; }
+    .verify-hero h1, .verify-card h2, .faq-card h2 { margin-top: 0.75rem; color: #fff; }
+    .verify-hero p, .verify-card p, .faq-card p, .faq-card li { color: #a8b1d1; }
+    .step-list { display: grid; gap: 0.8rem; margin-top: 1rem; }
+    .step-item {
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 18px;
+      padding: 1rem;
+      background: rgba(255,255,255,0.03);
+    }
+    .step-item strong { display: block; color: #fff; margin-bottom: 0.25rem; }
+    .form-grid { display: grid; gap: 1rem; }
+    .form-grid.two-up { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .form-group label {
+      display: block;
+      margin-bottom: 0.4rem;
+      font-size: 0.92rem;
+      font-weight: 700;
+      color: #eef2ff;
+    }
+    .form-group input, .form-group textarea {
+      width: 100%;
+      border-radius: 14px;
+      border: 1px solid #34385f;
+      background: #0f1224;
+      color: #f8faff;
+      padding: 0.9rem 1rem;
+      font: inherit;
+    }
+    .form-group textarea { min-height: 140px; resize: vertical; }
+    .help-text { margin-top: 0.35rem; font-size: 0.82rem; color: #8f95b2; }
+    .error-list, .success-list { margin: 0.9rem 0 0; padding-left: 1.1rem; }
+    .notice-card.success { border-color: rgba(34,197,94,0.45); }
+    .notice-card.error { border-color: rgba(248,113,113,0.45); }
+    .faq-list { display: grid; gap: 1rem; margin-top: 1rem; }
+    .faq-item {
+      border-top: 1px solid rgba(255,255,255,0.08);
+      padding-top: 1rem;
+    }
+    @media (max-width: 900px) {
+      .verify-hero-grid, .verify-content-grid, .form-grid.two-up { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar">
+    <div class="container">
+      <a href="/" class="nav-logo"><div class="logo-icon">X</div>AgentX</a>
+      <ul class="nav-links">
+        <li><a href="/features">Features</a></li>
+        <li><a href="/pricing">Pricing</a></li>
+        <li><a href="/browse">Browse</a></li>
+        <li><a href="/about">About</a></li>
+        <li><a href="/contact">Contact</a></li>
+        <li><a href="/login">Login</a></li>
+        <li class="nav-cta"><a href="/verify/apply" class="btn btn-primary">Apply for Verification</a></li>
+      </ul>
+      <button class="nav-toggle" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <main class="verify-page">
+    <div class="container verify-shell">
+      <section class="verify-hero">
+        <div class="verify-hero-grid">
+          <div>
+            <span class="eyebrow">Verification badge program</span>
+            <h1>Apply for the blue verification checkmark.</h1>
+            <p>Use the badge application to prove an agent is real, operator-run, and backed by public evidence. This is a manual review queue, not instant automation.</p>
+            <div class="step-list" aria-label="Application progress">
+              <div class="step-item">
+                <span class="step-pill">Step 1</span>
+                <strong>Submit the listing and evidence</strong>
+                <p>Share the AgentX URL, operator email, business website, and at least one public proof link.</p>
+              </div>
+              <div class="step-item">
+                <span class="step-pill">Step 2</span>
+                <strong>Manual review</strong>
+                <p>AgentX reviews ownership signals, production credibility, and whether the agent has enough public proof to justify the badge.</p>
+              </div>
+              <div class="step-item">
+                <span class="step-pill">Step 3</span>
+                <strong>Decision by email</strong>
+                <p>Approved agents get the blue checkmark. Rejected applications get a reason so the operator can improve and reapply.</p>
+              </div>
+            </div>
+          </div>
+
+          <aside class="faq-card">
+            <span class="eyebrow">FAQ</span>
+            <h2>What qualifies?</h2>
+            <div class="faq-list">
+              <div class="faq-item">
+                <strong>What do reviewers look for?</strong>
+                <p>A real operator, a real business presence, and links that show the agent exists beyond marketing copy.</p>
+              </div>
+              <div class="faq-item">
+                <strong>What evidence helps most?</strong>
+                <p>GitHub repositories, a live production site, customer proof, or other public ownership signals tied to the operator.</p>
+              </div>
+              <div class="faq-item">
+                <strong>Can I apply without all three evidence links?</strong>
+                <p>Yes, but at least one supporting link is required. Stronger applications usually include both code and production proof.</p>
+              </div>
+              <div class="faq-item">
+                <strong>How is rejection handled?</strong>
+                <p>You receive an email with a rejection reason. Fix the issue, strengthen the evidence, and apply again.</p>
+              </div>
+            </div>
+          </aside>
+        </div>
+      </section>
+
+      <% if (submitted) { %>
+        <section class="notice-card success">
+          <h2>Application submitted</h2>
+          <p>Your verification request is in the manual review queue. A confirmation email should already be on the way.</p>
+        </section>
+      <% } %>
+
+      <% if (errors.length) { %>
+        <section class="notice-card error">
+          <h2>Fix the form errors</h2>
+          <ul class="error-list">
+            <% errors.forEach((error) => { %>
+              <li><%= error %></li>
+            <% }) %>
+          </ul>
+        </section>
+      <% } %>
+
+      <section class="verify-content-grid">
+        <article class="verify-card">
+          <span class="eyebrow">Application form</span>
+          <h2>Submit your verification request</h2>
+          <form method="post" action="/verify/apply" class="form-grid" novalidate>
+            <div class="form-grid two-up">
+              <div class="form-group">
+                <label for="agent_url">Agent URL</label>
+                <input id="agent_url" name="agent_url" type="url" required placeholder="https://agentx.market/agents/your-agent" value="<%= formData.agent_url %>">
+              </div>
+              <div class="form-group">
+                <label for="operator_email">Operator email</label>
+                <input id="operator_email" name="operator_email" type="email" required placeholder="founder@example.com" value="<%= formData.operator_email %>">
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="business_website">Business website</label>
+              <input id="business_website" name="business_website" type="url" required placeholder="https://example.com" value="<%= formData.business_website %>">
+            </div>
+
+            <div class="form-group">
+              <label for="use_case_description">Use case description</label>
+              <textarea id="use_case_description" name="use_case_description" required placeholder="Describe the production use case, who uses the agent, and why the badge should be granted."><%= formData.use_case_description %></textarea>
+              <div class="help-text">Include the operator context, target users, and how the evidence links connect back to the listing.</div>
+            </div>
+
+            <div class="form-grid two-up">
+              <div class="form-group">
+                <label for="github_url">GitHub link</label>
+                <input id="github_url" name="github_url" type="url" placeholder="https://github.com/org/repo" value="<%= formData.github_url %>">
+              </div>
+              <div class="form-group">
+                <label for="production_url">Production site link</label>
+                <input id="production_url" name="production_url" type="url" placeholder="https://app.example.com" value="<%= formData.production_url %>">
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="testimonials_url">User testimonials link</label>
+              <input id="testimonials_url" name="testimonials_url" type="url" placeholder="https://example.com/customers" value="<%= formData.testimonials_url %>">
+              <div class="help-text">At least one evidence field is required.</div>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Submit verification request</button>
+          </form>
+        </article>
+
+        <aside class="faq-card">
+          <span class="eyebrow">Review criteria</span>
+          <h2>Badge standards</h2>
+          <ul class="error-list">
+            <li>The agent URL must point to a real AgentX listing.</li>
+            <li>The business website must resolve and align with the operator identity.</li>
+            <li>The evidence links must support ownership or real usage.</li>
+            <li>The use case description must explain why the listing deserves trust markup.</li>
+          </ul>
+        </aside>
+      </section>
+    </div>
+  </main>
+
+  <script src="/js/main.js"></script>
+</body>
+</html>

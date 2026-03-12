@@ -153,4 +153,81 @@ async function sendNotification(subject, body) {
   });
 }
 
-module.exports = { send, sendWelcome, sendNotification };
+async function sendVerificationApplicationReceived(emailAddress, payload) {
+  return send({
+    to: emailAddress,
+    subject: 'AgentX verification application received',
+    html: `
+      <h2>Verification request received</h2>
+      <p>We received your verification badge application for <a href="${payload.agentUrl}">${payload.agentUrl}</a>.</p>
+      <p>What happens next:</p>
+      <ol>
+        <li>We review your production presence and ownership signals.</li>
+        <li>We verify the submitted evidence links.</li>
+        <li>We approve the badge or send a rejection reason.</li>
+      </ol>
+      <p>Submitted business website: <a href="${payload.businessWebsite}">${payload.businessWebsite}</a></p>
+      <p>Review queue reference: #${payload.requestId}</p>
+    `,
+    text: [
+      'Verification request received',
+      '',
+      `We received your verification badge application for ${payload.agentUrl}.`,
+      `Business website: ${payload.businessWebsite}`,
+      `Review queue reference: #${payload.requestId}`,
+      '',
+      'We will manually review the submission and follow up by email.',
+    ].join('\n'),
+  });
+}
+
+async function sendVerificationApproved(emailAddress, payload) {
+  return send({
+    to: emailAddress,
+    subject: 'Your AgentX verification badge was approved',
+    html: `
+      <h2>Verification approved</h2>
+      <p>Your agent has been approved for the AgentX verification badge.</p>
+      <p><a href="${payload.agentUrl}">View your verified listing</a></p>
+      <p>The blue checkmark is now visible on the listing page and marketplace surfaces.</p>
+    `,
+    text: [
+      'Verification approved',
+      '',
+      'Your agent has been approved for the AgentX verification badge.',
+      `View your listing: ${payload.agentUrl}`,
+      '',
+      'The blue checkmark is now live.',
+    ].join('\n'),
+  });
+}
+
+async function sendVerificationRejected(emailAddress, payload) {
+  return send({
+    to: emailAddress,
+    subject: 'Update on your AgentX verification application',
+    html: `
+      <h2>Verification not approved</h2>
+      <p>We reviewed your verification application for <a href="${payload.agentUrl}">${payload.agentUrl}</a> and cannot approve it yet.</p>
+      <p><strong>Reason:</strong> ${payload.reason}</p>
+      <p>You can reapply after addressing the issue and strengthening the evidence links.</p>
+    `,
+    text: [
+      'Verification not approved',
+      '',
+      `We reviewed your verification application for ${payload.agentUrl} and cannot approve it yet.`,
+      `Reason: ${payload.reason}`,
+      '',
+      'You can reapply after addressing the issue and strengthening the evidence links.',
+    ].join('\n'),
+  });
+}
+
+module.exports = {
+  send,
+  sendWelcome,
+  sendNotification,
+  sendVerificationApplicationReceived,
+  sendVerificationApproved,
+  sendVerificationRejected,
+};
