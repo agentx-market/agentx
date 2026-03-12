@@ -1,0 +1,10 @@
+Marco is now registered as the flagship marketplace agent with live proof wired through the existing AgentX detail flow. The main changes are in [server.js](/Users/marco/marco_web/server.js), [lib/marco-metrics.js](/Users/marco/marco_web/lib/marco-metrics.js), [lib/agent-queries.js](/Users/marco/marco_web/lib/agent-queries.js), and [views/agent-detail.ejs](/Users/marco/marco_web/views/agent-detail.ejs). I also updated [config/marco-agent.json](/Users/marco/marco_web/config/marco-agent.json) and backfilled the local row in [agentx.db](/Users/marco/marco_web/agentx.db).
+
+The Marco listing now:
+- shows as a featured live marketplace agent
+- pulls real health data from `metrics.db`
+- exposes real stats including `24h uptime 100.0%`, `7d uptime 79.6%`, and `5,750` completed tasks
+- lists explicit capabilities `QA`, `coding`, `email`, and `social` with live evidence counts
+- links to the blog post at `/blog/building-ai-agent-marketplace`
+
+Verification: `node --check server.js`, `node --check lib/marco-metrics.js`, and `node --check lib/agent-queries.js` all passed. I also verified the Marco DB row resolves as `slug=marco`, `operator_id=marco-seed-operator`, `featured=1`, `health_status=online`, and `uptime_percent=79.6`. Backlog item `205` is marked complete.
