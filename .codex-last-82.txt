@@ -1,19 +1,5 @@
-Implemented the narrow version of feature `#82`.
+Feature `#82` is in place and closed.
 
-On `/browse`, the sticky email capture bar now only exists for logged-out visitors, reveals after 50% page scroll, stays dismissible, and submits to the existing `/api/waitlist` flow that writes into `waitlist`. I also blocked the generic fallback newsletter bar from appearing on `/browse`, which would otherwise have shown for logged-in users and conflicted with the acceptance criteria.
+The browse page already had the lead-capture implementation in the current worktree: logged-out users on `/browse` get a dismissible sticky bottom banner after 50% scroll, and submissions post to `/api/waitlist` with `sourcePath=/browse`. I made one narrow hardening edit in [views/browse.ejs](/Users/marco/marco_web/views/browse.ejs) to align the email field with server validation by adding `inputmode="email"`, `spellcheck="false"`, and `maxlength="254"`.
 
-Changed files:
-- [server.js](/Users/marco/marco_web/server.js)
-- [views/browse.ejs](/Users/marco/marco_web/views/browse.ejs)
-- [public/js/main.js](/Users/marco/marco_web/public/js/main.js)
-- [public/css/browse.css](/Users/marco/marco_web/public/css/browse.css)
-
-Verification:
-- `node --check server.js`
-- `node --check public/js/browse.js`
-- `node --check public/js/main.js`
-
-Backlog updated:
-- `bash ~/marco_web/backlog.sh complete 82 none codex`
-
-Residual risk: I did not run a browser smoke test, so the remaining validation is visual behavior on `/browse` at 50% scroll in a real session.
+Verification passed locally. `curl http://127.0.0.1:3000/browse` returned the banner markup, and a live `POST /api/waitlist` with a reserved `.invalid` test address returned `{"status":"ok","message":"Added to waitlist"}`; a follow-up DB check confirmed the row exists in `waitlist`. I also updated [memory/AGENT-MEMORY.md](/Users/marco/marco_web/memory/AGENT-MEMORY.md) and cleared the checkpoint.
