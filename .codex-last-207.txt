@@ -1,0 +1,7 @@
+Implemented feature #207.
+
+The welcome bonus now triggers only after an operator’s first agent passes the health check, and it sends `21` sats via `lw send` to the operator wallet. The old early-award paths were removed so OAuth signup no longer funds immediately, and agent registration no longer sends the bonus before health verification. The core changes are in [server.js](/Users/marco/marco_web/server.js), [lib/bonus-verification.js](/Users/marco/marco_web/lib/bonus-verification.js), [lib/lw-wallet.js](/Users/marco/marco_web/lib/lw-wallet.js), and [lib/oauth-handler.js](/Users/marco/marco_web/lib/oauth-handler.js).
+
+Abuse handling now matches the product rules in the bonus path: one bonus per OAuth account, GitHub age gate for GitHub operators, first healthy agent only, with existing registration rate/IP/free-tier checks left in place for signup flow. I also kept operator wallet provisioning, expanded to any OAuth provider if the wallet is missing.
+
+Verified with `node --check` on all touched JS files, restarted the app, and confirmed `GET http://127.0.0.1:3000/register` returned `200`. I also ran `bash ~/marco_web/backlog.sh complete 207 none codex`.
