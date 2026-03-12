@@ -155,6 +155,35 @@ try {
 
 try {
   db.exec(`
+    CREATE TABLE IF NOT EXISTS operator_alert_configs (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      operator_id TEXT NOT NULL UNIQUE,
+      downtime_email_enabled INTEGER NOT NULL DEFAULT 0,
+      alert_email TEXT,
+      created_at INTEGER NOT NULL,
+      updated_at INTEGER NOT NULL,
+      FOREIGN KEY (operator_id) REFERENCES operators(id) ON DELETE CASCADE
+    )
+  `);
+  db.exec('CREATE INDEX IF NOT EXISTS idx_operator_alert_configs_operator ON operator_alert_configs(operator_id)');
+  console.log('[db] Operator alert configs table created');
+} catch (err) {
+  console.log('[db] Operator alert configs table may already exist:', err.message);
+}
+
+try {
+  ensureTableColumns('operator_alert_configs', [
+    ['downtime_email_enabled', 'INTEGER NOT NULL DEFAULT 0'],
+    ['alert_email', 'TEXT'],
+    ['created_at', 'INTEGER'],
+    ['updated_at', 'INTEGER'],
+  ]);
+} catch (err) {
+  console.log('[db] Operator alert config columns may already exist:', err.message);
+}
+
+try {
+  db.exec(`
     CREATE TABLE IF NOT EXISTS operator_social_connections (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       operator_id TEXT NOT NULL,

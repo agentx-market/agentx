@@ -1,0 +1,5 @@
+Implemented a narrow first pass for feature `#224` in [server.js](/Users/marco/marco_web/server.js), [views/dashboard.ejs](/Users/marco/marco_web/views/dashboard.ejs), and [db.js](/Users/marco/marco_web/db.js).
+
+Operators on `/my-agents` now see each agent’s last-24h health history chart, a 24h uptime percentage, check count, and a persisted downtime email alert configuration form. Alert settings are stored in a new `operator_alert_configs` table and saved through an authenticated `POST /dashboard/alerts` route.
+
+Verification: `node --check server.js`, `node --check db.js`, and an `ejs.render(...)` compile check for `views/dashboard.ejs` all passed. I also ran `bash ~/marco_web/backlog.sh complete 224 none codex`.
