@@ -1,0 +1,8 @@
+Implemented feature `#112` with a shared live feed builder in [lib/agent-feed.js](/Users/marco/marco_web/lib/agent-feed.js), and wired routes in [server.js](/Users/marco/marco_web/server.js) for `GET /api/agents/feed`, `GET /agents/feed.json`, and `GET /agents/feed.xml`. The JSON feed returns the 50 most recent public listings, includes category tags and `dateModified`, and wraps each listing as schema.org `SoftwareApplication` inside a `DataFeed`. The RSS endpoint emits matching items for aggregators. I also added feed discovery links to [views/browse.ejs](/Users/marco/marco_web/views/browse.ejs).
+
+Verified locally:
+- `/api/agents/feed` returned `200` in `0.006737s`
+- `/agents/feed.json` returned `200` in `0.005452s` with `Content-Type: application/feed+json`
+- `/agents/feed.xml` returned `200` in `0.010147s` with `Content-Type: application/rss+xml`
+
+The feed is dynamic off the live `agents` + category join query, so new registrations appear automatically without extra sync work. Backlog item `112` is marked complete.
