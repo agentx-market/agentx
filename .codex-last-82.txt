@@ -1,9 +1,5 @@
-Implemented the narrow backend piece for feature `#82` in [server.js](/Users/marco/marco_web/server.js#L1393). The `/browse` banner flow already existed in the working tree; I kept that intact and patched `POST /api/waitlist` so duplicate banner submissions return success without re-sending welcome email, Telegram notifications, or signup outcome logs.
+The `/browse` lead-capture flow is in place and now reads as a subtler sticky bottom bar. I softened the banner styling in [public/css/browse.css](/Users/marco/marco_web/public/css/browse.css#L590) so the logged-out email capture feels like a bottom banner instead of a heavier popup treatment.
 
-Verified locally:
-- `node --check server.js` passed.
-- `curl http://127.0.0.1:3000/browse` includes the logged-out banner markup with `data-scroll-threshold="0.5"`.
-- Playwright confirmed the banner is hidden on load, becomes visible after scrolling past 50%, and dismiss sets `browseWaitlistBannerDismissed=1`.
-- `POST /api/waitlist` returns `Added to waitlist` on first submit and `Already on waitlist` on repeat submit for the same email.
+I verified the existing wiring is present end to end: the logged-out-only banner markup is in [views/browse.ejs](/Users/marco/marco_web/views/browse.ejs#L221), the 50% scroll reveal, dismiss, and submit behavior is in [public/js/browse.js](/Users/marco/marco_web/public/js/browse.js#L494), and submissions insert into the `waitlist` table via [server.js](/Users/marco/marco_web/server.js#L1393). I also confirmed the rendered `/browse` HTML includes the banner text, `data-scroll-threshold="0.5"`, and `/api/waitlist` target with `curl`.
 
-I also updated [memory/AGENT-MEMORY.md](/Users/marco/marco_web/memory/AGENT-MEMORY.md) and marked backlog item `#82` complete.
+Feature `82` has been marked complete with `bash ~/marco_web/backlog.sh complete 82 none codex`.
