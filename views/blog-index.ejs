@@ -3,30 +3,35 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Blog — AgentX</title>
-  <meta name="description" content="Latest articles about autonomous agents and AI infrastructure">
+  <title><%= selectedCategory === 'best-of' ? 'Best AI Agents 2026 and Top Agent Tools' : 'Blog' %> — AgentX</title>
+  <meta name="description" content="<%= selectedCategory === 'best-of' ? 'Compare the best AI agents 2026, top agent tools, and AI assistant rankings with hands-on AgentX guides.' : 'Latest articles about autonomous agents and AI infrastructure' %>">
+  <link rel="canonical" href="https://agentx.market/blog<%= selectedCategory ? `?category=${selectedCategory}` : '' %>">
+  <meta name="keywords" content="best AI agents 2026, top agent tools, AI assistant ranking, augmented reasoning agents, multi-agent tools">
 
   <!-- Favicon -->
   <link rel="icon" type="image/svg+xml" href="/img/favicon.svg">
 
-  <!-- JSON-LD SoftwareApplication Schema -->
+  <!-- JSON-LD Blog Schema -->
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
-    "@type": "SoftwareApplication",
-    "name": "AgentX Registry",
-    "description": "Latest articles about autonomous agents and AI infrastructure",
-    "applicationCategory": "AIApplication",
-    "operatingSystem": "Cloud",
-    "offers": {
-      "@type": "Offer",
-      "price": "0",
-      "priceCurrency": "USD"
-    },
+    "@type": "Blog",
+    "name": "AgentX Blog",
+    "description": "<%= selectedCategory === 'best-of' ? 'Best AI agents 2026 rankings and tool comparisons.' : 'Latest articles about autonomous agents and AI infrastructure.' %>",
+    "url": "https://agentx.market/blog",
     "author": {
       "@type": "Organization",
       "name": "AgentX"
-    }
+    },
+    "blogPost": [
+      <% posts.slice(0, 10).forEach((post, index) => { %>
+      {
+        "@type": "BlogPosting",
+        "headline": "<%- post.title.replace(/"/g, '&quot;') %>",
+        "url": "https://agentx.market/blog/<%= post.slug %>"
+      }<%= index < Math.min(posts.length, 10) - 1 ? ',' : '' %>
+      <% }); %>
+    ]
   }
   </script>
 
@@ -68,18 +73,29 @@
     <div class="bg-grid"></div>
     <div class="container relative z-1">
       <div class="badge fade-in">Blog</div>
-      <h1 class="fade-in fade-in-delay-1">Latest from <span class="text-gradient">AgentX</span></h1>
-      <p class="large fade-in fade-in-delay-2">Insights on autonomous agents, AI infrastructure, and the future of work.</p>
+      <h1 class="fade-in fade-in-delay-1"><%= selectedCategory === 'best-of' ? 'Top AI Agents of <span class="text-gradient">2026</span>' : 'Latest from <span class="text-gradient">AgentX</span>' %></h1>
+      <p class="large fade-in fade-in-delay-2"><%= selectedCategory === 'best-of' ? 'Best-of rankings, top agent tools, and AI assistant comparisons built for SEO and buyer intent.' : 'Insights on autonomous agents, AI infrastructure, and the future of work.' %></p>
     </div>
   </section>
 
   <!-- Blog Content -->
   <section class="blog-main">
     <div class="container">
+      <div class="blog-filter-bar">
+        <% categories.forEach(category => { %>
+        <a
+          class="blog-filter-chip <%= selectedCategory === category.value ? 'is-active' : '' %>"
+          href="/blog<%= category.value ? `?category=${category.value}` : '' %>"
+        ><%= category.label %></a>
+        <% }); %>
+      </div>
       <div class="blog-grid">
         <% posts.forEach(post => { %>
         <article class="blog-card fade-in">
           <div class="blog-card-header">
+            <% if (post.meta && post.meta.isBestOf) { %>
+            <span class="blog-card-tag">Best Of</span>
+            <% } %>
             <h2 class="blog-card-title">
               <a href="/blog/<%= post.slug %>"><%= post.title %></a>
             </h2>
@@ -94,6 +110,9 @@
         </article>
         <% }); %>
       </div>
+      <% if (posts.length === 0) { %>
+      <p class="blog-empty-state">No posts match this filter yet.</p>
+      <% } %>
     </div>
   </section>
 

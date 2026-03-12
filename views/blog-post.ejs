@@ -5,22 +5,62 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title><%= post.title %> — AgentX</title>
   <meta name="description" content="<%= post.description %>">
-  <link rel="canonical" href="https://agentx.market/blog/<%= post.slug %>">
+  <meta name="keywords" content="<%= (post.meta.keywords || []).join(', ') %>">
+  <link rel="canonical" href="<%= post.meta.canonicalUrl || `https://agentx.market/blog/${post.slug}` %>">
 
   <!-- Open Graph -->
   <meta property="og:type" content="article">
-  <meta property="og:url" content="https://agentx.market/blog/<%= post.slug %>">
+  <meta property="og:url" content="<%= post.meta.canonicalUrl || `https://agentx.market/blog/${post.slug}` %>">
   <meta property="og:title" content="<%= post.title %>">
   <meta property="og:description" content="<%= post.description %>">
   <meta property="og:site_name" content="AgentX">
   <meta property="og:image" content="https://agentx.market/img/og-image.png">
   <meta property="article:published_time" content="<%= post.date %>">
+  <% (post.meta.categories || []).forEach(category => { %>
+  <meta property="article:tag" content="<%= category %>">
+  <% }); %>
 
   <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:site" content="@agentxmarket">
   <meta name="twitter:title" content="<%= post.title %>">
   <meta name="twitter:description" content="<%= post.description %>">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "headline": "<%- post.title.replace(/"/g, '&quot;') %>",
+    "description": "<%- post.description.replace(/"/g, '&quot;') %>",
+    "datePublished": "<%= post.date %>",
+    "dateModified": "<%= post.date %>",
+    "author": {
+      "@type": "Organization",
+      "name": "AgentX"
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "AgentX",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://agentx.market/img/favicon.svg"
+      }
+    },
+    "mainEntityOfPage": "<%= post.meta.canonicalUrl || `https://agentx.market/blog/${post.slug}` %>",
+    "keywords": "<%= (post.meta.keywords || []).join(', ') %>"
+  }
+  </script>
+
+  <% if (post.meta.isBestOf) { %>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    "name": "<%- post.title.replace(/"/g, '&quot;') %>",
+    "itemListOrder": "https://schema.org/ItemListOrderDescending"
+  }
+  </script>
+  <% } %>
 
   <!-- Favicon -->
   <link rel="icon" type="image/svg+xml" href="/img/favicon.svg">
@@ -62,17 +102,48 @@
     <a href="/blog" class="blog-back">&larr; Back to blog</a>
 
     <div class="blog-post-header">
+      <% if (post.meta && post.meta.isBestOf) { %>
+      <span class="blog-card-tag">Best Of</span>
+      <% } %>
       <h1 class="blog-post-title"><%= post.title %></h1>
       <div class="blog-post-meta">
         <span class="blog-post-author">By <%= post.author %></span>
         <span>&middot;</span>
         <time datetime="<%= post.date %>"><%= post.date %></time>
+        <span>&middot;</span>
+        <span><%= post.meta.readTime %></span>
       </div>
+      <% if (post.meta.affiliate_disclosure) { %>
+      <p class="affiliate-disclosure"><%= post.meta.affiliate_disclosure %></p>
+      <% } %>
     </div>
 
     <article class="blog-post-content">
       <%- post.content %>
     </article>
+
+    <% if ((post.meta.keywords || []).length > 0) { %>
+    <section class="blog-keywords">
+      <% post.meta.keywords.forEach(keyword => { %>
+      <span class="blog-filter-chip"><%= keyword %></span>
+      <% }); %>
+    </section>
+    <% } %>
+
+    <% if (relatedPosts && relatedPosts.length > 0) { %>
+    <section class="related-posts">
+      <h2>Continue Reading</h2>
+      <div class="related-post-grid">
+        <% relatedPosts.forEach(relatedPost => { %>
+        <a class="related-post-card" href="/blog/<%= relatedPost.slug %>">
+          <span class="related-post-label"><%= relatedPost.meta.isBestOf ? 'Best Of' : 'Guide' %></span>
+          <strong><%= relatedPost.title %></strong>
+          <span><%= relatedPost.description %></span>
+        </a>
+        <% }); %>
+      </div>
+    </section>
+    <% } %>
   </div>
 
   <!-- CTA -->

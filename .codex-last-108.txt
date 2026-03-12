@@ -1,0 +1,7 @@
+Implemented feature `#108` on the existing blog system.
+
+The blog now supports a `best-of` category filter on `/blog`, richer post metadata in the markdown loader, markdown comparison tables, post-level SEO fields, `BlogPosting`/`ItemList` schema, affiliate disclosure blocks, and related/internal-link sections. The main template changes are in [routes/blog.js](/Users/marco/marco_web/routes/blog.js), [lib/markdown-renderer.js](/Users/marco/marco_web/lib/markdown-renderer.js), [views/blog-index.ejs](/Users/marco/marco_web/views/blog-index.ejs), [views/blog-post.ejs](/Users/marco/marco_web/views/blog-post.ejs), and [public/css/blog.css](/Users/marco/marco_web/public/css/blog.css).
+
+I added 10 new keyword-targeted posts under [public/blog](/Users/marco/marco_web/public/blog), including [top-50-ai-agents-2026.md](/Users/marco/marco_web/public/blog/top-50-ai-agents-2026.md), [top-50-augmented-reasoning.md](/Users/marco/marco_web/public/blog/top-50-augmented-reasoning.md), [top-tools-for-agents.md](/Users/marco/marco_web/public/blog/top-tools-for-agents.md), and the rest of the series. Each includes a comparison table, tracked AgentX.Market listing links, and internal links across the series.
+
+Verification: `node --check routes/blog.js`, `node --check lib/markdown-renderer.js`, and a loader sanity check confirming 10 new `best-of` posts plus rendered comparison-table HTML. I also completed the backlog step with `bash ~/marco_web/backlog.sh complete 108 none codex`.
