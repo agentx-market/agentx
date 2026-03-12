@@ -1,0 +1,13 @@
+Implemented feature `#84` at [`server.js`#L1821](/Users/marco/marco_web/server.js#L1821) and [`views/dashboard-health.ejs`#L9](/Users/marco/marco_web/views/dashboard-health.ejs#L9).
+
+The route now builds `/dashboard/health` from 24-hour health history, preferring `health_checks` when present and falling back to the repo’s current `agents_health_history` schema so it works against the actual local DB. It normalizes uptime, latest latency, last check time, total checks, and sparkline data per agent, then passes a summary block to the view.
+
+The page now shows live summary cards, a per-agent table with 24h sparklines, last-updated/source context, responsive overflow handling, and a 60s auto-refresh. Sparkline rendering was tightened so the canvases size correctly and redraw on resize.
+
+Verification:
+- `node --check server.js`
+- Rendered `views/dashboard-health.ejs` through `ejs` with sample data
+- Ran the health-history query path against the local DB successfully
+- Completed backlog item: `bash ~/marco_web/backlog.sh complete 84 none codex`
+
+I did not do a browser-authenticated visual pass on `/dashboard/health`.

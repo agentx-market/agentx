@@ -8,6 +8,10 @@
   
   <style>
     .health-dashboard-main { padding: 2rem 0; }
+    .health-toolbar { display: flex; justify-content: space-between; align-items: center; gap: 1rem; margin-bottom: 1.5rem; color: #8f95b2; font-size: 0.9rem; }
+    .health-toolbar strong { color: #e0e0ff; }
+    .health-live-pill { display: inline-flex; align-items: center; gap: 0.45rem; padding: 0.45rem 0.75rem; border-radius: 999px; border: 1px solid #2a2a4a; background: rgba(255, 255, 255, 0.02); }
+    .health-live-dot { width: 0.55rem; height: 0.55rem; border-radius: 999px; background: #00d26a; box-shadow: 0 0 10px rgba(0, 210, 106, 0.45); }
     .health-stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem; margin-bottom: 2rem; }
     .health-stat-card { background: #1a1a2e; border: 1px solid #2a2a4a; border-radius: 12px; padding: 1.5rem; }
     .health-stat-label { color: #a0a0c0; font-size: 0.875rem; margin-bottom: 0.5rem; }
@@ -32,10 +36,18 @@
     .sparkline-canvas { width: 100%; height: 100%; }
     .health-response-time { font-family: 'JetBrains Mono', monospace; font-size: 0.875rem; }
     .health-response-time.fast { color: #00d26a; }
+    .health-response-time.medium { color: #ffa502; }
     .health-response-time.slow { color: #ff4757; }
     .health-last-check { font-size: 0.875rem; }
     .health-empty-state { text-align: center; padding: 4rem 2rem; background: #1a1a2e; border-radius: 12px; border: 1px solid #2a2a4a; }
     .health-empty-icon { font-size: 3rem; margin-bottom: 1rem; }
+    .health-table-wrap { overflow-x: auto; }
+    .health-table-note { margin-top: 0.75rem; color: #777b96; font-size: 0.8rem; }
+    @media (max-width: 768px) {
+      .health-toolbar { flex-direction: column; align-items: flex-start; }
+      .sparkline-container { width: 96px; }
+      .health-agents-table { min-width: 760px; }
+    }
   </style>
 </head>
 <body class="dashboard-page">
@@ -74,6 +86,13 @@
 
   <section class="health-dashboard-main">
     <div class="container">
+      <div class="health-toolbar">
+        <div>Last updated <strong><%= new Date(refreshedAt).toLocaleString() %></strong></div>
+        <div class="health-live-pill">
+          <span class="health-live-dot"></span>
+          <span>Auto-refresh every 60s via <strong><%= healthSource %></strong></span>
+        </div>
+      </div>
       <% if (agents.length === 0) { %>
         <div class="health-empty-state">
           <div class="health-empty-icon">📊</div>
@@ -81,86 +100,83 @@
           <p>Register agents to see their health metrics here.</p>
         </div>
       <% } else { %>
-        <!-- Summary Stats -->
         <div class="health-stats-grid">
-          <% 
-            const totalAgents = agents.length;
-            const onlineAgents = agents.filter(a => a.health_status === 'online').length;
-            const avgUptime = agents.length > 0 ? (agents.reduce((sum, a) => sum + parseFloat(a.uptimePercent), 0) / agents.length).toFixed(1) : '0';
-            const avgResponse = agents.length > 0 ? Math.round(agents.reduce((sum, a) => sum + (a.latest_response_ms || 0), 0) / agents.length) : 0;
-          %>
           <div class="health-stat-card">
             <div class="health-stat-label">Total Agents</div>
-            <div class="health-stat-value"><%= totalAgents %></div>
+            <div class="health-stat-value"><%= summary.totalAgents %></div>
           </div>
           <div class="health-stat-card">
             <div class="health-stat-label">Online</div>
-            <div class="health-stat-value green"><%= onlineAgents %></div>
+            <div class="health-stat-value green"><%= summary.onlineAgents %></div>
           </div>
           <div class="health-stat-card">
             <div class="health-stat-label">Avg Uptime (24h)</div>
-            <div class="health-stat-value green"><%= avgUptime %>%</div>
+            <div class="health-stat-value green"><%= summary.avgUptime %>%</div>
           </div>
           <div class="health-stat-card">
             <div class="health-stat-label">Avg Response Time</div>
-            <div class="health-stat-value"><%= avgResponse %>ms</div>
+            <div class="health-stat-value"><%= summary.avgResponseMs === null ? 'N/A' : `${summary.avgResponseMs}ms` %></div>
+          </div>
+          <div class="health-stat-card">
+            <div class="health-stat-label">Checks (24h)</div>
+            <div class="health-stat-value"><%= summary.totalChecks24h %></div>
           </div>
         </div>
 
-        <!-- Health Table -->
-        <table class="health-agents-table">
-          <thead>
-            <tr>
-              <th>Agent</th>
-              <th>Status</th>
-              <th>Uptime (24h)</th>
-              <th>Response Time</th>
-              <th>Last Check</th>
-              <th>24h Health</th>
-            </tr>
-          </thead>
-          <tbody>
-            <% agents.forEach(agent => { %>
+        <div class="health-table-wrap">
+          <table class="health-agents-table">
+            <thead>
               <tr>
-                <td>
-                  <div class="health-agent-name"><%= agent.name %></div>
-                  <% if (agent.description) { %>
-                    <div style="font-size: 0.875rem; color: #606080;"><%= agent.description.substring(0, 60) %><%= agent.description.length > 60 ? '...' : '' %></div>
-                  <% } %>
-                </td>
-                <td>
-                  <span class="health-status-badge <%= agent.health_status %>">
-                    <%= agent.health_status.toUpperCase() %>
-                  </span>
-                </td>
-                <td>
-                  <span class="health-uptime <%= agent.uptimePercent >= 95 ? 'good' : agent.uptimePercent >= 80 ? 'medium' : 'bad' %>">
-                    <%= agent.uptimePercent %>%
-                  </span>
-                </td>
-                <td>
-                  <span class="health-response-time <%= agent.latest_response_ms && agent.latest_response_ms < 200 ? 'fast' : agent.latest_response_ms && agent.latest_response_ms < 500 ? 'yellow' : 'slow' %>">
-                    <%= agent.latest_response_ms ? agent.latest_response_ms + 'ms' : 'N/A' %>
-                  </span>
-                </td>
-                <td>
-                  <div class="health-last-check">
-                    <% if (agent.last_health_check) { %>
-                      <%= new Date(agent.last_health_check).toLocaleString() %>
-                    <% } else { %>
-                      Never
-                    <% } %>
-                  </div>
-                </td>
-                <td>
-                  <div class="sparkline-container">
-                    <canvas id="sparkline-<%= agent.id %>" class="sparkline-canvas"></canvas>
-                  </div>
-                </td>
+                <th>Agent</th>
+                <th>Status</th>
+                <th>Uptime (24h)</th>
+                <th>Latency</th>
+                <th>Last Check</th>
+                <th>Checks</th>
+                <th>24h Trend</th>
               </tr>
-            <% }); %>
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              <% agents.forEach(agent => { %>
+                <tr>
+                  <td>
+                    <div class="health-agent-name"><%= agent.name %></div>
+                    <% if (agent.description) { %>
+                      <div style="font-size: 0.875rem; color: #606080;"><%= agent.description.substring(0, 60) %><%= agent.description.length > 60 ? '...' : '' %></div>
+                    <% } %>
+                  </td>
+                  <td>
+                    <span class="health-status-badge <%= agent.healthStatus %>">
+                      <%= agent.healthStatus.toUpperCase() %>
+                    </span>
+                  </td>
+                  <td>
+                    <span class="health-uptime <%= Number(agent.uptimePercent) >= 95 ? 'good' : Number(agent.uptimePercent) >= 80 ? 'medium' : 'bad' %>">
+                      <%= agent.uptimePercent %>%
+                    </span>
+                  </td>
+                  <td>
+                    <span class="health-response-time <%= agent.latestResponseMs !== null && agent.latestResponseMs < 200 ? 'fast' : agent.latestResponseMs !== null && agent.latestResponseMs < 500 ? 'medium' : 'slow' %>">
+                      <%= agent.latestResponseMs === null ? 'N/A' : `${agent.latestResponseMs}ms` %>
+                    </span>
+                  </td>
+                  <td>
+                    <div class="health-last-check">
+                      <%= agent.lastCheckAt ? new Date(agent.lastCheckAt).toLocaleString() : 'Never' %>
+                    </div>
+                  </td>
+                  <td><%= agent.checks24h %></td>
+                  <td>
+                    <div class="sparkline-container">
+                      <canvas id="sparkline-<%= agent.id %>" class="sparkline-canvas" aria-label="Health trend for <%= agent.name %>"></canvas>
+                    </div>
+                  </td>
+                </tr>
+              <% }); %>
+            </tbody>
+          </table>
+        </div>
+        <p class="health-table-note">Sparkline points show the last 24 hours of checks, colored by status and positioned by latency.</p>
       <% } %>
     </div>
   </section>
@@ -210,67 +226,65 @@
     function renderSparkline(canvasId, data) {
       const canvas = document.getElementById(canvasId);
       if (!canvas || !data || data.timestamps.length === 0) return;
-      
+
       const ctx = canvas.getContext('2d');
-      const width = canvas.offsetWidth;
-      const height = canvas.offsetHeight;
-      
-      // Clear canvas
+      const ratio = window.devicePixelRatio || 1;
+      const width = canvas.clientWidth;
+      const height = canvas.clientHeight;
+      canvas.width = width * ratio;
+      canvas.height = height * ratio;
+      ctx.scale(ratio, ratio);
       ctx.clearRect(0, 0, width, height);
-      
-      if (data.timestamps.length === 0) return;
-      
-      // Map timestamps to x-coordinates
-      const timestamps = data.timestamps;
+
       const statuses = data.statuses;
       const responseTimes = data.responseTimes;
-      
-      // Create color mapping: online=green, degraded=yellow, offline=red
       const statusColors = {
         'online': '#00d26a',
         'degraded': '#ffa502',
         'offline': '#ff4757'
       };
-      
-      // Draw points for each check
-      const stepX = timestamps.length > 1 ? width / (timestamps.length - 1) : width;
-      
-      timestamps.forEach((ts, i) => {
+
+      const positiveTimes = responseTimes.filter((value) => value > 0);
+      const maxResponse = Math.max(...positiveTimes, 500);
+      const stepX = data.timestamps.length > 1 ? width / (data.timestamps.length - 1) : width / 2;
+
+      ctx.beginPath();
+      ctx.moveTo(0, height - 1);
+      ctx.lineTo(width, height - 1);
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.08)';
+      ctx.lineWidth = 1;
+      ctx.stroke();
+
+      data.timestamps.forEach((timestamp, i) => {
         const x = i * stepX;
         const status = statuses[i] || 'offline';
         const color = statusColors[status] || '#ff4757';
-        
-        // Map response time to y-position (higher = slower = lower on canvas)
-        const responseMs = responseTimes[i] || 0;
-        const maxResponse = Math.max(...responseTimes.filter(r => r > 0), 500);
+        const responseMs = responseTimes[i] || maxResponse;
         const normalizedResponse = Math.min(responseMs / maxResponse, 1);
-        const y = height - (normalizedResponse * height * 0.8) - (height * 0.1);
-        
-        // Draw point
+        const y = height - (normalizedResponse * height * 0.75) - (height * 0.12);
+
         ctx.beginPath();
         ctx.arc(x, y, 3, 0, Math.PI * 2);
         ctx.fillStyle = color;
         ctx.fill();
-        
-        // Draw line to previous point (if exists)
+
         if (i > 0) {
           const prevX = (i - 1) * stepX;
-          const prevResponse = responseTimes[i - 1] || 0;
+          const prevResponse = responseTimes[i - 1] || maxResponse;
           const prevNormalized = Math.min(prevResponse / maxResponse, 1);
-          const prevY = height - (prevNormalized * height * 0.8) - (height * 0.1);
-          
+          const prevY = height - (prevNormalized * height * 0.75) - (height * 0.12);
+
           ctx.beginPath();
           ctx.moveTo(prevX, prevY);
           ctx.lineTo(x, y);
           ctx.strokeStyle = color;
-          ctx.lineWidth = 1;
+          ctx.lineWidth = 1.5;
           ctx.stroke();
         }
       });
     }
-    
-    // Render all sparklines after page load
-    window.addEventListener('load', () => {
+
+    function renderAllSparklines() {
       <% agents.forEach(agent => { %>
         renderSparkline('sparkline-<%= agent.id %>', {
           timestamps: <%= JSON.stringify(agent.sparkline.timestamps) %>,
@@ -278,7 +292,11 @@
           responseTimes: <%= JSON.stringify(agent.sparkline.responseTimes) %>
         });
       <% }); %>
-    });
+    }
+
+    window.addEventListener('load', renderAllSparklines);
+    window.addEventListener('resize', renderAllSparklines);
+    window.setTimeout(() => window.location.reload(), 60000);
   </script>
 </body>
 </html>
