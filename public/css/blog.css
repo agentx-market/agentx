@@ -167,6 +167,14 @@
   color: var(--text-secondary);
 }
 
+.blog-featured-image {
+  width: 100%;
+  margin-top: var(--space-xl);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-md);
+}
+
 /* --- Blog Post Content --- */
 .blog-post-content h2 {
   font-size: 1.6rem;
@@ -323,6 +331,29 @@
   flex-wrap: wrap;
   gap: var(--space-sm);
   margin-top: var(--space-2xl);
+}
+
+.blog-faq {
+  margin-top: var(--space-3xl);
+  padding-top: var(--space-2xl);
+  border-top: 1px solid var(--border);
+}
+
+.blog-faq-item {
+  padding: var(--space-lg);
+  margin-top: var(--space-lg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.blog-faq-item h3 {
+  margin-top: 0;
+  margin-bottom: var(--space-sm);
+}
+
+.blog-faq-item p {
+  margin-bottom: 0;
 }
 
 .related-posts {

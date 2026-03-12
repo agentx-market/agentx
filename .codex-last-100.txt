@@ -1,0 +1,7 @@
+Implemented feature `#100` with a narrow content/SEO pass.
+
+I added 10 new comparison posts under [`/Users/marco/marco_web/public/blog`](#/Users/marco/marco_web/public/blog), including the requested titles plus six related comparison/search-intent pieces. Each post is 600+ words, includes a feature matrix, pricing table, objective pros/cons, a branded featured image, FAQ JSON-LD, and at least 3 internal links to category pages like [`/Users/marco/marco_web/routes/category-landing.js`](#/Users/marco/marco_web/routes/category-landing.js). I also added a shared branded image at [`/Users/marco/marco_web/public/img/blog-comparison-series.svg`](#/Users/marco/marco_web/public/img/blog-comparison-series.svg).
+
+To support the content cleanly, I extended the blog metadata/rendering in [`/Users/marco/marco_web/lib/markdown-renderer.js`](#/Users/marco/marco_web/lib/markdown-renderer.js), [`/Users/marco/marco_web/views/blog-post.ejs`](#/Users/marco/marco_web/views/blog-post.ejs), and [`/Users/marco/marco_web/public/css/blog.css`](#/Users/marco/marco_web/public/css/blog.css) so posts can carry `featured_image`, `social_image`, and `faq_json`, render featured images and visible FAQs, and emit per-post `og:image`, `twitter:image`, and FAQ schema.
+
+Verified with targeted checks: all 10 posts parse correctly, each exposes 3 FAQ items and 3+ internal links, all word counts exceed 600, and `node --check` passed for the touched JS files. I also ran `bash ~/marco_web/backlog.sh complete 100 none codex`.

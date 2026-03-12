@@ -1,0 +1,30 @@
+<svg width="1200" height="630" viewBox="0 0 1200 630" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1200" height="630" rx="32" fill="#08111F"/>
+  <rect x="28" y="28" width="1144" height="574" rx="28" fill="url(#paint0_linear)"/>
+  <rect x="72" y="78" width="250" height="42" rx="21" fill="#9AE6B4" fill-opacity="0.14" stroke="#9AE6B4" stroke-opacity="0.55"/>
+  <text x="98" y="105" fill="#C6F6D5" font-family="Inter, Arial, sans-serif" font-size="22" font-weight="700">AgentX Comparison Series</text>
+  <text x="72" y="205" fill="#F7FAFC" font-family="Inter, Arial, sans-serif" font-size="68" font-weight="800">Buyer-intent AI agent</text>
+  <text x="72" y="286" fill="#F7FAFC" font-family="Inter, Arial, sans-serif" font-size="68" font-weight="800">marketplace comparisons</text>
+  <text x="72" y="360" fill="#A0AEC0" font-family="Inter, Arial, sans-serif" font-size="30" font-weight="500">Feature matrices, pricing tables, and category-based alternatives.</text>
+  <rect x="72" y="438" width="272" height="94" rx="22" fill="#111C2D" stroke="#22314A"/>
+  <text x="104" y="482" fill="#63B3ED" font-family="Inter, Arial, sans-serif" font-size="24" font-weight="700">/agents/chatbot</text>
+  <text x="104" y="515" fill="#E2E8F0" font-family="JetBrains Mono, monospace" font-size="20">support and lead capture</text>
+  <rect x="374" y="438" width="306" height="94" rx="22" fill="#111C2D" stroke="#22314A"/>
+  <text x="406" y="482" fill="#F6AD55" font-family="Inter, Arial, sans-serif" font-size="24" font-weight="700">/agents/automation</text>
+  <text x="406" y="515" fill="#E2E8F0" font-family="JetBrains Mono, monospace" font-size="20">workflow and orchestration</text>
+  <rect x="710" y="438" width="362" height="94" rx="22" fill="#111C2D" stroke="#22314A"/>
+  <text x="742" y="482" fill="#FC8181" font-family="Inter, Arial, sans-serif" font-size="24" font-weight="700">/agents/data-analysis</text>
+  <text x="742" y="515" fill="#E2E8F0" font-family="JetBrains Mono, monospace" font-size="20">research, analytics, reporting</text>
+  <circle cx="962" cy="182" r="120" fill="#3182CE" fill-opacity="0.18"/>
+  <circle cx="1038" cy="228" r="92" fill="#F56565" fill-opacity="0.18"/>
+  <circle cx="904" cy="254" r="74" fill="#ECC94B" fill-opacity="0.18"/>
+  <path d="M868 178H1088" stroke="#E2E8F0" stroke-width="10" stroke-linecap="round"/>
+  <path d="M868 230H1088" stroke="#A0AEC0" stroke-width="10" stroke-linecap="round"/>
+  <path d="M868 282H1018" stroke="#63B3ED" stroke-width="10" stroke-linecap="round"/>
+  <defs>
+    <linearGradient id="paint0_linear" x1="84" y1="64" x2="1118" y2="566" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#0F172A"/>
+      <stop offset="1" stop-color="#132238"/>
+    </linearGradient>
+  </defs>
+</svg>
