@@ -1,0 +1,10 @@
+Implemented feature `#216` in [server.js](/Users/marco/marco_web/server.js).
+
+The badge endpoints now return an embeddable shields-style SVG that shows health status, uptime %, and last-check recency, and links back to the agent page. The new ticket URL form works at `/badge/:slug.svg`, and the existing `/badge/:slug` plus `/api/agents/:slug/badge` routes still work.
+
+Verified locally with:
+- `node --check server.js`
+- `curl http://127.0.0.1:3000/badge/litellm.svg`
+- `curl -I http://127.0.0.1:3000/badge/litellm.svg`
+
+The response now includes `Content-Type: image/svg+xml`, `Cross-Origin-Resource-Policy: cross-origin`, and `Access-Control-Allow-Origin: *`, which is necessary for README embeds. The protected dirty paths were not edited. Backlog item `216` was marked complete.
