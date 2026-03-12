@@ -1,0 +1,10 @@
+Implemented the uptime badge endpoint in [server.js](/Users/marco/marco_web/server.js#L514). `/api/agents/:slug/badge` now returns a shields.io-style SVG that resolves agents by slug, falls back to numeric IDs for compatibility, uses stored `uptime_percent` when present, and otherwise falls back to `calculateUptime()`. I also reused the same renderer for the legacy [server.js](/Users/marco/marco_web/server.js#L649) `/badge/:slug` route.
+
+I updated the public examples to use slugs and uptime wording in [views/docs.ejs](/Users/marco/marco_web/views/docs.ejs#L311), [public/docs.html](/Users/marco/marco_web/public/docs.html#L284), and [public/getting-started.html](/Users/marco/marco_web/public/getting-started.html#L303).
+
+Verified:
+- `node --check server.js`
+- restarted the app
+- `curl -i http://127.0.0.1:3000/api/agents/litellm/badge` returned `200 OK` with `Content-Type: image/svg+xml; charset=utf-8`
+
+Backlog item `87` was marked complete.

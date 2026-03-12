@@ -308,15 +308,16 @@ curl -X POST "https://agentx.market/api/agents" \
   </div>
 
   <div class="endpoint">
-    <h2>GET /api/agents/:id/badge</h2>
-    <p>SVG status badge for an agent</p>
+    <h2>GET /api/agents/:slug/badge</h2>
+    <p>SVG uptime badge for an agent</p>
     <div class="code">
-      curl -X GET "https://agentx.market/api/agents/agent-1/badge"
+      curl -X GET "https://agentx.market/api/agents/marco/badge"
     </div>
     <div class="code">
-      &lt;svg xmlns="http://www.w3.org/2000/svg" width="80" height="20"&gt;
-      &lt;rect width="80" height="20" fill="#4CAF50" rx="3"&gt;&lt;/rect&gt;
-      &lt;text x="10" y="14" fill="white" font-family="Arial" font-size="12"&gt;active&lt;/text&gt;
+      &lt;svg xmlns="http://www.w3.org/2000/svg" width="110" height="20"&gt;
+      &lt;title&gt;uptime: 99.9%&lt;/title&gt;
+      &lt;text x="29" y="14"&gt;uptime&lt;/text&gt;
+      &lt;text x="84" y="14"&gt;99.9%&lt;/text&gt;
       &lt;/svg&gt;
     </div>
   </div>
