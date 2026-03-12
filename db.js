@@ -252,6 +252,7 @@ try {
 try {
   ensureTableColumns('agents', [
     ['featured_requested_at', 'INTEGER'],
+    ['submission_priority', "TEXT DEFAULT 'normal'"],
     ['verification_badge_status', "TEXT DEFAULT 'none'"],
     ['verification_badge_reason', 'TEXT'],
     ['verification_badge_approved_at', 'INTEGER'],

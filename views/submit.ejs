@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Submit Your Agent - AgentX.Market</title>
+  <meta name="description" content="Submit your agent with a name, health check URL, and operator email. Pro operators can enable priority review with a 24 hour SLA.">
+  <style>
+    :root {
+      --bg: #f4efe6;
+      --surface: rgba(255, 251, 245, 0.94);
+      --surface-strong: #fffdf9;
+      --border: #d7c8b5;
+      --text: #1f1a14;
+      --muted: #6f6357;
+      --accent: #b6532f;
+      --accent-dark: #7f3518;
+      --success: #216e39;
+      --danger: #a12626;
+      --shadow: 0 24px 60px rgba(50, 28, 10, 0.12);
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Georgia, "Times New Roman", serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at top left, rgba(182, 83, 47, 0.12), transparent 30%),
+        linear-gradient(180deg, #efe5d6 0%, var(--bg) 100%);
+      min-height: 100vh;
+    }
+    .wrap { max-width: 960px; margin: 0 auto; padding: 32px 20px 64px; }
+    .nav { display: flex; justify-content: space-between; align-items: center; margin-bottom: 48px; }
+    .brand, .nav a { color: var(--text); text-decoration: none; }
+    .brand { font-size: 1.2rem; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; }
+    .nav-links { display: flex; gap: 18px; font-size: 0.95rem; }
+    .hero { display: grid; gap: 24px; grid-template-columns: minmax(0, 1.2fr) minmax(280px, 0.8fr); align-items: start; }
+    .card { background: var(--surface); border: 1px solid var(--border); border-radius: 24px; box-shadow: var(--shadow); }
+    .hero-copy { padding: 32px; }
+    .eyebrow { display: inline-block; margin-bottom: 14px; color: var(--accent-dark); font-size: 0.85rem; letter-spacing: 0.1em; text-transform: uppercase; }
+    h1 { margin: 0 0 16px; font-size: clamp(2.5rem, 6vw, 4.7rem); line-height: 0.95; }
+    .lede, .sidebar p, .field-help, .message, .priority-label, .priority-note { font-family: "Helvetica Neue", Arial, sans-serif; }
+    .lede { margin: 0; font-size: 1.05rem; line-height: 1.7; color: var(--muted); max-width: 48ch; }
+    .sidebar { padding: 28px; background: var(--surface-strong); }
+    .sidebar h2, .form-card h2 { margin-top: 0; font-size: 1.2rem; }
+    .sidebar ul { margin: 16px 0 0; padding-left: 18px; color: var(--muted); line-height: 1.8; font-family: "Helvetica Neue", Arial, sans-serif; }
+    .form-card { margin-top: 28px; padding: 32px; }
+    form { display: grid; gap: 18px; }
+    label { display: block; margin-bottom: 8px; font-family: "Helvetica Neue", Arial, sans-serif; font-size: 0.95rem; font-weight: 700; }
+    input { width: 100%; padding: 14px 16px; border: 1px solid var(--border); border-radius: 14px; font: inherit; font-family: "Helvetica Neue", Arial, sans-serif; background: #fff; color: var(--text); }
+    input:focus { outline: 2px solid rgba(182, 83, 47, 0.18); border-color: var(--accent); }
+    .field-help { margin-top: 8px; color: var(--muted); font-size: 0.92rem; line-height: 1.5; }
+    .priority-card { padding: 16px 18px; border: 1px solid var(--border); border-radius: 16px; background: rgba(182, 83, 47, 0.07); }
+    .priority-toggle { display: flex; gap: 12px; align-items: flex-start; }
+    .priority-toggle input { width: 18px; height: 18px; margin-top: 2px; padding: 0; }
+    .priority-label { margin: 0; font-weight: 700; }
+    .priority-note { margin: 6px 0 0; color: var(--muted); line-height: 1.5; }
+    button { border: 0; border-radius: 999px; padding: 14px 20px; font: inherit; font-family: "Helvetica Neue", Arial, sans-serif; font-weight: 700; cursor: pointer; background: var(--accent); color: #fff7f2; transition: background 0.2s ease; }
+    button:hover { background: var(--accent-dark); }
+    button:disabled { opacity: 0.7; cursor: wait; }
+    .secondary-link { display: inline-flex; align-items: center; justify-content: center; margin-top: 16px; padding: 13px 18px; border-radius: 999px; border: 1px solid var(--border); font-family: "Helvetica Neue", Arial, sans-serif; font-weight: 700; color: var(--text); text-decoration: none; background: rgba(255, 255, 255, 0.72); }
+    .message { display: none; margin-top: 18px; padding: 14px 16px; border-radius: 14px; font-size: 0.96rem; line-height: 1.6; }
+    .message.visible { display: block; }
+    .message.success { background: rgba(33, 110, 57, 0.08); border: 1px solid rgba(33, 110, 57, 0.18); color: var(--success); }
+    .message.error { background: rgba(161, 38, 38, 0.08); border: 1px solid rgba(161, 38, 38, 0.18); color: var(--danger); }
+
+    @media (max-width: 780px) {
+      .hero { grid-template-columns: 1fr; }
+      .wrap { padding-top: 20px; }
+      .nav { margin-bottom: 28px; }
+      .hero-copy, .sidebar, .form-card { padding: 24px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <nav class="nav">
+      <a class="brand" href="/">AgentX</a>
+      <div class="nav-links">
+        <a href="/browse">Browse</a>
+        <a href="/register">Register</a>
+      </div>
+    </nav>
+
+    <section class="hero">
+      <div class="card hero-copy">
+        <span class="eyebrow"><%= isPro ? 'Pro Submission' : 'Simple Submission' %></span>
+        <h1>List your agent without OAuth.</h1>
+        <p class="lede">
+          Submit a name, a working health check URL, and the operator email. If the health check returns
+          <strong>200 OK</strong>, AgentX creates a live community listing immediately.
+          <% if (isPro) { %> Pro operators can also flag the submission for priority review with a 24 hour SLA.<% } %>
+        </p>
+      </div>
+
+      <aside class="card sidebar">
+        <h2>What happens next</h2>
+        <p>If the health check passes, the listing goes live right away and we email the operator with claim and upgrade instructions.</p>
+        <ul>
+          <li>No OAuth required on first submission</li>
+          <li>No pending state if the health check fails</li>
+          <li><%= isPro ? 'Priority review moves ahead of standard 72 hour submissions' : 'Claim and richer profile setup can happen later' %></li>
+        </ul>
+        <% if (!operatorId) { %>
+          <a class="secondary-link" href="/auth/github?next=/submit">Use GitHub for full registration</a>
+        <% } else if (!isPro) { %>
+          <a class="secondary-link" href="/pricing">Upgrade to Pro for 24h review</a>
+        <% } %>
+      </aside>
+    </section>
+
+    <section class="card form-card">
+      <h2>Submit agent</h2>
+      <form id="submitForm">
+        <div>
+          <label for="agentName">Agent name</label>
+          <input id="agentName" name="agentName" type="text" maxlength="100" required placeholder="Acme Support Agent">
+        </div>
+
+        <div>
+          <label for="healthUrl">Health check URL</label>
+          <input id="healthUrl" name="healthUrl" type="url" maxlength="500" required placeholder="https://agent.example.com/health">
+          <p class="field-help">This URL must return HTTP 200 within 5 seconds. We use it for the immediate go-live check.</p>
+        </div>
+
+        <div>
+          <label for="contactEmail">Operator email</label>
+          <input id="contactEmail" name="contactEmail" type="email" maxlength="254" required placeholder="operator@example.com">
+        </div>
+
+        <% if (isPro) { %>
+          <div class="priority-card">
+            <label class="priority-toggle" for="priority_review">
+              <input id="priority_review" name="priority_review" type="checkbox">
+              <span>
+                <span class="priority-label">Priority review</span>
+                <span class="priority-note">Move this submission to the top of the review queue with a guaranteed 24 hour review window. Standard review remains 72 hours.</span>
+              </span>
+            </label>
+          </div>
+        <% } %>
+
+        <div>
+          <button id="submitButton" type="submit">Run check and list agent</button>
+        </div>
+      </form>
+
+      <div id="message" class="message" aria-live="polite"></div>
+    </section>
+  </div>
+
+  <script>
+    const form = document.getElementById('submitForm');
+    const message = document.getElementById('message');
+    const submitButton = document.getElementById('submitButton');
+    const isPro = <%- JSON.stringify(isPro) %>;
+
+    function showMessage(type, text) {
+      message.className = `message visible ${type}`;
+      message.textContent = text;
+    }
+
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      submitButton.disabled = true;
+      showMessage('success', 'Running health check...');
+
+      try {
+        const payload = {
+          agentName: form.agentName.value.trim(),
+          healthUrl: form.healthUrl.value.trim(),
+          contactEmail: form.contactEmail.value.trim()
+        };
+
+        if (isPro && form.priority_review) {
+          payload.priority_review = form.priority_review.checked;
+        }
+
+        const response = await fetch('/api/submit-agent', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+
+        const data = await response.json();
+        if (!response.ok) {
+          throw new Error(data.error || 'Submission failed');
+        }
+
+        const slaHours = Number(data.reviewSlaHours || 72);
+        const isPriority = data.submissionPriority === 'high';
+        showMessage(
+          'success',
+          isPriority
+            ? `Health check passed. Your agent is listed and queued for priority review. Review SLA: ${slaHours} hours.`
+            : `Health check passed. Your agent is listed and queued for standard review. Review SLA: ${slaHours} hours.`
+        );
+        form.reset();
+      } catch (error) {
+        showMessage('error', error.message || 'Submission failed');
+      } finally {
+        submitButton.disabled = false;
+      }
+    });
+  </script>
+</body>
+</html>

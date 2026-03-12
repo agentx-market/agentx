@@ -1,0 +1,7 @@
+Implemented the narrow pass for feature `#127`.
+
+`/submit` now renders a Pro-aware EJS view at [views/submit.ejs](/Users/marco/marco_web/views/submit.ejs), with a `priority_review` checkbox shown only to authenticated Pro operators. The submit API in [server.js](/Users/marco/marco_web/server.js#L1406) gates that flag to active Pro subscriptions, stores `submission_priority` on the created agent, and returns the correct 24h vs 72h SLA. The schema support was added in [db.js](/Users/marco/marco_web/db.js#L252).
+
+The dashboard route in [server.js](/Users/marco/marco_web/server.js#L2544) now computes a priority-first review queue and recent SLA state, and [views/dashboard.ejs](/Users/marco/marco_web/views/dashboard.ejs#L186) shows a `Priority Review Active` badge with time remaining, queue position, and due time for recent Pro submissions.
+
+Verification: `node --check server.js`, a direct `db.js` load confirming `agents.submission_priority`, and EJS render checks for both `submit.ejs` and `dashboard.ejs` all passed. I also ran `bash ~/marco_web/backlog.sh complete 127 none codex`.
