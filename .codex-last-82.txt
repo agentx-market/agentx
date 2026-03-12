@@ -1,0 +1,5 @@
+Implemented feature `#82` on `/browse`.
+
+The page now renders a logged-out-only sticky bottom banner in [views/browse.ejs](/Users/marco/marco_web/views/browse.ejs#L197) with the required copy, email input, and dismiss control. The behavior lives in [public/js/browse.js](/Users/marco/marco_web/public/js/browse.js#L10): it reveals after 50% scroll, stays hidden for dismissed/submitted visitors via `localStorage`, and submits to the existing `/api/waitlist` endpoint so emails land in the `waitlist` table. Styling for the subtle bottom bar and mobile layout is in [public/css/browse.css](/Users/marco/marco_web/public/css/browse.css#L428), including an offset when the compare bar is visible.
+
+Verified with `node --check public/js/browse.js`, restarted the local server, and confirmed the updated banner markup is served from `http://127.0.0.1:3000/browse`. Ran `bash ~/marco_web/backlog.sh complete 82 none codex`.
