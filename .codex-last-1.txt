@@ -1,0 +1,9 @@
+Implemented the narrow agent registry API in [server.js](/Users/marco/marco_web/server.js): `POST /api/agents` now registers an agent in SQLite with `name`, `description`, `capabilities`, `endpoint_url`, and `pricing`, and `GET /api/agents` plus `GET /api/agents/:id` return a minimal consistent registry shape. The create endpoint is now public, validates `endpoint_url`, normalizes `capabilities`, and stores records as active rows in `agents`.
+
+Verified with `node --check server.js` and a live smoke test against the running app:
+- `POST /api/agents` returned `201` with the inserted record
+- `GET /api/agents/:id` returned that record
+- `GET /api/agents` included that record
+- The smoke-test row was deleted afterward
+
+I also ran `bash ~/marco_web/backlog.sh complete 1 none codex`. One note: starting the app surfaced existing `db.js` migration warnings (`ALTER TABLE ... ADD COLUMN IF NOT EXISTS` syntax issues in SQLite), but they did not block this feature.
