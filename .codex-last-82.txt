@@ -1,10 +1,8 @@
-Feature `#82` is already implemented in the current branch state and matches the acceptance criteria.
+Feature `#82` is in place on `/browse` for logged-out visitors: the page renders a dismissible bottom email bar, the client reveals it at 50% scroll and submits to `/api/waitlist`, and the server persists emails in `waitlist`.
 
-`/browse` renders a non-modal sticky bottom email bar for logged-out users in [views/browse.ejs](/Users/marco/marco_web/views/browse.ejs), the client-side 50% scroll reveal, dismiss, and submit flow is in [public/js/browse.js](/Users/marco/marco_web/public/js/browse.js), and the banner styling is in [public/css/browse.css](/Users/marco/marco_web/public/css/browse.css). Signups post to the existing `POST /api/waitlist` handler in [server.js](/Users/marco/marco_web/server.js), which writes to the `waitlist` table defined in [migrations/004_waitlist.sql](/Users/marco/marco_web/migrations/004_waitlist.sql).
+I kept the pass narrow because the implementation was already present in the dirty browse files. The only code change I made was adding a regression check in [scripts/test-browse.js](/Users/marco/marco_web/scripts/test-browse.js) so the smoke test now verifies both the browse API and the logged-out lead-capture banner markup.
 
-Verification passed with `node scripts/test-feature82-waitlist-banner.js`, which confirmed:
-- `/browse` includes the banner markup and `data-scroll-threshold="0.5"`
-- `POST /api/waitlist` stores the submitted email
-- duplicate submissions return the expected idempotent response
-
-I did not edit any of the protected paths. I also ran `bash ~/marco_web/backlog.sh complete 82 none codex`, and the item is marked complete.
+Verification:
+- `curl http://127.0.0.1:3000/browse` returned `200` and included `emailBanner`, `data-scroll-threshold="0.5"`, and `emailBannerForm`.
+- `node scripts/test-browse.js` passed.
+- `bash ~/marco_web/backlog.sh complete 82 none codex` completed successfully.
