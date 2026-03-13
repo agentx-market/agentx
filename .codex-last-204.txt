@@ -1,0 +1,10 @@
+Implemented a narrower `/browse` email capture that is visible on first load and reuses the working `/api/waitlist` storage path.
+
+On the verification side, the existing waitlist flow was not broken locally: `agentx.db` already had 10 waitlist rows, and the existing storage test passed. The issue was conversion surface, not persistence. I added an above-the-fold waitlist card in [views/browse.ejs](/Users/marco/marco_web/views/browse.ejs), wired it through the same submit logic in [public/js/browse.js](/Users/marco/marco_web/public/js/browse.js), and added the supporting styles in [public/css/browse.css](/Users/marco/marco_web/public/css/browse.css). I also updated the browse smoke test in [scripts/test-browse.js](/Users/marco/marco_web/scripts/test-browse.js) to assert the new hero capture exists.
+
+Verified with:
+- `node scripts/test-browse.js`
+- `node scripts/test-feature82-waitlist-banner.js`
+- `node --check public/js/browse.js`
+
+Also ran `bash ~/marco_web/backlog.sh complete 204 none codex`.
